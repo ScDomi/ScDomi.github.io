@@ -20,10 +20,5 @@
     document.getElementById('meme-bottom').textContent = d.memeBottom;
   }
 
-  applyMood(localStorage.getItem(KEY) || 'research');
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.mood-option');
-    if (!btn) return;
-    applyMood(btn.dataset.mood);
-  });
+  applyMood('research');
 })();

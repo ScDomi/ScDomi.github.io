@@ -1,10 +1,10 @@
 window.SITE_CONTENT = {
   heroBadges: ['AI Research', 'Math-first', 'Theory + Systems', 'Music-heavy', '🫪 😭 🌚'],
   posts: [
-    { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine 🧠', date: '2026-06-01' },
-    { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live 🚀', date: '2026-06-01' },
-    { href: 'posts/ai-workflow-stack.html', title: 'My AI Workflow Stack for Productive Days ⚙️', date: '2026-05-31' },
-    { href: 'posts/ship-fast-with-quality.html', title: 'How I Ship Fast Without Losing Quality 🎯', date: '2026-05-30' }
+    { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' },
+    { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live', date: '2026-06-01' },
+    { href: 'posts/ai-workflow-stack.html', title: 'My AI Workflow Stack for Productive Days', date: '2026-05-31' },
+    { href: 'posts/ship-fast-with-quality.html', title: 'How I Ship Fast Without Losing Quality', date: '2026-05-30' }
   ],
   moods: {
     research: {
@@ -14,30 +14,6 @@ window.SITE_CONTENT = {
       memeTop: 'research mood:',
       memeMain: '"just one quick experiment" -> 4 ablations, 2 baselines, and a full methods rewrite 💀',
       memeBottom: 'peer-review me, not my vibe 📊'
-    },
-    focus: {
-      eyebrow: 'LOCK-IN MODE',
-      title: 'No noise. Just output.',
-      lead: 'Thesis, tutoring, side builds. Less talking, more shipping, cleaner systems.',
-      memeTop: 'me: "quick check"',
-      memeMain: 'three hours later: fixed the system, optimized the flow, moved on.',
-      memeBottom: 'still 50:50, but disciplined ✅'
-    },
-    chaos: {
-      eyebrow: 'CHAOS ARC',
-      title: 'Domi: late, loud, and somehow still on point.',
-      lead: '50:50 mindset. Either 0 or 100. Music in the background, ideas in overdrive.',
-      memeTop: 'me: "2 mins"',
-      memeMain: 'next scene: 6:00 AM, full story unlocked, zero regrets.',
-      memeBottom: 'certified crashout energy 😭'
-    },
-    night: {
-      eyebrow: 'NIGHT SHIFT',
-      title: 'Music up. Brain on max. Sleep pending.',
-      lead: 'Spontaneous nights, specific humor, and one more idea before sunrise.',
-      memeTop: '2:47 AM',
-      memeMain: 'should be offline, but started another move instead.',
-      memeBottom: 'moonlight productivity 🌚'
     }
   }
 };
