@@ -262,3 +262,38 @@ h3 {
   margin: 0.35rem 0 0.55rem;
   color: var(--muted);
 }
+
+.personality-card {
+  background: linear-gradient(140deg, #ffffff 0%, #f3f8ff 100%);
+}
+
+.mini-list {
+  padding-left: 1rem;
+  margin: 0.6rem 0 0.8rem;
+}
+
+.mini-list li {
+  margin-bottom: 0.45rem;
+}
+
+.grid-three {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.micro-card {
+  border: 2px solid var(--ink);
+  border-radius: 18px;
+  padding: 1rem;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.micro-card:nth-child(1) { background: linear-gradient(180deg, #fff, #fff8dc); }
+.micro-card:nth-child(2) { background: linear-gradient(180deg, #fff, #f0f7ff); }
+.micro-card:nth-child(3) { background: linear-gradient(180deg, #fff, #fff2f7); }
+
+@media (max-width: 860px) {
+  .grid-three { grid-template-columns: 1fr; }
+}
