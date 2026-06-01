@@ -1,21 +1,24 @@
 # Domi Blog (GitHub Pages)
 
-Static Blog ohne Build-Tool. Einfach pushen, GitHub Pages aktivieren, fertig.
+Static Blog ohne Build-Tool.
 
-## Lokal testen
+## Struktur (erweiterbar)
 
-Einfach `index.html` im Browser öffnen.
+- `assets/content.js`: zentrale Inhalte (Posts, Badges, About-Items, Mood-Texte)
+- `assets/render.js`: rendert Listen/Badges aus `content.js`
+- `assets/mood.js`: Mood-Switcher (Chaos/Focus/Night)
+- `assets/theme.js`: Theme-Switcher (Main/Neon/Brutal/Street/Soft)
+- `index.html`: nur Layout-Shell + Platzhalter-Container
+
+## Schnell erweitern
+
+1. Neuer Post: Eintrag in `assets/content.js` unter `posts` ergänzen.
+2. Neue Badge: `heroBadges` erweitern.
+3. About-Zeile ändern: `aboutItems` anpassen.
+4. Mood-Text ändern: `moods`-Objekt anpassen.
 
 ## Deploy auf GitHub Pages
 
-1. Neues Repository erstellen.
-2. Diese Dateien in das Repo pushen.
-3. In GitHub: Settings -> Pages.
-4. Source: `Deploy from a branch`.
-5. Branch: `main` + `/ (root)`.
-6. Speichern.
-
-Nach 1-3 Minuten ist die Seite live unter `https://<username>.github.io/<repo>/`.
-
-Wenn das Repo exakt `<username>.github.io` heißt, dann ist die URL:
-`https://<username>.github.io/`.
+1. Änderungen committen und pushen.
+2. GitHub Pages baut automatisch von `main` + `/`.
+3. Live unter `https://scdomi.github.io/`.
