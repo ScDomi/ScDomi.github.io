@@ -11,7 +11,7 @@ body{font-family:Sora,system-ui,sans-serif;color:var(--ink);line-height:1.7;back
 .hero{padding:4rem 0 2rem}.eyebrow{display:inline-block;margin:0;background:var(--acid);color:#0e0e0f;border-radius:999px;padding:.25rem .65rem;font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
 h1,h2,h3{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.03em;line-height:1.06;margin:0}h1{margin-top:.8rem;font-size:clamp(2.2rem,7vw,5rem);max-width:12ch}h2{font-size:clamp(1.4rem,3.3vw,2.05rem);margin-bottom:.8rem}
 .lead{margin-top:.95rem;color:var(--muted);max-width:66ch}.hero-badges{margin-top:1.05rem;display:flex;flex-wrap:wrap;gap:.5rem}.badge{background:#12192a;border:1px solid var(--line);border-radius:10px;padding:.3rem .58rem;font-size:.76rem;font-weight:800}
-.spotlight-row{display:grid;grid-template-columns:1.2fr .85fr;gap:.9rem}.meme-card,.about,.post-list li{background:linear-gradient(165deg,#182035 0%,#131a2c 100%);border:1px solid var(--line);border-radius:18px}
+.spotlight-row{display:grid;grid-template-columns:1fr;gap:.9rem}.meme-card,.about,.post-list li{background:linear-gradient(165deg,#182035 0%,#131a2c 100%);border:1px solid var(--line);border-radius:18px}
 .meme-card{padding:1.2rem;position:relative;overflow:hidden}.meme-card::after{content:"";position:absolute;inset:auto -40px -70px auto;width:180px;height:180px;background:radial-gradient(circle,rgba(255,255,255,.3),transparent 70%)}
 .meme-top,.meme-bottom{text-transform:uppercase;font-size:.73rem;letter-spacing:.08em;color:var(--muted)}.meme-bottom{margin-top:.7rem;color:var(--cool);font-weight:700}
 .about{padding:1rem}.mini-list{padding-left:1rem;margin:.5rem 0}.mini-list li{margin-bottom:.35rem}
