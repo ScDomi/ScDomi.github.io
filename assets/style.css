@@ -297,3 +297,102 @@ h3 {
 @media (max-width: 860px) {
   .grid-three { grid-template-columns: 1fr; }
 }
+
+.theme-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+}
+
+.theme-option {
+  border: 2px solid var(--ink);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.28rem 0.62rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.theme-option[aria-pressed="true"] {
+  background: var(--ink);
+  color: #fff;
+}
+
+:root[data-theme="neon-chaos"] {
+  --bg: #0d0b1f;
+  --ink: #f7f7ff;
+  --muted: #c7c5e2;
+  --card: #16122f;
+  --line: #3e2f74;
+  --lime: #d7ff36;
+  --coral: #ff4dc4;
+  --cyan: #29d7ff;
+  --violet: #8d5bff;
+}
+
+:root[data-theme="neon-chaos"] body {
+  background:
+    radial-gradient(900px 420px at -10% -20%, #2f1d73 0%, transparent 68%),
+    radial-gradient(700px 360px at 110% 0%, #352b72 0%, transparent 65%),
+    var(--bg);
+}
+
+:root[data-theme="clean-brutal"] {
+  --bg: #f0f0f0;
+  --ink: #000000;
+  --muted: #3b3b3b;
+  --card: #ffffff;
+  --line: #000000;
+  --lime: #e8ff52;
+}
+
+:root[data-theme="clean-brutal"] * {
+  border-radius: 0 !important;
+}
+
+:root[data-theme="street-internet"] {
+  --bg: #fff4e9;
+  --ink: #17110e;
+  --muted: #5f4e43;
+  --card: #fffdfb;
+  --line: #2f1c13;
+  --lime: #ffcf4a;
+  --coral: #ff6b3d;
+  --cyan: #8ae8ff;
+}
+
+:root[data-theme="street-internet"] body {
+  background:
+    radial-gradient(700px 300px at 10% 0%, #ffe39d 0%, transparent 65%),
+    radial-gradient(700px 320px at 90% -10%, #ffd2be 0%, transparent 62%),
+    var(--bg);
+}
+
+:root[data-theme="soft-flex"] {
+  --bg: #f7f9ff;
+  --ink: #1a1c2f;
+  --muted: #5e6485;
+  --card: #ffffff;
+  --line: #dbe1ff;
+  --lime: #d6f0ff;
+  --coral: #ff9bd2;
+  --cyan: #8bd5ff;
+}
+
+:root[data-theme="soft-flex"] .featured,
+:root[data-theme="soft-flex"] .post-content,
+:root[data-theme="soft-flex"] .about,
+:root[data-theme="soft-flex"] .micro-card,
+:root[data-theme="soft-flex"] .post-list li {
+  border-color: #cfd7ff;
+  box-shadow: 0 12px 28px rgba(54, 62, 130, 0.12);
+}
+
+@media (max-width: 700px) {
+  .theme-switch {
+    margin-top: 0.45rem;
+  }
+}
