@@ -1,11 +1,5 @@
 window.SITE_CONTENT = {
-  heroBadges: ['AI Student', 'Rap', 'Fashion', 'Late Night Builder', '🫪 😭 🌚'],
-  aboutItems: [
-    { label: 'Signature Phrase', value: '50:50' },
-    { label: 'Energy', value: 'either 0 or 100' },
-    { label: 'Soundtrack', value: 'Rap-first' },
-    { label: 'Operating Hours', value: 'often active until 6 AM' }
-  ],
+  heroBadges: ['AI Student', 'Rap-heavy', 'Fashion Brain', '50:50', '🫪 😭 🌚'],
   posts: [
     { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live', date: '2026-06-01' },
     { href: 'posts/ai-workflow-stack.html', title: 'My AI Workflow Stack for Productive Days', date: '2026-05-31' },
@@ -13,28 +7,28 @@ window.SITE_CONTENT = {
   ],
   moods: {
     chaos: {
-      eyebrow: 'CHAOS MODE',
-      title: 'Domi: late, but always with a story.',
-      lead: 'Rap in my ears, 0-or-100 mindset, and fast iteration in real life.',
-      memeTop: 'me: "be there in 5"',
-      memeMain: '6:00 AM and I walk in with a full story from the night.',
-      memeBottom: 'late, but with context'
+      eyebrow: 'CHAOS ARC',
+      title: 'Domi: late, loud, and somehow still on point.',
+      lead: '50:50 mindset. Either 0 or 100. Rap in the background, ideas in overdrive.',
+      memeTop: 'me: "2 mins"',
+      memeMain: 'next scene: 6:00 AM, full story unlocked, zero regrets.',
+      memeBottom: 'certified crashout energy'
     },
     focus: {
-      eyebrow: 'FOCUS MODE',
-      title: 'When focus hits: fewer excuses, stronger execution.',
-      lead: 'Thesis, tutoring, and side builds with clear structure and momentum.',
-      memeTop: 'me: "just checking one thing"',
-      memeMain: 'three hours later: plan finished, system cleaner, problem solved.',
-      memeBottom: '50:50, but structured'
+      eyebrow: 'LOCK-IN MODE',
+      title: 'No noise. Just output.',
+      lead: 'Thesis, tutoring, side builds. Less talking, more shipping, cleaner systems.',
+      memeTop: 'me: "quick check"',
+      memeMain: 'three hours later: fixed the system, optimized the flow, moved on.',
+      memeBottom: 'still 50:50, but disciplined'
     },
     night: {
-      eyebrow: 'NIGHT MODE',
-      title: 'Rap up, noise down, ideas at full speed.',
-      lead: 'Spontaneous nights, sharp humor, and high energy until sunrise.',
+      eyebrow: 'NIGHT SHIFT',
+      title: 'Rap up. Brain on max. Sleep pending.',
+      lead: 'Spontaneous nights, specific humor, and one more idea before sunrise.',
       memeTop: '2:47 AM',
-      memeMain: 'should be offline, ended up starting a new move instead.',
-      memeBottom: 'night shift domi'
+      memeMain: 'should be offline, but started another move instead.',
+      memeBottom: 'moonlight productivity'
     }
   }
 };
