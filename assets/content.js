@@ -2,38 +2,38 @@ window.SITE_CONTENT = {
   heroBadges: ['AI Student', 'Rap', 'Fashion', '50:50', '🫪 😭 🌚'],
   aboutItems: [
     { label: 'Catchphrase', value: '50:50' },
-    { label: 'Energie', value: 'entweder 0 oder 100' },
+    { label: 'Energy', value: 'either 0 or 100' },
     { label: 'Soundtrack', value: 'Rap' },
-    { label: 'Night Mode', value: 'bis 6 Uhr morgens aktiv' }
+    { label: 'Night Mode', value: 'active until 6 AM' }
   ],
   posts: [
-    { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: Von 0 auf live', date: '01.06.2026' },
-    { href: 'posts/ai-workflow-stack.html', title: 'AI Workflow Stack für produktive Tage', date: '31.05.2026' },
-    { href: 'posts/ship-fast-with-quality.html', title: 'Ship fast ohne Qualitätsverlust', date: '30.05.2026' }
+    { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From 0 to live', date: '2026-06-01' },
+    { href: 'posts/ai-workflow-stack.html', title: 'My AI workflow stack for productive days', date: '2026-05-31' },
+    { href: 'posts/ship-fast-with-quality.html', title: 'Ship fast without losing quality', date: '2026-05-30' }
   ],
   moods: {
     chaos: {
       eyebrow: 'CHAOS CEO MODE',
-      title: 'Domi: zu spät, aber mit Story.',
-      lead: 'Denglisch vibes, Rap im Ohr, 0 oder 100 Mentality. 50:50 ist nicht nur ein Satz, ist ein Zustand.',
-      memeTop: 'me: "bin gleich da"',
-      memeMain: '6:00 Uhr morgens, ich komm rein und hab eine komplette Story vom Abend.',
-      memeBottom: 'zu spät aber mit story'
+      title: 'Domi: late, but with a story.',
+      lead: 'Rap in my ears, 0 or 100 mentality. 50:50 is not a phrase, it is a lifestyle.',
+      memeTop: 'me: "be there in 5"',
+      memeMain: '6:00 AM and I walk in with a full story from the night.',
+      memeBottom: 'late, but with lore'
     },
     focus: {
       eyebrow: 'FOCUS ARC',
-      title: 'Wenn Fokus kickt: keine Ausreden, nur Output.',
-      lead: 'Bachelorarbeit, Tutorium, Side Builds. Weniger reden, mehr liefern.',
-      memeTop: 'me: "ich check nur kurz eine Sache"',
-      memeMain: '3 Stunden später: kompletter Plan steht und alles ist in Ordnung gebracht.',
-      memeBottom: '50:50 aber diesmal mit struktur'
+      title: 'When focus hits: no excuses, just output.',
+      lead: 'Thesis, tutoring, side builds. Less talk, more shipping.',
+      memeTop: 'me: "just checking one thing"',
+      memeMain: '3 hours later: full plan done and clean.',
+      memeBottom: '50:50 but structured'
     },
     night: {
       eyebrow: 'NIGHT RAP MODE',
-      title: 'Rap laut, Kopf frei, Ideen on max.',
-      lead: 'Spontane Nächte, spezieller Humor, 0 oder 100 Energie bis früh um 6.',
-      memeTop: '02:47 AM',
-      memeMain: 'eigentlich Feierabend, stattdessen neue Idee, neuer Move.',
+      title: 'Rap loud, head clear, ideas on max.',
+      lead: 'Spontaneous nights, special humor, 0 or 100 energy until sunrise.',
+      memeTop: '2:47 AM',
+      memeMain: 'should be offline, starting a new move instead.',
       memeBottom: 'night shift domi'
     }
   }
