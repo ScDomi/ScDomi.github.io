@@ -52,3 +52,5 @@ h1,h2,h3{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.03em;line
 .page-note{background:linear-gradient(165deg,#182035 0%,#131a2c 100%);border:1px solid var(--line);border-radius:18px;padding:.9rem 1rem}
 .page-note p{margin:.35rem 0}
 @media(max-width:860px){.info-grid{grid-template-columns:1fr}}
+.back-btn{display:inline-block;text-decoration:none;color:#0e0e0f;background:var(--acid);border:1px solid var(--acid);border-radius:999px;padding:.4rem .8rem;font-weight:700}
+.back-btn:hover{opacity:.9}
