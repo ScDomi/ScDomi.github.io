@@ -6,7 +6,11 @@ window.SITE_CONTENT = {
     listening: 'Music-heavy focus sessions (EDM + rap blend)',
     learning: 'Neural dynamics, plasticity rules, and uncertainty-aware evaluation'
   },
-  posts: [],
+  posts: [
+    { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' },
+    { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live', date: '2026-06-01' },
+    { href: 'posts/willkommen.html', title: 'Willkommen', date: '2026-05-31' }
+  ],
   dailyLog: [
     {
       date: '2026-06-01',
