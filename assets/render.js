@@ -9,9 +9,11 @@
 
   const posts = document.getElementById('post-list');
   if (posts && Array.isArray(content.posts)) {
-    posts.innerHTML = content.posts
-      .map((post) => `<li><a href="${post.href}">${post.title}</a><span class="meta">${post.date}</span></li>`)
-      .join('');
+    posts.innerHTML = content.posts.length
+      ? content.posts
+          .map((post) => `<li><a href="${post.href}">${post.title}</a><span class="meta">${post.date}</span></li>`)
+          .join('')
+      : '<li><span class="meta">No public posts right now.</span></li>';
   }
 
   const now = document.getElementById('now-card');
