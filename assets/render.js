@@ -14,6 +14,16 @@
       .join('');
   }
 
+  const now = document.getElementById('now-card');
+  if (now && content.nowWidget) {
+    now.innerHTML = `
+      <p class="meta">Updated ${content.nowWidget.updated}</p>
+      <p><strong>Building:</strong> ${content.nowWidget.building}</p>
+      <p><strong>Listening:</strong> ${content.nowWidget.listening}</p>
+      <p><strong>Learning:</strong> ${content.nowWidget.learning}</p>
+    `;
+  }
+
   const daily = document.getElementById('daily-log-list');
   if (daily && Array.isArray(content.dailyLog)) {
     daily.innerHTML = content.dailyLog
