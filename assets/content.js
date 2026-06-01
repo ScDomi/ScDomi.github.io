@@ -29,6 +29,14 @@ window.SITE_CONTENT = {
       memeTop: '2:47 AM',
       memeMain: 'should be offline, but started another move instead.',
       memeBottom: 'moonlight productivity 🌚'
+    },
+    research: {
+      eyebrow: 'RESEARCH MODE',
+      title: 'Hypothesis first. Evidence next. Conclusions last.',
+      lead: 'Methodical workflow with explicit assumptions, reproducible steps, and measurable outcomes.',
+      memeTop: 'research log: v1',
+      memeMain: 'define scope, run experiment, analyze results, document decisions.',
+      memeBottom: 'rigor over noise 📊'
     }
   }
 };
