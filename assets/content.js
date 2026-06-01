@@ -31,12 +31,12 @@ window.SITE_CONTENT = {
   ],
   moods: {
     research: {
-      eyebrow: 'RESEARCH MODE',
-      title: 'Hypothesis locked. Model cooking. Evidence loading.',
-      lead: 'Theory-first AI: formal assumptions, reproducibility constraints, uncertainty-aware evaluation, and no fake certainty.',
-      memeTop: 'research mood:',
-      memeMain: '"just one quick experiment" -> 4 ablations, 2 baselines, and a full methods rewrite 💀',
-      memeBottom: 'peer-review me, not my vibe 📊'
+      eyebrow: 'LAB MODE',
+      title: 'Theorem-core brain, meme-core morale.',
+      lead: 'Hypothesis in, gradients out. We test assumptions, run ablations, and only trust results that survive replication.',
+      memeTop: 'research status:',
+      memeMain: '"quick sanity check" -> 17 tabs, 3 plots, 1 existential crisis, 0 regrets.',
+      memeBottom: 'publishable chaos, statistically significant vibes 📈'
     }
   }
 };
