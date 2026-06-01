@@ -1,6 +1,7 @@
 window.SITE_CONTENT = {
   heroBadges: ['AI Research', 'Math-first', 'Theory + Systems', 'Music-heavy', '🫪 😭 🌚'],
   posts: [
+    { href: 'posts/ai-across-frameworks.html', title: 'AI Across Frameworks: Math, Mind, Body, and Future 🧠', date: '2026-06-01' },
     { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live 🚀', date: '2026-06-01' },
     { href: 'posts/ai-workflow-stack.html', title: 'My AI Workflow Stack for Productive Days ⚙️', date: '2026-05-31' },
     { href: 'posts/ship-fast-with-quality.html', title: 'How I Ship Fast Without Losing Quality 🎯', date: '2026-05-30' }
