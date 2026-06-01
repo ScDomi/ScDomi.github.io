@@ -6,6 +6,23 @@ window.SITE_CONTENT = {
     { href: 'posts/ai-workflow-stack.html', title: 'My AI Workflow Stack for Productive Days', date: '2026-05-31' },
     { href: 'posts/ship-fast-with-quality.html', title: 'How I Ship Fast Without Losing Quality', date: '2026-05-30' }
   ],
+  dailyLog: [
+    {
+      date: '2026-06-01',
+      items: [
+        'Reworked the site voice to English and aligned it to a research-first tone.',
+        'Refactored content into centralized data files for fast iteration.',
+        'Added a longform AI article with neuron-level framing across multiple disciplines.'
+      ]
+    },
+    {
+      date: '2026-05-31',
+      items: [
+        'Shipped first live version of the blog via GitHub Pages.',
+        'Defined initial visual direction and base post structure.'
+      ]
+    }
+  ],
   moods: {
     research: {
       eyebrow: 'RESEARCH MODE',
