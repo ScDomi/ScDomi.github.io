@@ -36,7 +36,7 @@ window.SITE_CONTENT = {
       lead: 'Hypothesis in, gradients out. We test assumptions, run ablations, and only trust results that survive replication.',
       memeTop: 'research status:',
       memeMain: '"quick sanity check" -> 17 tabs, 3 plots, 1 existential crisis, 0 regrets.',
-      memeBottom: 'publishable chaos, statistically significant vibes 📈'
+      memeBottom: 'publishable chaos, statistically significant vibes 🧪'
     }
   }
 };
