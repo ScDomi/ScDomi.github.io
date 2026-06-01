@@ -18,3 +18,17 @@ h1,h2,h3{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.03em;line
 .section{margin:1rem 0}.post-list{list-style:none;margin:0;padding:0;display:grid;gap:.65rem}.post-list li{padding:.85rem .95rem;display:flex;justify-content:space-between;gap:.8rem}.post-list a{color:var(--ink);text-decoration:none;font-weight:700}.meta{color:var(--muted);font-size:.86rem}
 .site-footer{border-top:1px solid var(--line);margin-top:1.8rem}.footer-row{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem;padding:.95rem 0 1.2rem}
 @media(max-width:940px){.spotlight-row{grid-template-columns:1fr}}@media(max-width:760px){.nav-row{grid-template-columns:1fr}.switchers{width:100%}.mood-switch{justify-content:flex-start}.post-list li{flex-direction:column;align-items:flex-start}.footer-row{flex-direction:column;gap:.4rem}}
+
+.post-shell{padding:1.4rem 0 0.8rem}
+.post-hero{margin-bottom:1rem}
+.post-kicker{display:inline-block;padding:.24rem .62rem;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.post-title{max-width:16ch;font-size:clamp(1.9rem,5.5vw,3.6rem);margin:.75rem 0 .65rem}
+.post-subtitle{max-width:68ch;color:var(--muted);margin:0}
+.post-meta-bar{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.9rem}
+.post-meta-pill{border:1px solid var(--line);border-radius:999px;padding:.25rem .58rem;font-size:.74rem;color:var(--muted);background:#101218}
+.post-content{background:linear-gradient(165deg,#182035 0%,#131a2c 100%);border:1px solid var(--line);border-radius:18px;padding:1.2rem}
+.post-content h2{font-size:clamp(1.05rem,2.7vw,1.45rem);margin:1rem 0 .45rem}
+.post-content p{margin:.45rem 0}
+.post-cta{margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:.8rem;align-items:center;flex-wrap:wrap}
+.post-cta-note{color:var(--muted);font-size:.86rem}
+@media(max-width:760px){.post-shell{padding-top:1rem}.post-cta{flex-direction:column;align-items:flex-start}}
