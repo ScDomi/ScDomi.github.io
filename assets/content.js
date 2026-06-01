@@ -8,9 +8,7 @@ window.SITE_CONTENT = {
   },
   posts: [
     { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' },
-    { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live', date: '2026-06-01' },
-    { href: 'posts/ai-workflow-stack.html', title: 'My AI Workflow Stack for Productive Days', date: '2026-05-31' },
-    { href: 'posts/ship-fast-with-quality.html', title: 'How I Ship Fast Without Losing Quality', date: '2026-05-30' }
+    { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live', date: '2026-06-01' }
   ],
   dailyLog: [
     {
@@ -31,11 +29,11 @@ window.SITE_CONTENT = {
   ],
   moods: {
     research: {
-      eyebrow: 'LAB MODE',
-      title: 'Theorem-core brain, meme-core morale.',
-      lead: 'Hypothesis in, gradients out. We test assumptions, run ablations, and only trust results that survive replication.',
-      memeTop: 'research status:',
-      memeMain: '"quick sanity check" -> 17 tabs, 3 plots, 1 existential crisis, 0 regrets.',
+      eyebrow: 'RESEARCH MODE',
+      title: 'Hypothesis locked. Model cooking. Evidence loading.',
+      lead: 'Theory-first AI: formal assumptions, reproducibility constraints, uncertainty-aware evaluation, and no fake certainty.',
+      memeTop: 'research mood:',
+      memeMain: '"just one quick experiment" -> 4 ablations, 2 baselines, and a full methods rewrite 💀',
       memeBottom: 'publishable chaos, statistically significant vibes 🧪'
     }
   }
