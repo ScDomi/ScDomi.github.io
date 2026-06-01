@@ -3,27 +3,27 @@
   const data = {
     chaos: {
       eyebrow: 'CHAOS CEO MODE',
-      title: 'Domi: 50% Fokus, 50% Crashout, 100% Output.',
-      lead: 'Denglisch vibes only. AI Student, Fashion brain, Meme timing und Rap/EDM im Hintergrund.',
-      memeTop: 'me: "ich mach kurz pause"',
-      memeMain: '10 Tabs später: ich baue ein neues System statt Pause zu machen.',
-      memeBottom: 'classic domi crashout moment'
+      title: 'Domi: zu spät, aber mit Story.',
+      lead: 'Denglisch vibes, Rap im Ohr, 0 oder 100 Mentality. 50:50 ist nicht nur ein Satz, ist ein Zustand.',
+      memeTop: 'me: "bin gleich da"',
+      memeMain: '6:00 Uhr morgens, ich komm rein und hab eine komplette Story vom Abend.',
+      memeBottom: 'zu spät aber mit story'
     },
     focus: {
       eyebrow: 'FOCUS ARC',
-      title: 'Deep Work, klare Systeme, zero fake productivity.',
-      lead: 'Bachelorarbeit, Tutorium und side builds mit Struktur statt Chaos-Overload.',
-      memeTop: 'me: "nur ein quick fix"',
-      memeMain: 'wird zu 2h Refactor, aber wenigstens clean.',
-      memeBottom: 'painful but worth it'
+      title: 'Wenn Fokus kickt: keine Ausreden, nur Output.',
+      lead: 'Bachelorarbeit, Tutorium, Side Builds. Weniger reden, mehr liefern.',
+      memeTop: 'me: "ich check nur kurz eine Sache"',
+      memeMain: '3 Stunden später: kompletter Plan steht und alles ist in Ordnung gebracht.',
+      memeBottom: '50:50 aber diesmal mit struktur'
     },
     night: {
-      eyebrow: 'NIGHT VIBES',
-      title: 'EDM x Rap x Ideen, die nachts plötzlich Sinn machen.',
-      lead: 'Wenn alle pennen, starten die besten Builds. Loud taste, specific humor, full send.',
-      memeTop: '2:03 AM',
-      memeMain: 'eigentlich schlafen, stattdessen neues Projekt anfangen.',
-      memeBottom: 'night shift energy'
+      eyebrow: 'NIGHT RAP MODE',
+      title: 'Rap laut, Kopf frei, Ideen on max.',
+      lead: 'Spontane Nächte, spezieller Humor, 0 oder 100 Energie bis früh um 6.',
+      memeTop: '02:47 AM',
+      memeMain: 'eigentlich Feierabend, stattdessen neue Idee, neuer Move.',
+      memeBottom: 'night shift domi'
     }
   };
 
