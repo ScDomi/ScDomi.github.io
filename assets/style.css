@@ -250,3 +250,15 @@ h3 {
 
   .hero { padding-top: 3.2rem; }
 }
+
+.newsletter {
+  border: 2px dashed var(--ink);
+  border-radius: 22px;
+  background: linear-gradient(90deg, color-mix(in oklab, var(--lime) 25%, #fff 75%), #fff);
+  padding: 1.1rem 1.2rem;
+}
+
+.newsletter p {
+  margin: 0.35rem 0 0.55rem;
+  color: var(--muted);
+}
