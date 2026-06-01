@@ -38,3 +38,17 @@ h1,h2,h3{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.03em;line
 @media(max-width:760px){.post-shell{padding-top:1rem}.post-cta{flex-direction:column;align-items:flex-start}}
 .now-card{background:linear-gradient(165deg,#182035 0%,#131a2c 100%);border:1px solid var(--line);border-radius:18px;padding:.9rem 1rem;margin-bottom:1rem}
 .now-card p{margin:.28rem 0}
+
+.page-shell{padding:1.4rem 0 1rem}
+.page-hero{margin-bottom:1rem}
+.page-title{font-size:clamp(2rem,6vw,4rem);margin:.7rem 0 .55rem;max-width:14ch}
+.page-lead{max-width:68ch;color:var(--muted);margin:0}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.9rem}
+.info-grid.single-col{grid-template-columns:1fr}
+.info-card{background:linear-gradient(165deg,#182035 0%,#131a2c 100%);border:1px solid var(--line);border-radius:18px;padding:1rem}
+.info-card h2{font-size:clamp(1.05rem,2.7vw,1.4rem);margin:0 0 .45rem}
+.info-card ul{margin:.25rem 0 0;padding-left:1.1rem}
+.info-card li{margin:.3rem 0}
+.page-note{background:linear-gradient(165deg,#182035 0%,#131a2c 100%);border:1px solid var(--line);border-radius:18px;padding:.9rem 1rem}
+.page-note p{margin:.35rem 0}
+@media(max-width:860px){.info-grid{grid-template-columns:1fr}}
