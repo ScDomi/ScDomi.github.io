@@ -1,5 +1,5 @@
 window.SITE_CONTENT = {
-  heroBadges: ['AI Student', 'Music-heavy', 'Fashion Brain', '50:50', '🫪 😭 🌚'],
+  heroBadges: ['AI Research', 'Math-first', 'Theory + Systems', 'Music-heavy', '🫪 😭 🌚'],
   posts: [
     { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live 🚀', date: '2026-06-01' },
     { href: 'posts/ai-workflow-stack.html', title: 'My AI Workflow Stack for Productive Days ⚙️', date: '2026-05-31' },
@@ -32,11 +32,11 @@ window.SITE_CONTENT = {
     },
     research: {
       eyebrow: 'RESEARCH MODE',
-      title: 'Hypothesis first. Evidence next. Conclusions last.',
-      lead: 'Methodical workflow with explicit assumptions, reproducible steps, and measurable outcomes.',
-      memeTop: 'research log: v1',
-      memeMain: 'define scope, run experiment, analyze results, document decisions.',
-      memeBottom: 'rigor over noise 📊'
+      title: 'Theory-driven AI with measurable rigor.',
+      lead: 'I work with hypotheses, formal assumptions, reproducibility constraints, and statistically grounded evaluation.',
+      memeTop: 'research log: v2',
+      memeMain: 'frame the objective, formalize the setup, run controlled experiments, report confidence-aware conclusions.',
+      memeBottom: 'proof > hype · rigor over noise 📊'
     }
   }
 };
