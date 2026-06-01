@@ -7,13 +7,13 @@ window.SITE_CONTENT = {
     { href: 'posts/ship-fast-with-quality.html', title: 'How I Ship Fast Without Losing Quality 🎯', date: '2026-05-30' }
   ],
   moods: {
-    chaos: {
-      eyebrow: 'CHAOS ARC',
-      title: 'Domi: late, loud, and somehow still on point.',
-      lead: '50:50 mindset. Either 0 or 100. Music in the background, ideas in overdrive.',
-      memeTop: 'me: "2 mins"',
-      memeMain: 'next scene: 6:00 AM, full story unlocked, zero regrets.',
-      memeBottom: 'certified crashout energy 😭'
+    research: {
+      eyebrow: 'RESEARCH MODE',
+      title: 'Hypothesis locked. Model cooking. Evidence loading.',
+      lead: 'Theory-first AI: formal assumptions, reproducibility constraints, uncertainty-aware evaluation, and no fake certainty.',
+      memeTop: 'research mood:',
+      memeMain: '"just one quick experiment" -> 4 ablations, 2 baselines, and a full methods rewrite 💀',
+      memeBottom: 'peer-review me, not my vibe 📊'
     },
     focus: {
       eyebrow: 'LOCK-IN MODE',
@@ -23,6 +23,14 @@ window.SITE_CONTENT = {
       memeMain: 'three hours later: fixed the system, optimized the flow, moved on.',
       memeBottom: 'still 50:50, but disciplined ✅'
     },
+    chaos: {
+      eyebrow: 'CHAOS ARC',
+      title: 'Domi: late, loud, and somehow still on point.',
+      lead: '50:50 mindset. Either 0 or 100. Music in the background, ideas in overdrive.',
+      memeTop: 'me: "2 mins"',
+      memeMain: 'next scene: 6:00 AM, full story unlocked, zero regrets.',
+      memeBottom: 'certified crashout energy 😭'
+    },
     night: {
       eyebrow: 'NIGHT SHIFT',
       title: 'Music up. Brain on max. Sleep pending.',
@@ -30,14 +38,6 @@ window.SITE_CONTENT = {
       memeTop: '2:47 AM',
       memeMain: 'should be offline, but started another move instead.',
       memeBottom: 'moonlight productivity 🌚'
-    },
-    research: {
-      eyebrow: 'RESEARCH MODE',
-      title: 'Theory-driven AI with measurable rigor.',
-      lead: 'I work with hypotheses, formal assumptions, reproducibility constraints, and statistically grounded evaluation.',
-      memeTop: 'research log: v2',
-      memeMain: 'frame the objective, formalize the setup, run controlled experiments, report confidence-aware conclusions.',
-      memeBottom: 'proof > hype · rigor over noise 📊'
     }
   }
 };

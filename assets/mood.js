@@ -3,7 +3,7 @@
   const moods = window.SITE_CONTENT?.moods || {};
 
   function applyMood(mood) {
-    const safe = moods[mood] ? mood : 'chaos';
+    const safe = moods[mood] ? mood : 'research';
     const d = moods[safe];
     if (!d) return;
 
@@ -20,7 +20,7 @@
     document.getElementById('meme-bottom').textContent = d.memeBottom;
   }
 
-  applyMood(localStorage.getItem(KEY) || 'chaos');
+  applyMood(localStorage.getItem(KEY) || 'research');
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.mood-option');
     if (!btn) return;
