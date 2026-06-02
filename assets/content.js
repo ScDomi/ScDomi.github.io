@@ -1,17 +1,25 @@
 window.SITE_CONTENT = {
   heroBadges: ['AI Research', 'Math-first', 'Theory + Systems', 'Music-heavy', '🫪 😭 🌚'],
   nowWidget: {
-    updated: '2026-06-01',
-    building: 'Neuron-level AI theory post + research-first blog architecture',
+    updated: '2026-06-02',
+    building: 'Agent harness research: OpenClaw vs Hermes and the architecture behind useful personal AI',
     listening: 'Music-heavy focus sessions (EDM + rap blend)',
-    learning: 'Neural dynamics, plasticity rules, and uncertainty-aware evaluation'
+    learning: 'Gateway design, agent harnesses, persistent memory, and multi-agent coordination'
   },
   posts: [
+    { href: 'posts/openclaw-vs-hermes-harness.html', title: 'OpenClaw vs. Hermes Harness: Gateway oder lernendes Agenten-Betriebssystem?', date: '2026-06-02' },
     { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' },
     { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live', date: '2026-06-01' },
     { href: 'posts/willkommen.html', title: 'Willkommen', date: '2026-05-31' }
   ],
   dailyLog: [
+    {
+      date: '2026-06-02',
+      items: [
+        'Published a compact comparison of OpenClaw and Hermes Agent through the lens of agent harness architecture.',
+        'Captured the core idea: the model is not the whole agent; the runtime, memory, tools, logs, and permissions matter.'
+      ]
+    },
     {
       date: '2026-06-01',
       items: [
