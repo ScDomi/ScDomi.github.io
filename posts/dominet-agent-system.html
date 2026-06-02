@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heute habe ich mein eigenes kleines Agenten-OS gebaut | DOMI.LOG</title>
+  <meta name="description" content="Ein Build-Log über DomiNet: Tasks, Agentenrollen, Message-Bus, Review-Modus, Dashboard und den ersten Schritt Richtung persönliches Agentensystem." />
+  <link rel="stylesheet" href="../assets/style.css?v=20260602-2152" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav-row">
+      <a class="brand" href="../index.html">DOMI.LOG</a>
+      <nav class="nav">
+        <a href="../index.html">Home</a>
+        <a href="../index.html#posts">Posts</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap post-shell">
+    <section class="post-hero">
+      <p class="post-kicker">Build Log</p>
+      <h1 class="post-title">Heute habe ich mein eigenes kleines Agenten-OS gebaut</h1>
+      <p class="post-subtitle">Aus einer losen Idee wurde DomiNet: ein lokales Agentensystem mit Central Brain, spezialisierten Rollen, Task-Lifecycle, Message-Bus, Review-Modus und erstem Dashboard.</p>
+      <div class="post-meta-bar">
+        <span class="post-meta-pill">2026-06-02</span>
+        <span class="post-meta-pill">5 min read</span>
+        <span class="post-meta-pill">Agent Systems</span>
+      </div>
+    </section>
+
+    <article class="post-content">
+      <h2>Aus einer Idee wurde ein System</h2>
+      <p>Heute war einer dieser Tage, an denen aus einer groben Idee plötzlich etwas Greifbares geworden ist. Kein "wir planen mal irgendwann ein System", sondern wirklich: Dateien, Tasks, Agenten, Message-Bus, Dashboard. DomiNet ist entstanden.</p>
+      <p>Gestartet ist das Ganze mit der Idee, KI-Agenten nicht nur als lose Chat-Prompts zu behandeln, sondern als kleines lokales Betriebssystem. Ein zentrales Gehirn, mehrere spezialisierte Agenten und ein sauberer Ablauf: Aufgabe rein, Agenten arbeiten, Antworten landen in einer Inbox, das Central Brain reviewed und entscheidet weiter.</p>
+
+      <h2>Der Task-Lifecycle</h2>
+      <p>Der erste große Meilenstein war der Task-Lifecycle. DomiNet kann Aufgaben erstellen, Agenten der Reihe nach sprechen lassen, Ergebnisse speichern, Reviews durchführen und Tasks sauber auf <code>done</code> oder <code>blocked</code> setzen.</p>
+      <p>Das klingt trocken, ist aber eigentlich der Kern. Ohne Lifecycle gibt es kein echtes Agentensystem, nur Chat-Chaos mit hübschem Namen. Jetzt gibt es Status, Prioritäten, Historie und nachvollziehbare Übergänge.</p>
+
+      <h2>Die Kommandozentrale</h2>
+      <p>Danach kam die CLI als Kommandozentrale. Statt einzelne Scripts merken zu müssen, läuft alles über ein zentrales Werkzeug:</p>
+      <pre><code>python3 agent-system/scripts/dominet.py status
+python3 agent-system/scripts/dominet.py create
+python3 agent-system/scripts/dominet.py run
+python3 agent-system/scripts/dominet.py review
+python3 agent-system/scripts/dominet.py close</code></pre>
+      <p>Damit fühlt sich DomiNet nicht mehr wie ein Ordner voller Experimente an, sondern wie ein kleines Agenten-OS, das man bedienen kann.</p>
+
+      <h2>Agenten mit Rollen und Kontext</h2>
+      <p>Dann wurden die Agenten schlauer. Sie heißen nicht nur Planner, Writer oder Messenger, sondern laden ihre Rollenprofile aus <code>agents/*.md</code>. Der Planner arbeitet nach Planner-Profil, der Writer nach Writer-Profil, der Messenger nach Messenger-Profil.</p>
+      <p>Dazu können Tasks Kontextdateien bekommen. Das heißt: Agenten antworten nicht komplett im luftleeren Raum, sondern bekommen Material, Auszüge und Hinweise mit in ihren Cycle.</p>
+
+      <h2>Review statt Blackbox</h2>
+      <p>Ein besonders wichtiger Schritt war <code>review --verbose</code>. Das Central Brain sieht jetzt nicht nur, was ein Agent gesagt hat, sondern auch, auf welcher Rollenbasis und mit welchem Kontext die Antwort entstanden ist.</p>
+      <p>Das macht das System debugbar. Keine reine Blackbox, sondern ein Agenten-Protokoll, das man inspizieren, verbessern und später automatisieren kann.</p>
+
+      <h2>Das erste Dashboard</h2>
+      <p>Dann ging es Richtung Dashboard. Erst kamen strukturierte Task-Listen, dann eine Dashboard-Datenquelle als JSON, danach ein erstes statisches HTML-Dashboard.</p>
+      <p>Es zeigt inzwischen Metriken, Status-Verteilung, Tasks, Inbox, Outbox und aufklappbare Task-Details. Und weil ich remote im Uni-Netz war, wurde das Ganze über Tailscale erreichbar gemacht.</p>
+      <p>Damit ist DomiNet nicht nur im Terminal sichtbar, sondern als kleiner Kontrollraum im Browser.</p>
+
+      <h2>Was jetzt steht</h2>
+      <p>Aktueller Stand: DomiNet läuft als lokales Agenten-OS mit Central Brain, sieben Agentenrollen, Task-System, Message-Bus, CLI, Kontextsupport, Review-Modus und erstem Dashboard.</p>
+      <p>Was heute entstanden ist, ist noch nicht das finale Jarvis-Gehirn. Aber es ist eine echte Basis: erweiterbar, nachvollziehbar, lokal und modular. Kein Spielzeug mehr, sondern der Anfang von einem persönlichen Agentensystem.</p>
+
+      <h2>Der nächste visuelle Schritt</h2>
+      <p>Als nächstes soll das Dashboard optisch wilder werden: ein futuristisches Brain-Dashboard mit Central Brain in der Mitte, Agenten als Nodes, leuchtenden Verbindungen, Datenpulsen zwischen Inbox und Outbox und Tasks als kleine Orbit-Cluster.</p>
+      <p>Kurz gesagt: Heute wurde aus "ich will ein Agentensystem" ein funktionierendes DomiNet v0.2.x. Und das ist schon ziemlich krank.</p>
+
+      <div class="post-cta">
+        <a class="back-btn" href="../index.html">Back to home</a>
+        <span class="post-cta-note">Central Brain online. Chaos kanalisiert.</span>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <small>© 2026 Domi</small>
+      <small>Built local. Reviewed clean. Dashboard next.</small>
+    </div>
+  </footer>
+</body>
+</html>

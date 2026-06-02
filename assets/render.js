@@ -26,6 +26,22 @@
     `;
   }
 
+  const featured = document.getElementById('featured-post');
+  if (featured && content.featuredPost) {
+    const stats = Array.isArray(content.featuredPost.stats)
+      ? content.featuredPost.stats.map((stat) => `<span>${stat}</span>`).join('')
+      : '';
+    featured.innerHTML = `
+      <div class="feature-copy">
+        <p class="feature-kicker">${content.featuredPost.kicker}</p>
+        <h2>${content.featuredPost.title}</h2>
+        <p>${content.featuredPost.summary}</p>
+        <div class="feature-stats">${stats}</div>
+      </div>
+      <a class="feature-link" href="${content.featuredPost.href}">${content.featuredPost.cta}</a>
+    `;
+  }
+
   const daily = document.getElementById('daily-log-list');
   if (daily && Array.isArray(content.dailyLog)) {
     daily.innerHTML = content.dailyLog

@@ -2,11 +2,21 @@ window.SITE_CONTENT = {
   heroBadges: ['AI Research', 'Math-first', 'Theory + Systems', 'Music-heavy', '🫪 😭 🌚'],
   nowWidget: {
     updated: '2026-06-02',
-    building: 'Agent harness research: OpenClaw vs Hermes and the architecture behind useful personal AI',
+    building: 'DomiNet: a local agent OS with tasks, roles, message bus, reviews, and a browser dashboard',
     listening: 'Music-heavy focus sessions (EDM + rap blend)',
-    learning: 'Gateway design, agent harnesses, persistent memory, and multi-agent coordination'
+    learning: 'Multi-agent coordination, inspectable agent workflows, and futuristic dashboard design'
+  },
+  featuredPost: {
+    kicker: 'Today shipped',
+    title: 'DomiNet: mein eigenes kleines Agenten-OS',
+    href: 'posts/dominet-agent-system.html',
+    date: '2026-06-02',
+    summary: 'Central Brain, sieben Agentenrollen, Task-Lifecycle, Message-Bus, Kontextsupport, Review-Modus und ein erstes Dashboard: aus einer Idee wurde ein lokales Agentensystem.',
+    stats: ['7 Agentenrollen', '4 Tasks', '11 Inbox Items', 'Dashboard live'],
+    cta: 'Read the build log'
   },
   posts: [
+    { href: 'posts/dominet-agent-system.html', title: 'Heute habe ich mein eigenes kleines Agenten-OS gebaut', date: '2026-06-02' },
     { href: 'posts/openclaw-vs-hermes-harness.html', title: 'OpenClaw vs. Hermes Harness: Gateway or Learning Agent Runtime?', date: '2026-06-02' },
     { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' },
     { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live', date: '2026-06-01' },
@@ -16,6 +26,8 @@ window.SITE_CONTENT = {
     {
       date: '2026-06-02',
       items: [
+        'Built DomiNet into a local agent OS with Central Brain, roles, tasks, message bus, review flow, and dashboard.',
+        'Published the DomiNet build log and featured it on the homepage.',
         'Published a compact comparison of OpenClaw and Hermes Agent through the lens of agent harness architecture.',
         'Captured the core idea: the model is not the whole agent; the runtime, memory, tools, logs, and permissions matter.'
       ]
