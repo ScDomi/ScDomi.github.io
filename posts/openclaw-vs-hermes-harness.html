@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OpenClaw vs. Hermes Harness | DOMI.LOG</title>
-  <meta name="description" content="Ein kompakter Vergleich von OpenClaw und Hermes Agent: Gateway, Harness, Memory, Skills, Sicherheit und die Frage, welches System besser zum eigenen Agenten-Setup passt." />
+  <meta name="description" content="A compact comparison of OpenClaw and Hermes Agent through gateway design, agent harnesses, memory, skills, safety, and multi-agent workflows." />
   <link rel="stylesheet" href="../assets/style.css?v=20260601-2306" />
 </head>
 <body>
@@ -23,8 +23,8 @@
   <main class="wrap post-shell">
     <section class="post-hero">
       <p class="post-kicker">Agent Systems</p>
-      <h1 class="post-title">OpenClaw vs. Hermes Harness: Gateway oder lernendes Agenten-Betriebssystem?</h1>
-      <p class="post-subtitle">OpenClaw und Hermes wirken auf den ersten Blick ähnlich. Beide verbinden LLMs mit Tools, Memory und Chat-Kanälen. Der eigentliche Unterschied liegt aber in der Architekturfrage: Will ich ein starkes persönliches Gateway oder ein selbstverbesserndes Agenten-Harness?</p>
+      <h1 class="post-title">OpenClaw vs. Hermes Harness: Gateway or Learning Agent Runtime?</h1>
+      <p class="post-subtitle">OpenClaw and Hermes Agent look similar at first: both connect LLMs with tools, memory, automations, and real work. The deeper question is architectural: do I want a personal AI gateway, or a harness that keeps improving how agents operate?</p>
       <div class="post-meta-bar">
         <span class="post-meta-pill">2026-06-02</span>
         <span class="post-meta-pill">7 min read</span>
@@ -33,55 +33,55 @@
     </section>
 
     <article class="post-content">
-      <h2>1. Die Kurzfassung</h2>
-      <p>OpenClaw ist vor allem spannend als selbstgehostetes Gateway: Es verbindet Chat-Oberflächen wie Telegram, Discord, Slack, WhatsApp oder Signal mit Coding-Agents und lokalen Tools. Die offizielle Dokumentation beschreibt OpenClaw genau als diese Schicht zwischen Kommunikationskanal und Agentenlaufzeit.</p>
-      <p>Hermes Agent von Nous Research positioniert sich stärker als Agenten-Harness, das mit dir mitwächst: persistent memory, Skills, Scheduler, Subagents, mehrere Backends und eine eingebaute Lernschleife. Der Claim ist nicht nur: "Ich leite Nachrichten weiter", sondern: "Ich verbessere meine Arbeitsweise über Zeit."</p>
-      <p>Meine Einordnung: OpenClaw ist der bessere Startpunkt, wenn ich meine eigene Chat-zentrierte KI-Infrastruktur kontrollieren will. Hermes ist interessanter, wenn das System selbst zur produktiven Agentenplattform werden soll.</p>
+      <h2>1. The Short Version</h2>
+      <p>OpenClaw is most interesting as a self-hosted gateway. It connects chat surfaces like Telegram, Discord, Slack, WhatsApp, or Signal to coding agents, local tools, workspace files, and automations. Its core strength is that it gives a personal AI a place to live: in the channels I already use.</p>
+      <p>Hermes Agent, from Nous Research, feels closer to a full agent harness. Its documentation emphasizes persistent memory, skills that can be created and improved over time, schedulers, subagents, multiple terminal backends, and search over past sessions. The message is not only "route this request"; it is "learn how to work better over time."</p>
+      <p>My current take: OpenClaw is the better starting point for controlling my own chat-centered AI infrastructure. Hermes is the more interesting reference if the long-term goal is a structured, self-improving agent workbench.</p>
 
-      <h2>2. Was heißt eigentlich Harness?</h2>
-      <p>Ein LLM allein ist nur das Modell. Ein Harness ist die Laufzeit drumherum: Kontextaufbau, Tool-Aufrufe, Dateizugriff, Memory, Rechte, Wiederholungen, Tests, Logs und Abbruchbedingungen. Ein aktuelles arXiv-Paper zu "AI Harness Engineering" formuliert das sehr treffend: Software-Agenten entstehen nicht nur aus dem Modell, sondern aus dem Zusammenspiel von Modell, Harness und Umgebung.</p>
-      <p>Das ist der wichtigste Perspektivwechsel. Die Frage ist nicht: "Welches Modell ist schlauer?" Die Frage ist: "Welche Umgebung zwingt das Modell zu nachvollziehbarer, überprüfbarer Arbeit?"</p>
+      <h2>2. What Is a Harness?</h2>
+      <p>An LLM alone is just the model. A harness is the runtime around it: context assembly, tool calls, file access, memory, permissions, retries, tests, logs, scheduling, and stop conditions. Recent research on AI harness engineering frames software agents as the combination of model, harness, and environment, not as model output alone.</p>
+      <p>That is the key shift. The question is not only "which model is smarter?" The better question is: "which runtime makes the model work in a traceable, controllable, and reviewable way?"</p>
 
-      <h2>3. OpenClaw: Das Gateway als persönlicher Kontrollraum</h2>
-      <p>OpenClaw fühlt sich wie ein Kontrollraum an. Ein Gateway läuft auf eigener Infrastruktur, nimmt Nachrichten aus Kanälen entgegen, routet sie an Agenten und kann über Skills, Shell, Dateien, Browser, Kalender oder andere Integrationen echte Aktionen ausführen.</p>
-      <p>Der größte Vorteil ist Besitz. Chat-Verlauf, Workspace-Dateien, Agenten-Persönlichkeit, Tools und Memory liegen nicht einfach in einer fremden App-Blackbox. Man kann sehen, wo Konfiguration, Skills, Logs und Arbeitsordner leben. Für einen persönlichen KI-Klon ist das stark, weil Identität, Langzeitgedächtnis und tägliche Automatisierung an einem Ort zusammenlaufen.</p>
-      <p>Der Nachteil ist genau derselbe Punkt: Wer so viel Kontrolle bekommt, bekommt auch Verantwortung. Gateway-Token, offene Ports, Skill-Berechtigungen, Shell-Zugriff und Chat-Integrationen müssen ernst genommen werden. Ein persönlicher Agent mit Dateizugriff ist kein Spielzeug-Chatbot mehr.</p>
+      <h2>3. OpenClaw: The Gateway as Personal Control Room</h2>
+      <p>OpenClaw feels like a control room for a personal AI. A gateway receives messages from external channels, routes them to agents, and lets those agents use local skills, files, shell commands, browsers, calendars, or other integrations.</p>
+      <p>The main advantage is ownership. The workspace, identity, long-term memory, tools, and logs do not disappear into a closed app. They live in places I can inspect and edit. For a personal AI clone, that matters because personality, daily automation, and durable context need a stable home.</p>
+      <p>The risk is the same thing in reverse: control creates responsibility. Gateway tokens, exposed ports, shell access, channel integrations, and skill permissions need serious boundaries. A personal agent with file and tool access is no longer a toy chatbot.</p>
 
-      <h2>4. Hermes: Der Harness als lernender Arbeitsapparat</h2>
-      <p>Hermes Agent beschreibt sich als "the agent that grows with you". In der GitHub-Dokumentation stehen Features wie persistent memory, Skill-Erstellung aus Erfahrung, Skill-Verbesserung während der Nutzung, Volltextsuche über Sessions, Cron-Automationen, Subagents und mehrere Terminal-Backends.</p>
-      <p>Das klingt mehr nach Agenten-Betriebssystem als nach bloßem Gateway. Besonders interessant ist der Lernloop: Ein Agent soll nicht nur eine Aufgabe erledigen, sondern wiederkehrende Arbeitsmuster erkennen und daraus wiederverwendbare Skills machen.</p>
-      <p>Das ist genau die Richtung, die bei komplexeren Setups zählt: Wenn mehrere Agenten parallel arbeiten, braucht man nicht mehr Chat-Magie, sondern Protokolle, Aufgabenstatus, Übergaben, Reviews und Memory. Hermes scheint diese Denke stärker im Produktkern zu tragen.</p>
+      <h2>4. Hermes: The Harness as Learning Workbench</h2>
+      <p>Hermes Agent describes itself as "the agent that grows with you." The GitHub documentation lists persistent memory, skill creation from experience, skill improvement during use, full-text session search, cron automations, subagents, and multiple terminal backends.</p>
+      <p>That sounds less like a simple gateway and more like an agent operating system. The most interesting part is the learning loop: the agent should not only finish a task, but also notice repeated work patterns and turn them into reusable skills.</p>
+      <p>This becomes important in multi-agent setups. When several agents work in parallel, the hard problem is not making them talk more. The hard problem is task ownership, handoffs, reviews, shared memory, and keeping the whole workflow auditable.</p>
 
-      <h2>5. Vergleich: Wofür würde ich was nehmen?</h2>
+      <h2>5. Where Each System Fits</h2>
       <ul>
-        <li><strong>OpenClaw für persönliche Infrastruktur:</strong> Telegram rein, lokaler Workspace raus, klare Kontrolle über Gateway, Agentenrolle, Memory und Skills.</li>
-        <li><strong>Hermes für Harness-Experimente:</strong> Lernende Skills, Subagents, mehrere Backends, stärkerer Fokus auf Agentenflotten und wiederholbare Workflows.</li>
-        <li><strong>OpenClaw für Chat-first Alltag:</strong> Wenn der Agent dort leben soll, wo ich eh schreibe.</li>
-        <li><strong>Hermes für systematische Agentenarbeit:</strong> Wenn ich langfristig Agenten wie ein kleines Team orchestrieren will.</li>
+        <li><strong>Use OpenClaw for personal infrastructure:</strong> chat input, local workspace output, clear control over gateway, identity, memory, and skills.</li>
+        <li><strong>Use Hermes as a harness reference:</strong> learning skills, subagents, multiple backends, and repeatable agent workflows.</li>
+        <li><strong>OpenClaw is strong for chat-first daily use:</strong> it puts the agent where the human already communicates.</li>
+        <li><strong>Hermes is strong for systematic agent work:</strong> it points toward a durable team of agents with reusable process.</li>
       </ul>
-      <p>Die spannende These: OpenClaw kann das soziale Interface sein, Hermes-artige Harness-Prinzipien können die Arbeitslogik liefern. Also nicht zwangsläufig "entweder oder", sondern: Gateway vorne, strukturierter Harness hinten.</p>
+      <p>The interesting thesis is not "OpenClaw or Hermes." It is: OpenClaw can be the social interface, while Hermes-like harness principles can shape the working logic behind it.</p>
 
-      <h2>6. Was sagen Forschung und Community?</h2>
-      <p>Die wissenschaftliche Diskussion bewegt sich klar weg vom reinen Prompting und hin zu Laufzeitarchitekturen. Papers zu Agent-Harnesses, deterministischen Agenten-Frameworks und verifizierbaren Tool-Schleifen argumentieren alle ähnlich: Agenten brauchen Grenzen, Logs, Tests, Zustandskontrolle und nachvollziehbare Übergänge.</p>
-      <p>Community-Threads auf Reddit und LocalLLM sind weniger wissenschaftlich, aber praktisch wertvoll: Dort taucht immer wieder dasselbe Muster auf. Nutzer bewerten Agenten nicht nach Demo-Magie, sondern nach Stabilität, Kosten, Kontextmanagement, lokaler Ausführbarkeit und der Frage, ob man den Ergebnissen auditierbar trauen kann.</p>
+      <h2>6. What Research and Community Discussions Add</h2>
+      <p>The research direction is moving away from pure prompting and toward runtime architecture. Papers on agent harnesses, deterministic agent frameworks, and verifiable tool loops all point in the same direction: agents need boundaries, logs, tests, state control, and inspectable transitions.</p>
+      <p>Community discussions on Reddit and LocalLLaMA are less formal, but still useful. Builders tend to judge agents by stability, cost, context management, local execution, and whether the output can be audited. Demo magic matters less once the agent starts touching real files and real decisions.</p>
 
-      <h2>7. Mein Fazit</h2>
-      <p>OpenClaw ist für mich der bessere Einstieg in persönliche KI-Infrastruktur: sichtbar, lokal, chat-nah, hackbar. Hermes ist die interessantere Referenz für ein langfristiges Agenten-Team: mehr Harness-Denke, mehr Skill-Lernen, mehr Multi-Agent-Potenzial.</p>
-      <p>Wenn ich daraus ein eigenes System bauen würde, wäre mein Ziel nicht "OpenClaw gegen Hermes". Mein Ziel wäre: OpenClaw als Gateway und Identitätslayer, kombiniert mit Harness-Prinzipien aus Hermes und der Forschung: Task Board, Memory, Agentenrollen, Reviews, Logs, Sicherheitsgrenzen.</p>
-      <p>Kurz gesagt: Das Gehirn ist nicht das Modell. Das Gehirn ist die Architektur, die das Modell zwingt, sauber zu arbeiten.</p>
+      <h2>7. My Conclusion</h2>
+      <p>OpenClaw is my better entry point into personal AI infrastructure: visible, local, chat-native, and hackable. Hermes is the stronger reference for a future agent team: more harness thinking, more skill learning, and more multi-agent potential.</p>
+      <p>If I were designing my own system, I would not frame it as OpenClaw versus Hermes. I would use OpenClaw as the gateway and identity layer, then borrow harness principles from Hermes and the research literature: task boards, memory, agent roles, reviews, logs, and security boundaries.</p>
+      <p>Short version: the brain is not just the model. The brain is the architecture that forces the model to work cleanly.</p>
 
-      <h2>Quellen und Recherche-Notizen</h2>
+      <h2>Sources and Research Notes</h2>
       <ul>
-        <li><a href="https://docs.openclaw.ai/">OpenClaw Docs</a> - offizielle Beschreibung als selbstgehostetes Gateway für Chat-Kanäle und AI Coding Agents.</li>
-        <li><a href="https://github.com/NousResearch/hermes-agent">NousResearch/hermes-agent</a> - offizielles GitHub-Repository mit Memory-, Skill-, Cron-, Gateway- und Subagent-Features.</li>
-        <li><a href="https://arxiv.org/abs/2605.13357">AI Harness Engineering</a> - arXiv-Paper zur Rolle des Harness als Runtime-Substrat für Software-Agenten.</li>
-        <li><a href="https://arxiv.org/abs/2604.17025">Harness as an Asset / CAAF</a> - Forschungsarbeit zu deterministischeren Agenten-Frameworks und kontrollierten Ausführungsgrenzen.</li>
-        <li><a href="https://www.reddit.com/r/LocalLLaMA/comments/1soerpk/is_harness_a_new_buzzword/">LocalLLaMA-Diskussion zu "Harness"</a> - Community-Perspektive auf den Begriff und praktische Agenten-Laufzeiten.</li>
+        <li><a href="https://docs.openclaw.ai/">OpenClaw Docs</a> - official documentation for the self-hosted gateway and chat-channel architecture.</li>
+        <li><a href="https://github.com/NousResearch/hermes-agent">NousResearch/hermes-agent</a> - official repository covering memory, skills, cron jobs, gateway features, and subagents.</li>
+        <li><a href="https://arxiv.org/abs/2605.13357">AI Harness Engineering</a> - arXiv paper on harnesses as runtime substrates for software agents.</li>
+        <li><a href="https://arxiv.org/abs/2604.17025">Harness as an Asset / CAAF</a> - research on more deterministic agent frameworks and controlled execution boundaries.</li>
+        <li><a href="https://www.reddit.com/r/LocalLLaMA/comments/1soerpk/is_harness_a_new_buzzword/">LocalLLaMA discussion on "harness"</a> - community perspective on the term and practical agent runtimes.</li>
       </ul>
 
       <div class="post-cta">
         <a class="back-btn" href="../index.html">Back to home</a>
-        <span class="post-cta-note">Gateway vorne. Harness hinten. Logs überall.</span>
+        <span class="post-cta-note">Gateway in front. Harness behind. Logs everywhere.</span>
       </div>
     </article>
   </main>

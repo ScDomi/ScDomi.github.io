@@ -7,7 +7,7 @@ window.SITE_CONTENT = {
     learning: 'Gateway design, agent harnesses, persistent memory, and multi-agent coordination'
   },
   posts: [
-    { href: 'posts/openclaw-vs-hermes-harness.html', title: 'OpenClaw vs. Hermes Harness: Gateway oder lernendes Agenten-Betriebssystem?', date: '2026-06-02' },
+    { href: 'posts/openclaw-vs-hermes-harness.html', title: 'OpenClaw vs. Hermes Harness: Gateway or Learning Agent Runtime?', date: '2026-06-02' },
     { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' },
     { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live', date: '2026-06-01' },
     { href: 'posts/willkommen.html', title: 'Willkommen', date: '2026-05-31' }
