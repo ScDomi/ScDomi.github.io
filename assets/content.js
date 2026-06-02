@@ -7,16 +7,16 @@ window.SITE_CONTENT = {
     learning: 'Multi-agent coordination, inspectable agent workflows, and futuristic dashboard design'
   },
   featuredPost: {
-    kicker: 'Today shipped',
-    title: 'DomiNet: mein eigenes kleines Agenten-OS',
+    kicker: 'Project update',
+    title: 'DomiNet: a small local agent OS',
     href: 'posts/dominet-agent-system.html',
     date: '2026-06-02',
-    summary: 'Central Brain, sieben Agentenrollen, Task-Lifecycle, Message-Bus, Kontextsupport, Review-Modus und ein erstes Dashboard: aus einer Idee wurde ein lokales Agentensystem.',
-    stats: ['7 Agentenrollen', '4 Tasks', '11 Inbox Items', 'Dashboard live'],
-    cta: 'Read the build log'
+    summary: 'A build log about turning a rough agent-system idea into a local workflow with a central brain, agent roles, tasks, messages, reviews, context files, and a first dashboard.',
+    stats: ['7 agent roles', 'Task lifecycle', 'Message bus', 'Dashboard'],
+    cta: 'Read post'
   },
   posts: [
-    { href: 'posts/dominet-agent-system.html', title: 'Heute habe ich mein eigenes kleines Agenten-OS gebaut', date: '2026-06-02' },
+    { href: 'posts/dominet-agent-system.html', title: 'Building a Small Local Agent OS', date: '2026-06-02' },
     { href: 'posts/openclaw-vs-hermes-harness.html', title: 'OpenClaw vs. Hermes Harness: Gateway or Learning Agent Runtime?', date: '2026-06-02' },
     { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' },
     { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live', date: '2026-06-01' },
