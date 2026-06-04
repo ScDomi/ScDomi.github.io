@@ -7,16 +7,16 @@ window.SITE_CONTENT = {
     learning: 'Multi-agent coordination, inspectable agent workflows, and futuristic dashboard design'
   },
   featuredPost: {
-    kicker: 'Psychologie',
-    title: 'Ich bin Potenzial',
+    kicker: 'Psychology',
+    title: 'I Am Potential',
     href: 'posts/ich-bin-potenzial.html',
     date: '2026-06-04',
-    summary: 'Ein deutscher Essay ueber Selbstbild, Rausch, Vergleich und die Entscheidung, sich nicht kleiner zu machen, sondern das eigene Level zu bauen.',
-    stats: ['Mindset', 'Potenzial', 'Weiterentwicklung', 'Ehrlich'],
+    summary: 'A short essay about self-image, intoxication, comparison, and the decision to stop shrinking yourself and build your own level.',
+    stats: ['Mindset', 'Potential', 'Evolution', 'Honest'],
     cta: 'Read post'
   },
   posts: [
-    { href: 'posts/ich-bin-potenzial.html', title: 'Ich bin Potenzial', date: '2026-06-04' },
+    { href: 'posts/ich-bin-potenzial.html', title: 'I Am Potential', date: '2026-06-04' },
     { href: 'posts/dominet-agent-system.html', title: 'Building a Small Local Agent OS', date: '2026-06-02' },
     { href: 'posts/openclaw-vs-hermes-harness.html', title: 'OpenClaw vs. Hermes Harness: Gateway or Learning Agent Runtime?', date: '2026-06-02' },
     { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' },
@@ -27,7 +27,7 @@ window.SITE_CONTENT = {
     {
       date: '2026-06-04',
       items: [
-        'Published a German psychology essay about self-image, comparison, drugs as false adaptation, and choosing development over shrinking.',
+        'Published a psychology essay about self-image, comparison, intoxication as false adaptation, and choosing development over shrinking.',
         'Captured the line: yes, I did it, I liked it, and now I build my own level.'
       ]
     },
