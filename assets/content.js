@@ -7,15 +7,16 @@ window.SITE_CONTENT = {
     learning: 'Multi-agent coordination, inspectable agent workflows, and futuristic dashboard design'
   },
   featuredPost: {
-    kicker: 'Project update',
-    title: 'DomiNet: a small local agent OS',
-    href: 'posts/dominet-agent-system.html',
-    date: '2026-06-02',
-    summary: 'A build log about turning a rough agent-system idea into a local workflow with a central brain, agent roles, tasks, messages, reviews, context files, and a first dashboard.',
-    stats: ['7 agent roles', 'Task lifecycle', 'Message bus', 'Dashboard'],
+    kicker: 'Psychologie',
+    title: 'Ich bin Potenzial',
+    href: 'posts/ich-bin-potenzial.html',
+    date: '2026-06-04',
+    summary: 'Ein deutscher Essay ueber Selbstbild, Rausch, Vergleich und die Entscheidung, sich nicht kleiner zu machen, sondern das eigene Level zu bauen.',
+    stats: ['Mindset', 'Potenzial', 'Weiterentwicklung', 'Ehrlich'],
     cta: 'Read post'
   },
   posts: [
+    { href: 'posts/ich-bin-potenzial.html', title: 'Ich bin Potenzial', date: '2026-06-04' },
     { href: 'posts/dominet-agent-system.html', title: 'Building a Small Local Agent OS', date: '2026-06-02' },
     { href: 'posts/openclaw-vs-hermes-harness.html', title: 'OpenClaw vs. Hermes Harness: Gateway or Learning Agent Runtime?', date: '2026-06-02' },
     { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' },
@@ -23,6 +24,13 @@ window.SITE_CONTENT = {
     { href: 'posts/willkommen.html', title: 'Willkommen', date: '2026-05-31' }
   ],
   dailyLog: [
+    {
+      date: '2026-06-04',
+      items: [
+        'Published a German psychology essay about self-image, comparison, drugs as false adaptation, and choosing development over shrinking.',
+        'Captured the line: yes, I did it, I liked it, and now I build my own level.'
+      ]
+    },
     {
       date: '2026-06-02',
       items: [
