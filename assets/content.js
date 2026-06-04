@@ -11,8 +11,8 @@ window.SITE_CONTENT = {
     title: 'I Am Potential',
     href: 'posts/ich-bin-potenzial.html',
     date: '2026-06-04',
-    summary: 'A short essay about self-image, intoxication, comparison, and the decision to stop shrinking yourself and build your own level.',
-    stats: ['Mindset', 'Potential', 'Evolution', 'Honest'],
+    summary: 'A science-informed essay about self-image, reward loops, thinking as model-building, and AI as a tool for externalizing and improving cognition.',
+    stats: ['Psychology', 'Reward loops', 'Self-models', 'AI thinking'],
     cta: 'Read post'
   },
   posts: [
@@ -27,7 +27,7 @@ window.SITE_CONTENT = {
     {
       date: '2026-06-04',
       items: [
-        'Published a psychology essay about self-image, comparison, intoxication as false adaptation, and choosing development over shrinking.',
+        'Expanded the psychology essay with prediction, reward loops, self-efficacy, thinking as training data, and AI as cognitive amplification.',
         'Captured the line: yes, I did it, I liked it, and now I build my own level.'
       ]
     },
