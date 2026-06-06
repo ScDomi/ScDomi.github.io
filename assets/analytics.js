@@ -1,5 +1,5 @@
 (() => {
-  const endpoint = 'https://mac-mini-von-dominik.tail591247.ts.net/dominet/api/blog/track';
+  const endpoint = 'https://mac-mini-von-dominik.tail591247.ts.net:8443/track';
   const payload = {
     path: window.location.pathname,
     title: document.title,
