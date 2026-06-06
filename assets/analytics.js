@@ -3,7 +3,9 @@
   const startedAt = Date.now();
   const sessionKey = 'domilog_analytics_session';
   const makeId = () => (
-    crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`
+    window.crypto && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(16).slice(2)}`
   );
   const session = sessionStorage.getItem(sessionKey) || makeId();
   sessionStorage.setItem(sessionKey, session);
@@ -36,12 +38,12 @@
     scrollDepth: maxScrollDepth
   });
 
-  const send = (event, extra = {}) => {
+  const send = (event, extra = {}, useBeacon = false) => {
     maxScrollDepth = Math.max(maxScrollDepth, scrollDepth());
     const body = JSON.stringify({ ...basePayload(event), ...extra });
 
-    if (navigator.sendBeacon) {
-      const blob = new Blob([body], { type: 'application/json' });
+    if (useBeacon && navigator.sendBeacon) {
+      const blob = new Blob([body], { type: 'text/plain;charset=UTF-8' });
       navigator.sendBeacon(endpoint, blob);
       return;
     }
@@ -76,5 +78,5 @@
   }, { capture: true });
 
   setInterval(() => send('heartbeat'), 15000);
-  window.addEventListener('pagehide', () => send('end'));
+  window.addEventListener('pagehide', () => send('end', {}, true));
 })();
