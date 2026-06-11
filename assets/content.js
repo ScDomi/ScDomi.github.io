@@ -11,8 +11,8 @@ window.SITE_CONTENT = {
     title: 'The Playground in My Head',
     href: 'posts/the-playground-in-my-head.html',
     date: '2026-06-11',
-    summary: 'A warning written from inside a mind that turns danger into freedom, thoughts into systems, and fearlessness into a myth.',
-    stats: ['Psychology', 'Worldview', 'Danger', 'Warning'],
+    summary: 'A first-person descent into a mind that turns danger into freedom, thoughts into systems, and fearlessness into a myth.',
+    stats: ['Psychology', 'Worldview', 'Danger', 'Inner process'],
     cta: 'Read post'
   },
   posts: [
@@ -28,7 +28,7 @@ window.SITE_CONTENT = {
     {
       date: '2026-06-11',
       items: [
-        'Published The Playground in My Head: a warning about danger, freedom, self-mythology, and how a mind can make risk feel like clarity.'
+        'Published The Playground in My Head: an inner-process essay about danger, freedom, self-mythology, and how a mind can make risk feel like clarity.'
       ]
     },
     {
