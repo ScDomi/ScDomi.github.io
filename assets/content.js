@@ -11,7 +11,7 @@ window.SITE_CONTENT = {
     title: 'The Playground in My Head',
     href: 'posts/the-playground-in-my-head.html',
     date: '2026-06-11',
-    summary: 'A first-person descent into a mind that turns danger into freedom, thoughts into systems, and fearlessness into a myth.',
+    summary: 'Inside a mind that turns danger into freedom, thoughts into systems, and fearlessness into a myth.',
     stats: ['Psychology', 'Worldview', 'Danger', 'Inner process'],
     cta: 'Read post'
   },
