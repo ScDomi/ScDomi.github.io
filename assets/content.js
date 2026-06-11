@@ -8,14 +8,15 @@ window.SITE_CONTENT = {
   },
   featuredPost: {
     kicker: 'Psychology',
-    title: 'I Am Potential',
-    href: 'posts/ich-bin-potenzial.html',
-    date: '2026-06-04',
-    summary: 'A science-informed essay about self-image, reward loops, thinking as model-building, and AI as a tool for externalizing and improving cognition.',
-    stats: ['Psychology', 'Reward loops', 'Self-models', 'AI thinking'],
+    title: 'The Playground in My Head',
+    href: 'posts/the-playground-in-my-head.html',
+    date: '2026-06-11',
+    summary: 'A warning written from inside a mind that turns danger into freedom, thoughts into systems, and fearlessness into a myth.',
+    stats: ['Psychology', 'Worldview', 'Danger', 'Warning'],
     cta: 'Read post'
   },
   posts: [
+    { href: 'posts/the-playground-in-my-head.html', title: 'The Playground in My Head', date: '2026-06-11' },
     { href: 'posts/ich-bin-potenzial.html', title: 'I Am Potential', date: '2026-06-04' },
     { href: 'posts/dominet-agent-system.html', title: 'Building a Small Local Agent OS', date: '2026-06-02' },
     { href: 'posts/openclaw-vs-hermes-harness.html', title: 'OpenClaw vs. Hermes Harness: Gateway or Learning Agent Runtime?', date: '2026-06-02' },
@@ -24,6 +25,12 @@ window.SITE_CONTENT = {
     { href: 'posts/willkommen.html', title: 'Willkommen', date: '2026-05-31' }
   ],
   dailyLog: [
+    {
+      date: '2026-06-11',
+      items: [
+        'Published The Playground in My Head: a warning about danger, freedom, self-mythology, and how a mind can make risk feel like clarity.'
+      ]
+    },
     {
       date: '2026-06-04',
       items: [
