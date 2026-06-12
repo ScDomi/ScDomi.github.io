@@ -16,14 +16,14 @@ window.SITE_CONTENT = {
     cta: 'Read post'
   },
   notify: {
-    eyebrow: 'Signal Hook',
-    title: 'Get the next mind-system drop.',
-    lead: 'One quiet email when a new post lands. No feed spam, no motivational wallpaper, just the next human-AI cognition piece.',
+    eyebrow: 'Post Signal',
+    title: 'Get notified when the next thought goes live.',
+    lead: 'Short signal, no noise. New essays on human psychology, AI cognition, prediction loops, and the strange systems forming between them.',
     feedHref: 'feed.xml',
     endpoint: '',
     fallbackEmail: '',
     successMessage: 'Locked in. The next post signal goes to your inbox.',
-    pendingMessage: 'Signal saved locally. Live inbox delivery is the next switch.'
+    pendingMessage: 'Signal saved. The delivery layer is ready for the live mail switch.'
   },
   posts: [
     { href: 'posts/the-playground-in-my-head.html', title: 'The God Mode Loop', date: '2026-06-11' },
