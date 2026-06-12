@@ -7,15 +7,16 @@ window.SITE_CONTENT = {
     learning: 'Multi-agent coordination, inspectable agent workflows, and futuristic dashboard design'
   },
   featuredPost: {
-    kicker: 'Human-AI Cognition',
-    title: 'I Am Potential',
-    href: 'posts/ich-bin-potenzial.html',
-    date: '2026-06-04',
-    summary: 'A science-informed essay about self-image, prediction, reward loops, AI, potential, and the decision to keep evolving.',
-    stats: ['Cognitive Architecture', 'Mind Models', 'AI Psychology', 'Prediction Loops'],
+    kicker: 'Synthetic Psychology',
+    title: 'The God Mode Loop',
+    href: 'posts/the-playground-in-my-head.html',
+    date: '2026-06-11',
+    summary: 'A deep human-AI mind model about danger, freedom, prediction loops, and the moment risk starts feeling like proof.',
+    stats: ['Synthetic Psychology', 'Mind Models', 'Risk Signal', 'Prediction Loops'],
     cta: 'Read post'
   },
   posts: [
+    { href: 'posts/the-playground-in-my-head.html', title: 'The God Mode Loop', date: '2026-06-11' },
     { href: 'posts/ich-bin-potenzial.html', title: 'I Am Potential', date: '2026-06-04' },
     { href: 'posts/dominet-agent-system.html', title: 'Building a Small Local Agent OS', date: '2026-06-02' },
     { href: 'posts/openclaw-vs-hermes-harness.html', title: 'OpenClaw vs. Hermes Harness: Gateway or Learning Agent Runtime?', date: '2026-06-02' },
@@ -24,6 +25,13 @@ window.SITE_CONTENT = {
     { href: 'posts/willkommen.html', title: 'Willkommen', date: '2026-05-31' }
   ],
   dailyLog: [
+    {
+      date: '2026-06-12',
+      items: [
+        'Featured The God Mode Loop on the homepage as a synthetic psychology post.',
+        'Connected the post more clearly to human-AI cognition through labels and framing.'
+      ]
+    },
     {
       date: '2026-06-04',
       items: [
