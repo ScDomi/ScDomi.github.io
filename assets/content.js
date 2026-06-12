@@ -17,7 +17,7 @@ window.SITE_CONTENT = {
   },
   posts: [
     { href: 'posts/the-playground-in-my-head.html', title: 'The God Mode Loop', date: '2026-06-11' },
-    { href: 'posts/ich-bin-potenzial.html', title: 'I Am Potential', date: '2026-06-04' },
+    { href: 'posts/ich-bin-potenzial.html', title: 'The Self-Model Upgrade', date: '2026-06-04' },
     { href: 'posts/dominet-agent-system.html', title: 'Building a Small Local Agent OS', date: '2026-06-02' },
     { href: 'posts/openclaw-vs-hermes-harness.html', title: 'OpenClaw vs. Hermes Harness: Gateway or Learning Agent Runtime?', date: '2026-06-02' },
     { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' },
