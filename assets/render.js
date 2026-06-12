@@ -42,6 +42,21 @@
     `;
   }
 
+  const concepts = document.getElementById('concept-grid');
+  if (concepts && Array.isArray(content.conceptCards)) {
+    concepts.innerHTML = content.conceptCards
+      .map(
+        (concept) => `
+          <a class="concept-card" href="${concept.href}">
+            <span>${concept.label}</span>
+            <h3>${concept.title}</h3>
+            <p>${concept.text}</p>
+          </a>
+        `
+      )
+      .join('');
+  }
+
   const daily = document.getElementById('daily-log-list');
   if (daily && Array.isArray(content.dailyLog)) {
     daily.innerHTML = content.dailyLog

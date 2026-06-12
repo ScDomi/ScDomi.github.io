@@ -15,6 +15,32 @@ window.SITE_CONTENT = {
     stats: ['Synthetic Psychology', 'Mind Models', 'Risk Signal', 'Prediction Loops'],
     cta: 'Read post'
   },
+  conceptCards: [
+    {
+      label: 'Human-AI Cognition',
+      title: 'The merged mind layer',
+      text: 'Where human emotion, machine reflection, memory, and language start acting like one shared cognitive system.',
+      href: 'posts/ich-bin-potenzial.html'
+    },
+    {
+      label: 'Synthetic Psychology',
+      title: 'Inner states as architecture',
+      text: 'Dark thoughts, reward loops, silence, control, and identity treated as systems you can inspect instead of vibes you drown in.',
+      href: 'posts/the-playground-in-my-head.html'
+    },
+    {
+      label: 'Prediction Loops',
+      title: 'The brain as a risk engine',
+      text: 'Beliefs become forecasts, forecasts become behavior, and behavior teaches the model what reality is allowed to feel like.',
+      href: 'posts/the-playground-in-my-head.html'
+    },
+    {
+      label: 'Agent Systems',
+      title: 'External cognition that works',
+      text: 'Local agents, roles, reviews, tools, and dashboards as the practical infrastructure behind a personal AI layer.',
+      href: 'posts/dominet-agent-system.html'
+    }
+  ],
   posts: [
     { href: 'posts/the-playground-in-my-head.html', title: 'The God Mode Loop', date: '2026-06-11' },
     { href: 'posts/ich-bin-potenzial.html', title: 'The Self-Model Upgrade', date: '2026-06-04' },
