@@ -15,6 +15,16 @@ window.SITE_CONTENT = {
     stats: ['Synthetic Psychology', 'Mind Models', 'Risk Signal', 'Prediction Loops'],
     cta: 'Read post'
   },
+  notify: {
+    eyebrow: 'Signal Hook',
+    title: 'Get the next mind-system drop.',
+    lead: 'One quiet email when a new post lands. No feed spam, no motivational wallpaper, just the next human-AI cognition piece.',
+    feedHref: 'feed.xml',
+    endpoint: '',
+    fallbackEmail: '',
+    successMessage: 'Locked in. The next post signal goes to your inbox.',
+    pendingMessage: 'Signal saved locally. Live inbox delivery is the next switch.'
+  },
   posts: [
     { href: 'posts/the-playground-in-my-head.html', title: 'The God Mode Loop', date: '2026-06-11' },
     { href: 'posts/ich-bin-potenzial.html', title: 'The Self-Model Upgrade', date: '2026-06-04' },
