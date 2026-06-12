@@ -1,5 +1,5 @@
 window.SITE_CONTENT = {
-  heroBadges: ['Personal Science', 'Self-Research', 'Inner Systems', 'Life Models', '🫪 😭 🌚'],
+  heroBadges: ['AI Research', 'Cognitive Systems', 'Modeling', 'Prediction Loops', '🫪 😭 🌚'],
   nowWidget: {
     updated: '2026-06-02',
     building: 'DomiNet: a local agent OS with tasks, roles, message bus, reviews, and a browser dashboard',
@@ -7,12 +7,12 @@ window.SITE_CONTENT = {
     learning: 'Multi-agent coordination, inspectable agent workflows, and futuristic dashboard design'
   },
   featuredPost: {
-    kicker: 'Personal Science',
+    kicker: 'Cognitive Systems',
     title: 'I Am Potential',
     href: 'posts/ich-bin-potenzial.html',
     date: '2026-06-04',
     summary: 'A science-informed essay about self-image, prediction, reward loops, AI, potential, and the decision to keep evolving.',
-    stats: ['Personal Science', 'Life Model', 'Potential', 'Self-Research'],
+    stats: ['Cognitive Systems', 'Modeling', 'Potential', 'Prediction Loops'],
     cta: 'Read post'
   },
   posts: [
