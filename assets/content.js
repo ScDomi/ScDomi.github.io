@@ -42,6 +42,7 @@ window.SITE_CONTENT = {
     }
   ],
   posts: [
+    { href: 'posts/languages-of-the-nervous-system.html', title: 'Languages of the Nervous System', date: '2026-06-23' },
     { href: 'posts/the-playground-in-my-head.html', title: 'The God Mode Loop', date: '2026-06-11' },
     { href: 'posts/ich-bin-potenzial.html', title: 'The Self-Model Upgrade', date: '2026-06-04' },
     { href: 'posts/dominet-agent-system.html', title: 'Building a Small Local Agent OS', date: '2026-06-02' },
