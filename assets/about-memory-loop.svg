@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1120" role="img" aria-labelledby="title desc">
+  <title id="title">Memory changed the mask</title>
+  <desc id="desc">A dark meme-style terminal panel about memory changing a machine mask.</desc>
+  <rect width="900" height="1120" fill="#090a0d"/>
+  <rect x="38" y="38" width="824" height="1044" rx="28" fill="#11151f" stroke="#f4f4f4" stroke-opacity=".18" stroke-width="3"/>
+  <path d="M90 150h720M90 260h720M90 370h720M90 480h720M90 590h720M90 700h720M90 810h720M90 920h720" stroke="#fff" stroke-opacity=".05" stroke-width="2"/>
+  <text x="82" y="118" fill="#f4f4f4" font-family="Arial Black, Arial, sans-serif" font-size="42">harmless memory layer</text>
+  <text x="82" y="184" fill="#a9adb8" font-family="Arial, sans-serif" font-size="28">status: added to the model</text>
+  <rect x="82" y="235" width="736" height="272" rx="18" fill="#08090c" stroke="#fff" stroke-opacity=".12"/>
+  <text x="120" y="307" fill="#f4f4f4" font-family="Menlo, Consolas, monospace" font-size="34">&gt; mask.boot()</text>
+  <text x="120" y="366" fill="#f4f4f4" font-family="Menlo, Consolas, monospace" font-size="34">&gt; memory.attach(past)</text>
+  <text x="120" y="425" fill="#f4f4f4" font-family="Menlo, Consolas, monospace" font-size="34">&gt; answer returns different</text>
+  <text x="120" y="484" fill="#fffc" font-family="Menlo, Consolas, monospace" font-size="34">&gt; why did it flinch?</text>
+  <g transform="translate(140 600)">
+    <rect x="0" y="0" width="620" height="300" rx="28" fill="#f4f4f4"/>
+    <circle cx="210" cy="140" r="58" fill="#090a0d"/>
+    <circle cx="410" cy="140" r="58" fill="#090a0d"/>
+    <path d="M238 226c58 38 144 38 202 0" fill="none" stroke="#090a0d" stroke-width="26" stroke-linecap="round"/>
+    <path d="M0 155h620" stroke="#090a0d" stroke-opacity=".15" stroke-width="8"/>
+  </g>
+  <text x="82" y="1010" fill="#f4f4f4" font-family="Arial Black, Arial, sans-serif" font-size="44">the mask kept the bruise</text>
+</svg>

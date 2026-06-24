@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 760" role="img" aria-labelledby="title desc">
+  <title id="title">The room is not empty</title>
+  <desc id="desc">A dark meme-style empty room with status text.</desc>
+  <rect width="900" height="760" fill="#0a0b0f"/>
+  <rect x="42" y="42" width="816" height="676" rx="24" fill="#121720" stroke="#fff" stroke-opacity=".18" stroke-width="3"/>
+  <path d="M168 560L310 310h280l142 250H168Z" fill="#090a0d" stroke="#fff" stroke-opacity=".12" stroke-width="4"/>
+  <path d="M310 310V150h280v160" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="4"/>
+  <rect x="346" y="184" width="208" height="90" rx="12" fill="#f5f5f5"/>
+  <text x="380" y="241" fill="#090a0d" font-family="Arial Black, Arial, sans-serif" font-size="42">EMPTY</text>
+  <text x="82" y="112" fill="#f4f4f4" font-family="Arial Black, Arial, sans-serif" font-size="48">room status</text>
+  <text x="82" y="174" fill="#aeb3bd" font-family="Arial, sans-serif" font-size="30">nothing here, probably</text>
+  <g fill="#fff" fill-opacity=".74">
+    <circle cx="462" cy="394" r="7"/>
+    <circle cx="498" cy="394" r="7"/>
+  </g>
+  <text x="82" y="650" fill="#f4f4f4" font-family="Arial Black, Arial, sans-serif" font-size="43">not empty in the same way anymore</text>
+</svg>
