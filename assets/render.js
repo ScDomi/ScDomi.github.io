@@ -11,7 +11,10 @@
   if (posts && Array.isArray(content.posts)) {
     posts.innerHTML = content.posts.length
       ? content.posts
-          .map((post) => `<li><a href="${post.href}">${post.title}</a><span class="meta">${post.date}</span></li>`)
+          .map(
+            (post, index) =>
+              `<li class="${index === 0 ? 'is-newest' : ''}"><a href="${post.href}">${post.title}</a><span class="meta">${index === 0 ? '<strong>Newest</strong> ' : ''}${post.date}</span></li>`
+          )
           .join('')
       : '<li><span class="meta">No public posts right now.</span></li>';
   }
@@ -21,8 +24,8 @@
     now.innerHTML = `
       <p class="meta">Updated ${content.nowWidget.updated}</p>
       <p><strong>Building:</strong> ${content.nowWidget.building}</p>
-      <p><strong>Listening:</strong> ${content.nowWidget.listening}</p>
-      <p><strong>Learning:</strong> ${content.nowWidget.learning}</p>
+      <p><strong>Signal:</strong> ${content.nowWidget.listening}</p>
+      <p><strong>Question:</strong> ${content.nowWidget.learning}</p>
     `;
   }
 
@@ -39,6 +42,25 @@
         <div class="feature-stats">${stats}</div>
       </div>
       <a class="feature-link" href="${content.featuredPost.href}">${content.featuredPost.cta}</a>
+    `;
+  }
+
+  const latest = document.getElementById('latest-drop');
+  if (latest && content.latestDrop) {
+    latest.innerHTML = `
+      <div class="latest-drop-copy">
+        <p class="latest-drop-label">${content.latestDrop.label}</p>
+        <h2>${content.latestDrop.title}</h2>
+        <p>${content.latestDrop.summary}</p>
+      </div>
+      <div class="latest-drop-side">
+        <div class="latest-drop-meta">
+          <span>${content.latestDrop.date}</span>
+          <span>${content.latestDrop.mood}</span>
+          <span>${content.latestDrop.readTime}</span>
+        </div>
+        <a class="latest-drop-link" href="${content.latestDrop.href}">${content.latestDrop.cta}</a>
+      </div>
     `;
   }
 

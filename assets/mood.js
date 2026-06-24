@@ -3,7 +3,7 @@
   const moods = window.SITE_CONTENT?.moods || {};
 
   function applyMood(mood) {
-    const safe = moods[mood] ? mood : 'research';
+    const safe = moods[mood] ? mood : 'archive';
     const d = moods[safe];
     if (!d) return;
 
@@ -20,5 +20,5 @@
     document.getElementById('meme-bottom').textContent = d.memeBottom;
   }
 
-  applyMood('research');
+  applyMood('archive');
 })();
