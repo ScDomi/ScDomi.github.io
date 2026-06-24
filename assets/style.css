@@ -80,6 +80,18 @@ h1,h2,h3{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.03em;line
 .page-note{background:linear-gradient(165deg,#182035 0%,#131a2c 100%);border:1px solid var(--line);border-radius:18px;padding:.9rem 1rem}
 .page-note p{margin:.35rem 0}
 @media(max-width:860px){.info-grid{grid-template-columns:1fr}}
+.about-shell .about-hero{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:1rem 1rem 1.15rem;background:linear-gradient(155deg,rgba(255,255,255,.08),rgba(255,255,255,.02) 46%,rgba(0,0,0,.16)),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:auto,34px 34px,34px 34px}
+.about-shell .about-hero::after{content:"inside.exe / still running";position:absolute;right:1rem;bottom:.7rem;color:rgba(255,255,255,.34);font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.about-shell .page-title{max-width:11ch}
+.about-shell .page-lead{max-width:72ch;color:#d2d2d5}
+.about-shell .info-card,.about-shell .page-note{position:relative;overflow:hidden;border-radius:8px;background:linear-gradient(160deg,#171b28 0%,#10131c 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.about-shell .info-card::before{content:"";position:absolute;inset:0;border-top:1px solid rgba(255,255,255,.16);pointer-events:none}
+.about-shell .info-card h2{display:inline-block;border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:.16rem .5rem;background:rgba(255,255,255,.04);font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:#f5f5f5}
+.about-shell .info-card ul{padding-left:0;list-style:none}
+.about-shell .info-card li{position:relative;margin:.48rem 0;padding-left:1rem}
+.about-shell .info-card li::before{content:"//";position:absolute;left:0;color:rgba(255,255,255,.36);font-size:.78rem;font-weight:800}
+.about-shell .page-note{border-color:rgba(255,255,255,.18);background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.025) 42%,rgba(0,0,0,.18))}
+@media(max-width:760px){.about-shell .about-hero::after{position:static;display:block;margin-top:.8rem}}
 .back-btn{
 display:inline-flex;align-items:center;gap:.35rem;
 text-decoration:none;color:#0e0e0f;background:linear-gradient(135deg,#ffffff 0%,#dfe5ff 100%);
