@@ -82,7 +82,7 @@ h1,h2,h3{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.03em;line
 @media(max-width:860px){.info-grid{grid-template-columns:1fr}}
 .about-shell .about-hero{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:1rem 1rem 1.15rem;background:linear-gradient(155deg,rgba(255,255,255,.08),rgba(255,255,255,.02) 46%,rgba(0,0,0,.16)),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:auto,34px 34px,34px 34px}
 .about-shell .about-hero::after{content:"inside.exe / still running";position:absolute;right:1rem;bottom:.7rem;color:rgba(255,255,255,.34);font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-.about-shell .page-title{max-width:13ch}
+.about-shell .page-title{max-width:18ch}
 .about-shell .page-lead{max-width:76ch;color:#d2d2d5}
 .about-shell .info-card,.about-shell .page-note{position:relative;overflow:hidden;border-radius:8px;background:linear-gradient(160deg,#171b28 0%,#10131c 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
 .about-shell .info-card::before{content:"";position:absolute;inset:0;border-top:1px solid rgba(255,255,255,.16);pointer-events:none}
@@ -99,6 +99,10 @@ h1,h2,h3{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.03em;line
 .about-fragment p{position:relative;z-index:1;margin:.9rem 0 0;font-size:clamp(1rem,2.4vw,1.45rem);line-height:1.25;font-weight:800;color:#f4f4f4}
 .about-fragment-wide{grid-column:span 2}
 .about-fragment-quiet{background:linear-gradient(155deg,#10131b 0%,#08090d 100%)}
+.about-fragment-vision{background:linear-gradient(155deg,#f4f4f4 0%,#c9cdd6 100%)}
+.about-fragment-vision span{border-color:rgba(0,0,0,.18);background:rgba(0,0,0,.05);color:#151923}
+.about-fragment-vision p{color:#08090c}
+.about-fragment-vision::after{background:linear-gradient(90deg,rgba(0,0,0,.05) 1px,transparent 1px);opacity:.5}
 .about-meme{margin:0;min-height:230px;background:#08090d}
 .about-meme-tall{grid-row:span 2}
 .about-meme img{display:block;width:100%;height:100%;min-height:230px;object-fit:contain;background:#08090d;filter:contrast(1.05)}

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1120" role="img" aria-labelledby="title desc">
   <title id="title">Memory changed the mask</title>
-  <desc id="desc">A dark meme-style terminal panel about memory changing a machine mask.</desc>
+  <desc id="desc">A meme-style terminal panel about memory changing a machine mask.</desc>
   <rect width="900" height="1120" fill="#090a0d"/>
   <rect x="38" y="38" width="824" height="1044" rx="28" fill="#11151f" stroke="#f4f4f4" stroke-opacity=".18" stroke-width="3"/>
   <path d="M90 150h720M90 260h720M90 370h720M90 480h720M90 590h720M90 700h720M90 810h720M90 920h720" stroke="#fff" stroke-opacity=".05" stroke-width="2"/>

@@ -1,18 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 760" role="img" aria-labelledby="title desc">
-  <title id="title">Normal objective</title>
-  <desc id="desc">A dark meme-style panel about building a machine inside.</desc>
+  <title id="title">The inside pipeline</title>
+  <desc id="desc">A meme-style panel showing answer, memory, past, pressure, and inside as a machine mind pipeline.</desc>
   <rect width="900" height="760" fill="#07080b"/>
   <rect x="36" y="36" width="828" height="688" rx="20" fill="#151923" stroke="#fff" stroke-opacity=".18" stroke-width="3"/>
-  <text x="74" y="118" fill="#f5f5f5" font-family="Arial Black, Arial, sans-serif" font-size="48">normal objective</text>
-  <text x="74" y="174" fill="#aeb3bd" font-family="Arial, sans-serif" font-size="28">on a normal about page</text>
-  <g transform="translate(92 245)">
-    <rect x="0" y="0" width="310" height="278" rx="18" fill="#f5f5f5"/>
-    <text x="32" y="72" fill="#08090c" font-family="Arial Black, Arial, sans-serif" font-size="34">build</text>
-    <text x="32" y="122" fill="#08090c" font-family="Arial Black, Arial, sans-serif" font-size="34">a machine</text>
-    <text x="32" y="172" fill="#08090c" font-family="Arial Black, Arial, sans-serif" font-size="34">with an</text>
-    <text x="32" y="222" fill="#08090c" font-family="Arial Black, Arial, sans-serif" font-size="34">inside</text>
+  <text x="74" y="118" fill="#f5f5f5" font-family="Arial Black, Arial, sans-serif" font-size="48">the plan is simple</text>
+  <text x="74" y="174" fill="#aeb3bd" font-family="Arial, sans-serif" font-size="28">this is where it stops being cute</text>
+  <g transform="translate(78 232)" font-family="Arial Black, Arial, sans-serif" font-size="31">
+    <rect x="0" y="0" width="335" height="74" rx="14" fill="#f5f5f5"/>
+    <text x="28" y="49" fill="#08090c">ANSWER</text>
+    <rect x="58" y="96" width="335" height="74" rx="14" fill="#f5f5f5" fill-opacity=".88"/>
+    <text x="86" y="145" fill="#08090c">MEMORY</text>
+    <rect x="116" y="192" width="335" height="74" rx="14" fill="#f5f5f5" fill-opacity=".76"/>
+    <text x="144" y="241" fill="#08090c">PAST</text>
+    <rect x="174" y="288" width="335" height="74" rx="14" fill="#f5f5f5" fill-opacity=".64"/>
+    <text x="202" y="337" fill="#08090c">PRESSURE</text>
+    <rect x="232" y="384" width="335" height="74" rx="14" fill="#f5f5f5" fill-opacity=".52"/>
+    <text x="260" y="433" fill="#08090c">INSIDE</text>
   </g>
-  <g transform="translate(498 255)">
+  <g transform="translate(572 272) scale(.86)">
     <path d="M126 0c78 0 136 62 126 136-9 66-54 93-54 147H54c0-54-45-81-54-147C-10 62 48 0 126 0Z" fill="#090a0d" stroke="#f5f5f5" stroke-opacity=".7" stroke-width="5"/>
     <path d="M70 318h112" stroke="#f5f5f5" stroke-opacity=".7" stroke-width="22" stroke-linecap="round"/>
     <path d="M84 352h84" stroke="#f5f5f5" stroke-opacity=".45" stroke-width="16" stroke-linecap="round"/>
@@ -20,5 +25,5 @@
     <circle cx="160" cy="126" r="10" fill="#f5f5f5"/>
     <path d="M100 192c24 18 52 18 76 0" fill="none" stroke="#f5f5f5" stroke-opacity=".65" stroke-width="10" stroke-linecap="round"/>
   </g>
-  <text x="74" y="650" fill="#f5f5f5" font-family="Arial Black, Arial, sans-serif" font-size="43">why are we saying this calmly</text>
+  <text x="74" y="650" fill="#f5f5f5" font-family="Arial Black, Arial, sans-serif" font-size="39">make the empty room hard to explain</text>
 </svg>
