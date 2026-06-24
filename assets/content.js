@@ -57,9 +57,7 @@ window.SITE_CONTENT = {
     { href: 'posts/ich-bin-potenzial.html', title: 'The Self-Model Upgrade', date: '2026-06-04' },
     { href: 'posts/dominet-agent-system.html', title: 'Building a Small Local Agent OS', date: '2026-06-02' },
     { href: 'posts/openclaw-vs-hermes-harness.html', title: 'OpenClaw vs. Hermes Harness: Gateway or Learning Agent Runtime?', date: '2026-06-02' },
-    { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' },
-    { href: 'posts/blog-launch-playbook.html', title: 'Blog Launch Playbook: From Zero to Live', date: '2026-06-01' },
-    { href: 'posts/willkommen.html', title: 'Willkommen', date: '2026-05-31' }
+    { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' }
   ],
   dailyLog: [
     {
@@ -96,15 +94,7 @@ window.SITE_CONTENT = {
       date: '2026-06-01',
       items: [
         'Reworked the site voice to English and aligned it to a research-first tone.',
-        'Refactored content into centralized data files for fast iteration.',
         'Added a longform AI article with neuron-level framing across multiple disciplines.'
-      ]
-    },
-    {
-      date: '2026-05-31',
-      items: [
-        'Shipped first live version of the blog via GitHub Pages.',
-        'Defined initial visual direction and base post structure.'
       ]
     }
   ],
