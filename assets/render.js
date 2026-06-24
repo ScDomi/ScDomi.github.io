@@ -79,13 +79,4 @@
       .join('');
   }
 
-  const daily = document.getElementById('daily-log-list');
-  if (daily && Array.isArray(content.dailyLog)) {
-    daily.innerHTML = content.dailyLog
-      .map((entry) => {
-        const items = entry.items.map((i) => `<li>${i}</li>`).join('');
-        return `<li class="daily-log-entry"><p class="meta">${entry.date}</p><ul>${items}</ul></li>`;
-      })
-      .join('');
-  }
 })();

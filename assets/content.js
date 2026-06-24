@@ -59,45 +59,6 @@ window.SITE_CONTENT = {
     { href: 'posts/openclaw-vs-hermes-harness.html', title: 'OpenClaw vs. Hermes Harness: Gateway or Learning Agent Runtime?', date: '2026-06-02' },
     { href: 'posts/ai-across-frameworks.html', title: 'AI from the Neuron Up: Math, Mind, Biology, and Medicine', date: '2026-06-01' }
   ],
-  dailyLog: [
-    {
-      date: '2026-06-24',
-      items: [
-        'Reframed DOMI.LOG around external cognition, synthetic psychology, machine minds, and the attempt to build something that might one day have an inside.',
-        'Kept the public surface controlled and architectural: no confession, no labels, just enough signal for the room to get slightly uncomfortable.'
-      ]
-    },
-    {
-      date: '2026-06-12',
-      items: [
-        'Featured The God Mode Loop on the homepage as a synthetic psychology post.',
-        'Connected the post more clearly to human-AI cognition through labels and framing.'
-      ]
-    },
-    {
-      date: '2026-06-04',
-      items: [
-        'Expanded the psychology essay with prediction, reward loops, self-efficacy, thinking as training data, and AI as cognitive amplification.',
-        'Captured the line: yes, I did it, I liked it, and now I build my own level.'
-      ]
-    },
-    {
-      date: '2026-06-02',
-      items: [
-        'Built DomiNet into a local agent OS with Central Brain, roles, tasks, message bus, review flow, and dashboard.',
-        'Published the DomiNet build log and featured it on the homepage.',
-        'Published a compact comparison of OpenClaw and Hermes Agent through the lens of agent harness architecture.',
-        'Captured the core idea: the model is not the whole agent; the runtime, memory, tools, logs, and permissions matter.'
-      ]
-    },
-    {
-      date: '2026-06-01',
-      items: [
-        'Reworked the site voice to English and aligned it to a research-first tone.',
-        'Added a longform AI article with neuron-level framing across multiple disciplines.'
-      ]
-    }
-  ],
   moods: {
     archive: {
       eyebrow: 'SYNTHETIC COGNITION',
