@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Languages of the Nervous System | DOMI.LOG</title>
   <meta name="description" content="A dark systems essay about different minds, mistranslation, the false expectation of being understood, overload, responsibility, and designing for the night." />
-  <link rel="stylesheet" href="../assets/style.css?v=20260625-math-post-1" />
+  <link rel="stylesheet" href="../assets/style.css?v=20260626-math-post-2" />
   <script>
     window.MathJax = {
       tex: { inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[', '\\]']] },
@@ -47,6 +47,13 @@
       <p>The mistake is believing that the default grammar is reality itself.</p>
       <p>Some minds do not enter the world through the front door. They slip in through cracks. Through patterns. Through noise. Through invisible pressure changes in the room. Through signals others seem able to ignore, while the system records them like weather warnings.</p>
       <p>There is too much input sometimes. Too much texture in a sentence. Too much voltage in a silence. Too many possible meanings bleeding into each other before the executive layer can name them.</p>
+      <section class="math-block" aria-label="Default interface as a weighted model">
+        <p class="math-line">\[G_{\mathrm{majority}} \neq \mathbb{R}\]</p>
+        <p class="math-note">the dominant grammar is a public interface, not reality itself</p>
+
+        <p class="math-line">\[w_i : \mathcal{S} \rightarrow \mathbb{R}\]</p>
+        <p class="math-note">each system assigns different weights to the same incoming signal</p>
+      </section>
       <p>From the outside, this can look excessive.</p>
       <p>From the inside, it feels like trying to translate weather into language before the storm reaches the house.</p>
 
@@ -60,6 +67,13 @@
       <p>Another system cannot release it, because the pattern is still open, the equation is unfinished, the room is still full of static.</p>
       <p>One person calls it overthinking.</p>
       <p>Another experiences it as trying to translate a storm into grammar fast enough to survive it.</p>
+      <section class="math-block" aria-label="Mistranslation as a divergence problem">
+        <p class="math-line">\[\hat{y}_A \neq \hat{y}_B \quad \text{for the same } s_t\]</p>
+        <p class="math-note">the same sentence can resolve into different internal worlds</p>
+
+        <p class="math-line">\[\mathrm{madness} \approx \mathrm{translation\ failure}(M_A, M_B)\]</p>
+        <p class="math-note">what gets called irrational is often just low interoperability between models</p>
+      </section>
       <p>This is where the word "crazy" becomes lazy.</p>
       <p>It often means: I do not understand the language your mind is speaking.</p>
       <p>Or worse: your translation of reality threatens mine.</p>
@@ -76,6 +90,13 @@
       <p>Another treats it as threat.</p>
       <p>One model can discard a sentence after it has been spoken.</p>
       <p>Another keeps reprocessing it in the background, searching for the hidden variable that explains why it still hurts.</p>
+      <section class="math-block" aria-label="Private world models">
+        <p class="math-line">\[x_t = \phi_\theta(i_{\leq t}, h)\]</p>
+        <p class="math-note">state is a compression of input under architecture and history</p>
+
+        <p class="math-line">\[p(z \mid s_t, \theta_A) \neq p(z \mid s_t, \theta_B)\]</p>
+        <p class="math-note">different priors turn the same event into different predictions</p>
+      </section>
       <p>This is not randomness. It is training history. It is architecture. It is the invisible dataset of a life becoming prediction.</p>
       <p>A person is partly a model of the world that has learned from every room it survived.</p>
       <p>That is why communication fails so violently sometimes. People assume they are exchanging sentences, when they are actually exchanging compressed realities. They think disagreement means one side is irrational, when often the two systems are simply running different priors.</p>
@@ -97,6 +118,13 @@
       <p>The nervous system sends an entire weather system.</p>
       <p>The other person receives a text message without the forecast.</p>
       <p>This is where resentment grows: in the gap between how much something means internally and how little of that meaning actually survives transmission.</p>
+      <section class="math-block" aria-label="Transmission loss">
+        <p class="math-line">\[T : I_{\mathrm{inner}} \rightarrow O_{\mathrm{outer}}\]</p>
+        <p class="math-note">internal intensity must pass through a lossy channel before anyone else can receive it</p>
+
+        <p class="math-line">\[\lvert I_{\mathrm{inner}} \rvert \gg \lvert R_{\mathrm{other}} \rvert\]</p>
+        <p class="math-note">what feels huge inside often arrives as a thin fragment outside</p>
+      </section>
       <p>One side thinks: how can you not understand?</p>
       <p>The other side thinks: how was I supposed to know?</p>
       <p>Both can be telling the truth.</p>
@@ -121,6 +149,13 @@
       <p>Maybe a self is not a fixed object.</p>
       <p>Maybe it is the translator.</p>
       <p>The fragile process that turns sensation into story, story into identity, identity into action, and action into consequences other people have to feel.</p>
+      <section class="math-block" aria-label="Self as renderer">
+        <p class="math-line">\[\mathrm{self}_t = \tau(s_t, m_t, \pi_t)\]</p>
+        <p class="math-note">selfhood behaves less like an object and more like an ongoing translation operator</p>
+
+        <p class="math-line">\[\mathbb{W}_{\mathrm{lived}} = r(\mathbb{R}, \theta, m_t)\]</p>
+        <p class="math-note">the lived world is rendered from reality through system constraints and memory</p>
+      </section>
       <p>When that translator breaks, the person does not simply become irrational. The world loses grammar. The room loses scale. The future loses weight. The abyss stops looking like an absence and starts looking like an answer.</p>
       <p>That is why language matters so much.</p>
       <p>To name something is to keep it in the world of form. To lose language is to let the formless get closer.</p>
@@ -154,6 +189,13 @@
       <p>The calm mind thinks in options. The flooded mind thinks in exits.</p>
       <p>The calm mind understands time. The flooded mind only understands now.</p>
       <p>The calm mind can hold contradiction. The flooded mind turns contradiction into threat.</p>
+      <section class="math-block" aria-label="Overload dynamics">
+        <p class="math-line">\[L_t = \sum_{k=1}^{n} \lambda_k s_k\]</p>
+        <p class="math-note">load accumulates across channels until the system crosses its threshold</p>
+
+        <p class="math-line">\[L_t > \tau \Rightarrow \mathcal{O}_{\mathrm{future}} \downarrow,\ \mathcal{T}_{\mathrm{threat}} \uparrow\]</p>
+        <p class="math-note">once saturated, access to future, nuance, and contradiction collapses</p>
+      </section>
       <p>This is not an excuse.</p>
       <p>It is the anatomy of the fall.</p>
 
@@ -165,6 +207,13 @@
       <p>Inside overload, the observer does not vanish all at once. It flickers. It loses signal. It becomes a voice behind glass.</p>
       <p>The mind turns monotropic: locked onto one signal, one threat, one shame, one impossible exit. Everything else still exists, technically. Perspective. Memory. Love. Consequence. Future.</p>
       <p>But none of it has enough signal strength to reach the control room.</p>
+      <section class="math-block" aria-label="Access bottleneck">
+        <p class="math-line">\[\mathrm{insight}_t \nRightarrow \mathrm{control}_t\]</p>
+        <p class="math-note">knowing the pattern does not guarantee access to the layer that can interrupt it</p>
+
+        <p class="math-line">\[\sigma_{\mathrm{observer}} < \sigma_{\mathrm{threat}}\]</p>
+        <p class="math-note">the observer remains present but loses dominance under overload</p>
+      </section>
       <p>That is the terrifying part.</p>
       <p>Not the absence of knowledge.</p>
       <p>The absence of access.</p>
@@ -206,6 +255,13 @@
       <p>That is the blast radius.</p>
       <p>Not metaphorically.</p>
       <p>Physiologically.</p>
+      <section class="math-block" aria-label="Social propagation">
+        <p class="math-line">\[x_t^{(A)} \rightarrow x_{t+1}^{(B)}\]</p>
+        <p class="math-note">states propagate; one system becomes input to another</p>
+
+        <p class="math-line">\[\frac{\partial x^{(B)}}{\partial x^{(A)}} \neq 0\]</p>
+        <p class="math-note">there is no such thing as a perfectly private storm once signal leaves the body</p>
+      </section>
       <p>The tragedy begins when someone mistakes their storm for a private event.</p>
       <p>Being untranslated does not grant permission to become destructive.</p>
       <p>That is the hard part.</p>
@@ -228,6 +284,13 @@
       <p>Alcohol is not just a substance in this architecture. It can become a permission structure. It lowers the gates and lets old processes run with administrator rights.</p>
       <p>The body is older than the story. Older than the identity. Older than the philosophy. And when it believes there is danger, it does not ask the narrative for permission.</p>
       <p>So responsibility means building external structure for internal states that cannot always self-correct.</p>
+      <section class="math-block" aria-label="Responsibility as control design">
+        <p class="math-line">\[\mathrm{responsibility} = \mathrm{protocols}(\text{before } L_t > \tau)\]</p>
+        <p class="math-note">real control is installed upstream, before access collapses</p>
+
+        <p class="math-line">\[\mathrm{guardrails} > \mathrm{willpower}\]</p>
+        <p class="math-note">design beats intention once the system is already compromised</p>
+      </section>
       <p>Protocols before pride.</p>
       <p>Guardrails before collapse.</p>
       <p>Leaving earlier.</p>
