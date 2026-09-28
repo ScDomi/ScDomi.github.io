@@ -4,128 +4,133 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>scryx / ScDomi</title>
-  <meta name="description" content="scryx / ScDomi — surface layer for technical artifacts, systems and experiments." />
+  <meta name="description" content="scryx / ScDomi — technical brain surface, artifacts and systems." />
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="stylesheet" href="assets/style.css?v=20260928-scryx-rebuild-6" />
+  <link rel="stylesheet" href="assets/style.css?v=20260928-scryx-brain-1" />
 </head>
-<body class="home-scryx">
+<body class="home-scryx brain-interface">
   <!-- scryx: rules are defaults, not truth -->
   <header class="site-header glass-header">
     <div class="wrap nav-row">
       <a class="brand brand-mark" href="index.html"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>scryx</span></a>
       <nav class="nav">
-        <a href="#work">Work</a>
-        <a href="#system">System</a>
-        <a href="#range">Range</a>
+        <a href="#interface">Interface</a>
+        <a href="#artifacts">Artifacts</a>
+        <a href="#map">Map</a>
         <a href="https://github.com/ScDomi">GitHub</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <section class="scryx-hero wrap quiet-hero hacker-hero brain-surface">
-      <div class="hero-copy">
-        <p class="eyebrow">ScDomi / scryx</p>
-        <h1>Surface of the machine.</h1>
-        <p class="lead">Projects, models and systems as the visible layer of how I think.</p>
-      </div>
-      <aside class="terminal-panel minimal-terminal" aria-label="scryx terminal signal">
-        <div class="term-top"><i></i><i></i><i></i><span>~/scryx</span></div>
-        <pre><code><span class="dim">$</span> inspect surface
-rules     → defaults
-normal    → setting
-identity  → scryx
+    <section id="interface" class="wrap brain-hero">
+      <div class="terminal-panel brain-terminal" aria-label="brain terminal">
+        <div class="term-top"><i></i><i></i><i></i><span>~/domi/brain_surface</span></div>
+        <pre><code><span class="dim">$</span> whoami
+ScDomi <span class="violet">// scryx</span>
+
+<span class="dim">$</span> ./open_head --read-only
+mode: technical
+signal: high
+noise: filtered
 
 <span class="dim">$</span> show evidence
-models
-agents
-simulations
-systems</code></pre>
-      </aside>
-    </section>
+models          <span class="dim">→</span> learning behavior
+agents          <span class="dim">→</span> memory + tools
+simulations     <span class="dim">→</span> rules moving
+foundations     <span class="dim">→</span> logic underneath
 
-    <section class="surface-strip compact-strip">
-      <div class="wrap strip-grid">
-        <span>rules are defaults, not truth</span>
-        <span>build the evidence</span>
-        <span>show the system</span>
+<span class="dim">$</span> cursor
+_</code></pre>
+      </div>
+
+      <div class="brain-copy">
+        <p class="eyebrow">ScDomi / scryx</p>
+        <h1>brain surface.</h1>
+        <p class="lead">A public interface for the technical part of my head.</p>
       </div>
     </section>
 
-    <section id="work" class="wrap section showcase-section">
-      <div class="section-heading-row">
+    <section class="wrap signal-deck" aria-label="live brain modules">
+      <div class="signal-card active">
+        <span>input</span>
+        <strong>pattern</strong>
+        <small>what keeps repeating?</small>
+      </div>
+      <div class="signal-card">
+        <span>process</span>
+        <strong>model</strong>
+        <small>can it be simulated?</small>
+      </div>
+      <div class="signal-card">
+        <span>output</span>
+        <strong>artifact</strong>
+        <small>make it visible.</small>
+      </div>
+      <div class="signal-card ghost">
+        <span>identity</span>
+        <strong>scryx</strong>
+        <small>signature layer.</small>
+      </div>
+    </section>
+
+    <section id="artifacts" class="wrap section showcase-section">
+      <div class="section-heading-row quiet-heading">
         <div>
           <p class="section-kicker">Artifacts</p>
-          <h2>What the surface exposes.</h2>
+          <h2>things that escaped the head.</h2>
         </div>
       </div>
 
-      <div class="work-grid">
+      <div class="work-grid brain-grid">
         <a class="work-card large purple" href="https://github.com/ScDomi/rl-car-racing-dqn">
           <span class="work-tag">RL / Vision</span>
           <h3>DQN CarRacing Agent</h3>
-          <p>Pixels → action. Feedback, memory, failure, iteration.</p>
+          <p>Pixels in. Steering out.</p>
           <div class="card-visual road"><i></i><i></i><i></i></div>
         </a>
 
         <a class="work-card bright" href="https://github.com/ScDomi/emnist-deep-learning-showcase">
           <span class="work-tag">Deep Learning</span>
           <h3>EMNIST Recognition</h3>
-          <p>Messy symbols becoming measurable decisions.</p>
+          <p>Noise becomes classification.</p>
           <div class="glyph-cloud"><b>A</b><b>7</b><b>g</b><b>Q</b><b>2</b></div>
         </a>
 
         <a class="work-card dark" href="https://github.com/ScDomi/math-cs-foundations">
           <span class="work-tag">Foundations</span>
           <h3>Math & CS Foundations</h3>
-          <p>Algorithms, constraints, logic, simulations.</p>
+          <p>Small rules. Weird worlds.</p>
           <div class="mini-code"><span>prime_sieve()</span><span>sudoku(X)</span><span>turmite.step()</span></div>
         </a>
 
         <a class="work-card signal" href="https://github.com/ScDomi">
           <span class="work-tag">Agents</span>
           <h3>Local Agent Systems</h3>
-          <p>Tools, memory, logs and workflows turning AI into infrastructure.</p>
+          <p>Tools, memory, logs, workflows.</p>
           <div class="node-map"><i></i><i></i><i></i><i></i></div>
         </a>
       </div>
     </section>
 
-    <section id="system" class="wrap section identity-panel">
-      <div class="identity-lockup dark-logo-panel">
-        <img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx X sigil and wordmark">
+    <section id="map" class="wrap section brain-map">
+      <div class="map-node core">
+        <img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx">
       </div>
-      <div class="identity-copy">
-        <p class="section-kicker">scryx</p>
-        <h2>the technical identity layer.</h2>
-        <p>Not separate from me. Just the sharper interface: anti-default, pattern-first, built around artifacts.</p>
-      </div>
-    </section>
-
-    <section id="range" class="wrap section proof-wall">
-      <div class="proof-tile">
-        <strong>Modeling</strong>
-        <span>ML, evaluation, vision</span>
-      </div>
-      <div class="proof-tile">
-        <strong>Systems</strong>
-        <span>agents, tools, workflows</span>
-      </div>
-      <div class="proof-tile">
-        <strong>Abstraction</strong>
-        <span>algorithms, logic, constraints</span>
-      </div>
-      <div class="proof-tile">
-        <strong>Taste</strong>
-        <span>interface, signal, restraint</span>
-      </div>
+      <div class="map-node n1"><strong>models</strong><span>training loops / evaluation / vision</span></div>
+      <div class="map-node n2"><strong>systems</strong><span>agents / memory / workflows</span></div>
+      <div class="map-node n3"><strong>rules</strong><span>math / logic / constraints</span></div>
+      <div class="map-node n4"><strong>taste</strong><span>interface / signal / restraint</span></div>
+      <svg class="map-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M50 50 L20 22 M50 50 L82 27 M50 50 L24 78 M50 50 L78 76" />
+      </svg>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="wrap footer-row">
       <small>© 2026 Domi</small>
-      <small>scryx · rules are defaults, not truth</small>
+      <small>scryx</small>
     </div>
   </footer>
 </body>
