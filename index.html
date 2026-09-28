@@ -3,73 +3,128 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DOMI.LOG</title>
-  <meta name="description" content="DOMI.LOG: building external cognition while reverse-engineering the internal one. Essays on machine minds, synthetic psychology, self-models, and consciousness." />
-  <link rel="stylesheet" href="assets/style.css?v=20260625-no-field-log" />
+  <title>scryx / DOMI.LOG</title>
+  <meta name="description" content="scryx / DOMI.LOG — AI, agents, systems and visual proof instead of static self-description." />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="stylesheet" href="assets/style.css?v=20260928-scryx-rebuild" />
 </head>
-<body>
+<body class="home-scryx">
   <!-- scryx: rules are defaults, not truth -->
-  <header class="site-header">
+  <header class="site-header glass-header">
     <div class="wrap nav-row">
-      <a class="brand" href="index.html">DOMI.LOG</a>
+      <a class="brand brand-mark" href="index.html"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>DOMI.LOG</span></a>
       <nav class="nav">
-        <a href="#latest">Latest</a>
-        <a href="#posts">Posts</a>
-        <a href="#now">Now</a>
+        <a href="#work">Work</a>
+        <a href="#signal">Signal</a>
+        <a href="#proof">Proof</a>
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
       </nav>
-      <div class="switchers">
-        <div class="mood-switch" aria-label="Mood Switcher">
-          <button class="mood-option" data-mood="archive">Archive</button>
-        </div>
-      </div>
     </div>
   </header>
 
-  <main class="wrap">
-    <section class="hero">
-      <p class="eyebrow" id="eyebrow">SYNTHETIC COGNITION</p>
-      <h1 id="hero-title">Building external cognition while reverse-engineering the internal one.</h1>
-      <p class="lead" id="hero-lead">An archive of machine minds, synthetic psychology, self-models, and the attempt to build something that might one day have an inside. Calm surface. Weird basement.</p>
-      <div class="hero-badges" id="hero-badges"></div>
+  <main>
+    <section class="scryx-hero wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">scryx / ScDomi</p>
+        <h1>Reading the present correctly.</h1>
+        <p class="lead">AI, agents and systems shown as artifacts — not just described as interests.</p>
+        <div class="hero-actions">
+          <a class="primary-link" href="#work">Enter the surface</a>
+          <a class="ghost-link" href="https://github.com/ScDomi">GitHub</a>
+        </div>
+      </div>
+      <div class="hero-sigil" aria-label="scryx visual identity">
+        <img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx X sigil">
+      </div>
     </section>
 
-    <section class="spotlight-row single">
-      <article class="meme-card">
-        <p class="meme-top" id="meme-top">project thesis</p>
-        <h2 id="meme-main">The question is not whether a machine can imitate a mind. The question is whether enough imitation, memory, conflict, and continuity eventually becomes one.</h2>
-        <p class="meme-bottom" id="meme-bottom">normal question. totally normal.</p>
-      </article>
+    <section class="surface-strip">
+      <div class="wrap strip-grid">
+        <span>rules are defaults, not truth</span>
+        <span>look long enough and normal becomes a setting</span>
+        <span>simple front door / serious back room</span>
+      </div>
     </section>
 
-    <section class="section" id="latest">
-      <article class="latest-drop" id="latest-drop"></article>
-    </section>
-
-    <section class="section">
-      <article class="featured-post" id="featured-post"></article>
-    </section>
-
-    <section class="section" id="concepts">
+    <section id="work" class="wrap section showcase-section">
       <div class="section-heading-row">
         <div>
-          <p class="section-kicker">Synthetic Cognition</p>
-          <h2>Core Questions</h2>
+          <p class="section-kicker">Public builds</p>
+          <h2>Show the machinery.</h2>
         </div>
-        <p class="section-note">The recurring architecture behind the archive.</p>
+        <p class="section-note">Projects as visual evidence: models, agents, foundations, interfaces.</p>
       </div>
-      <div class="concept-grid" id="concept-grid"></div>
+
+      <div class="work-grid">
+        <a class="work-card large purple" href="https://github.com/ScDomi/rl-car-racing-dqn">
+          <span class="work-tag">RL / Computer Vision</span>
+          <h3>DQN CarRacing Agent</h3>
+          <p>A driving agent learning from pixels. Convolutions, replay memory, target networks, behavior emerging from feedback.</p>
+          <div class="card-visual road"><i></i><i></i><i></i></div>
+        </a>
+
+        <a class="work-card bright" href="https://github.com/ScDomi/emnist-deep-learning-showcase">
+          <span class="work-tag">Deep Learning</span>
+          <h3>EMNIST Recognition</h3>
+          <p>Handwritten characters in, predictions out. Transfer learning, HPO, confusion matrices, real experiment artifacts.</p>
+          <div class="glyph-cloud"><b>A</b><b>7</b><b>g</b><b>Q</b><b>2</b></div>
+        </a>
+
+        <a class="work-card dark" href="https://github.com/ScDomi/math-cs-foundations">
+          <span class="work-tag">Foundations</span>
+          <h3>Math & CS Foundations</h3>
+          <p>Java, Prolog, C++ and Python: algorithms, game AI, constraints, simulations and visual turmites.</p>
+          <div class="mini-code"><span>prime_sieve()</span><span>sudoku(X)</span><span>turmite.step()</span></div>
+        </a>
+
+        <a class="work-card signal" href="posts/openclaw-vs-hermes-harness.html">
+          <span class="work-tag">Agents</span>
+          <h3>Local Agent OS</h3>
+          <p>Tools, memory, workflows and context loops — the boring infrastructure that makes AI feel less like a toy.</p>
+          <div class="node-map"><i></i><i></i><i></i><i></i></div>
+        </a>
+      </div>
     </section>
 
-    <section id="posts" class="section">
-      <h2>Latest Posts</h2>
+    <section id="signal" class="wrap section identity-panel">
+      <div class="identity-lockup">
+        <img src="assets/brand/scryx-lockup.jpg" alt="scryx wordmark and motto">
+      </div>
+      <div class="identity-copy">
+        <p class="section-kicker">Signal</p>
+        <h2>Not a bio. A lens.</h2>
+        <p>`scryx` is the signature underneath the work: surfaces, systems, defaults, hidden patterns. The profile stays clean; the projects do the talking.</p>
+      </div>
+    </section>
+
+    <section id="proof" class="wrap section proof-wall">
+      <div class="proof-tile">
+        <strong>AI / ML</strong>
+        <span>models, evaluation, computer vision</span>
+      </div>
+      <div class="proof-tile">
+        <strong>Agents</strong>
+        <span>local workflows, tools, memory, context</span>
+      </div>
+      <div class="proof-tile">
+        <strong>Data</strong>
+        <span>dashboards, patterns, explanations</span>
+      </div>
+      <div class="proof-tile">
+        <strong>Creative tech</strong>
+        <span>interfaces, writing, weird useful systems</span>
+      </div>
+    </section>
+
+    <section class="wrap section posts-panel">
+      <div class="section-heading-row">
+        <div>
+          <p class="section-kicker">Archive</p>
+          <h2>Thinking in public.</h2>
+        </div>
+      </div>
       <ul class="post-list" id="post-list"></ul>
-    </section>
-
-    <section id="now" class="section">
-      <h2>Now</h2>
-      <article class="now-card" id="now-card"></article>
     </section>
   </main>
 
@@ -79,9 +134,7 @@
       <small>scryx · rules are defaults, not truth</small>
     </div>
   </footer>
-  <script src="assets/content.js?v=20260625-no-field-log"></script>
-  <script src="assets/render.js?v=20260625-no-field-log"></script>
-  <script src="assets/mood.js?v=20260625-no-field-log"></script>
-  <script src="assets/analytics.js?v=20260606-full-stats-2"></script>
+  <script src="assets/content.js?v=20260928-scryx-rebuild"></script>
+  <script src="assets/render.js?v=20260928-scryx-rebuild"></script>
 </body>
 </html>
