@@ -33,10 +33,10 @@ signal: high
 noise: filtered
 
 <span class="dim">$</span> show evidence
-vision          <span class="dim">→</span> detection + control
-language        <span class="dim">→</span> QA + evaluation
+models          <span class="dim">→</span> learning behavior
 agents          <span class="dim">→</span> memory + tools
-foundations     <span class="dim">→</span> rules underneath
+simulations     <span class="dim">→</span> rules moving
+foundations     <span class="dim">→</span> logic underneath
 
 <span class="dim">$</span> cursor
 _</code></pre>
@@ -50,17 +50,17 @@ _</code></pre>
     </section>
 
     <section class="wrap signal-deck" aria-label="live brain modules">
-      <div class="signal-card active"><span>input</span><strong>pattern</strong><small>first: what repeats?</small></div>
-      <div class="signal-card"><span>process</span><strong>model</strong><small>then: make it runnable.</small></div>
-      <div class="signal-card"><span>output</span><strong>artifact</strong><small>ship evidence.</small></div>
-      <div class="signal-card ghost"><span>filter</span><strong>taste</strong><small>less noise.</small></div>
+      <div class="signal-card active"><span>input</span><strong>pattern</strong><small>what keeps repeating?</small></div>
+      <div class="signal-card"><span>process</span><strong>model</strong><small>can it be simulated?</small></div>
+      <div class="signal-card"><span>output</span><strong>artifact</strong><small>make it visible.</small></div>
+      <div class="signal-card ghost"><span>identity</span><strong>scryx</strong><small>signature layer.</small></div>
     </section>
 
     <section id="artifacts" class="wrap section showcase-section">
       <div class="section-heading-row quiet-heading">
         <div>
           <p class="section-kicker">Artifacts</p>
-          <h2>click into the system.</h2>
+          <h2>things that escaped the head.</h2>
         </div>
         <p class="section-note">Cards open context first. GitHub is inside when the thing actually makes sense.</p>
       </div>
@@ -69,29 +69,29 @@ _</code></pre>
         <button class="work-card project-card large purple" data-project="gesture" onclick="openProject('gesture')">
           <span class="work-tag">CV / YOLO</span>
           <h3>gesture vision</h3>
-          <p>Hand signs → boxes/classes. Dataset chaos included.</p>
-          <div class="image-strip"><img src="assets/projects/gesture/gesture-1.jpg" alt="YOLO gesture example"><img src="assets/projects/gesture/gesture-2.jpg" alt="YOLO gesture example"></div>
+          <p>Hand signs → boxes/classes.</p>
+          <div class="card-visual road"><i></i><i></i><i></i></div>
         </button>
 
         <button class="work-card project-card bright" data-project="squad" onclick="openProject('squad')">
           <span class="work-tag">NLP / QA</span>
-          <h3>SQuAD QA benchmark</h3>
-          <p>Context + question → answer. Models compared, not worshipped.</p>
-          <div class="doc-preview"><img src="assets/projects/nlp/finetuning-large-language-models.pdf.png" alt="LLM fine-tuning documentation preview"></div>
+          <h3>SQuAD QA Benchmark</h3>
+          <p>Context becomes answer.</p>
+          <div class="glyph-cloud"><b>Q</b><b>A</b><b>T5</b><b>L</b><b>?</b></div>
         </button>
 
         <button class="work-card project-card dark" data-project="rl" onclick="openProject('rl')">
           <span class="work-tag">RL / Vision</span>
-          <h3>DQN racing agent</h3>
-          <p>Pixels in. Steering out. Reward decides the personality.</p>
-          <div class="doc-preview"><img src="assets/projects/rl/training-results.png" alt="RL training results"></div>
+          <h3>DQN Racing Agent</h3>
+          <p>Pixels in. Steering out.</p>
+          <div class="mini-code"><span>state = frame_stack</span><span>action = argmax(Q)</span><span>reward += survive()</span></div>
         </button>
 
         <button class="work-card project-card signal" data-project="foundations" onclick="openProject('foundations')">
           <span class="work-tag">Foundations</span>
-          <h3>math/cs foundations</h3>
-          <p>Small rules. Weird worlds. Proof that details matter.</p>
-          <div class="doc-preview"><img src="assets/projects/foundations/turmites.png" alt="Turmites simulation"></div>
+          <h3>Math & CS Foundations</h3>
+          <p>Small rules. Weird worlds.</p>
+          <div class="node-map"><i></i><i></i><i></i><i></i></div>
         </button>
       </div>
     </section>

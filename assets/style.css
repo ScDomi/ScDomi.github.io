@@ -157,3 +157,18 @@ body.home-scryx::before{content:"";position:fixed;inset:0;pointer-events:none;ba
 .project-dialog{max-height:82vh;overflow:auto}.dialog-grid{min-height:auto}.dialog-copy{padding:40px 36px 28px;display:flex;flex-direction:column}.dialog-copy h2{font-size:clamp(1.9rem,3.6vw,3.5rem);margin-bottom:12px}.dialog-simple{font-size:1rem;line-height:1.5}.tech-box{margin:16px 0;padding:15px}.detail-list{grid-template-columns:1fr 1fr;gap:7px;margin:14px 0 18px}.detail-list li{font-size:.82rem;padding:7px 10px}.github-button{align-self:flex-start;margin-top:auto}.dialog-media{padding:26px}.qa-card{padding:18px}.doc-thumb{max-height:180px}.modal-gallery img{height:260px}.wide-shot{max-height:340px}@media(max-width:760px){.detail-list{grid-template-columns:1fr}.project-dialog{max-height:88vh}.github-button{margin-top:8px}}
 /* repo button anchored inside detail panel */
 .project-dialog{position:relative}.github-button{position:absolute;right:36px;bottom:26px;z-index:6;box-shadow:0 10px 30px rgba(185,101,255,.22)}.dialog-copy{padding-bottom:86px}@media(max-width:760px){.github-button{position:static}.dialog-copy{padding-bottom:32px}}
+/* homepage cleanup after project-detail pass */
+.brain-copy{padding-left:clamp(1rem,3vw,2.4rem)}
+.brain-copy .eyebrow{margin-bottom:.9rem;display:block;letter-spacing:.18em}
+.project-grid .project-card{appearance:none;-webkit-appearance:none;color:inherit}
+.project-grid .project-card.large{min-height:560px}
+.project-grid .project-card:not(.large){min-height:300px;padding-bottom:5.7rem}
+.project-grid .bright .glyph-cloud b{color:#120d18}
+.project-grid .image-strip,.project-grid .doc-preview{display:none}
+.section-note{display:none!important}
+/* hero label + card polish */
+.brain-copy .eyebrow{display:inline-block;background:rgba(255,255,255,.055);color:#d9d1e7;border:1px solid rgba(255,255,255,.12);padding:.42rem .72rem;margin-bottom:1.25rem;border-radius:999px;line-height:1;max-width:max-content;box-shadow:none}
+.project-grid .work-card.dark h3{font-size:clamp(1.35rem,2.8vw,2.15rem);max-width:11ch;line-height:.92}
+.project-grid .work-card.dark{padding-bottom:9.6rem}
+.project-grid .work-card.dark .mini-code{bottom:1rem}
+.project-grid .work-card.dark p{max-width:24ch}
