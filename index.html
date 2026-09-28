@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>scryx / ScDomi</title>
-  <meta name="description" content="scryx / ScDomi — a technical self-portrait through systems, models and artifacts." />
+  <meta name="description" content="scryx / ScDomi — surface layer for technical artifacts, systems and experiments." />
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="stylesheet" href="assets/style.css?v=20260928-scryx-rebuild-5" />
+  <link rel="stylesheet" href="assets/style.css?v=20260928-scryx-rebuild-6" />
 </head>
 <body class="home-scryx">
   <!-- scryx: rules are defaults, not truth -->
@@ -15,126 +15,110 @@
       <a class="brand brand-mark" href="index.html"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>scryx</span></a>
       <nav class="nav">
         <a href="#work">Work</a>
-        <a href="#thinking">Thinking</a>
-        <a href="#proof">Range</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
+        <a href="#system">System</a>
+        <a href="#range">Range</a>
+        <a href="https://github.com/ScDomi">GitHub</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <section class="scryx-hero wrap quiet-hero hacker-hero">
+    <section class="scryx-hero wrap quiet-hero hacker-hero brain-surface">
       <div class="hero-copy">
         <p class="eyebrow">ScDomi / scryx</p>
-        <h1>Systems reveal people.</h1>
-        <p class="lead">A technical self-portrait in code, models, agents and simulations. Less profile page, more terminal left open: the interesting part is what leaks through the artifacts.</p>
+        <h1>Surface of the machine.</h1>
+        <p class="lead">Projects, models and systems as the visible layer of how I think.</p>
       </div>
-      <aside class="terminal-panel" aria-label="scryx terminal signal">
-        <div class="term-top"><i></i><i></i><i></i><span>~/scryx/signal</span></div>
-        <pre><code><span class="dim">$</span> whoami
-ScDomi <span class="violet">// scryx</span>
+      <aside class="terminal-panel minimal-terminal" aria-label="scryx terminal signal">
+        <div class="term-top"><i></i><i></i><i></i><span>~/scryx</span></div>
+        <pre><code><span class="dim">$</span> inspect surface
+rules     → defaults
+normal    → setting
+identity  → scryx
 
-<span class="dim">$</span> ./read_surface --mode=technical
-patterns: detected
-systems: active
-claims: ignored
-artifacts: required
-
-<span class="dim">$</span> tail -f mind.log
-compress chaos → structure
-turn curiosity → machinery
-leave evidence → not pitch</code></pre>
+<span class="dim">$</span> show evidence
+models
+agents
+simulations
+systems</code></pre>
       </aside>
     </section>
 
-    <section class="surface-strip">
+    <section class="surface-strip compact-strip">
       <div class="wrap strip-grid">
-        <span>technical self-portrait</span>
-        <span>intelligence leaves artifacts</span>
-        <span>scryx is the signature, not the product</span>
+        <span>rules are defaults, not truth</span>
+        <span>build the evidence</span>
+        <span>show the system</span>
       </div>
     </section>
 
     <section id="work" class="wrap section showcase-section">
       <div class="section-heading-row">
         <div>
-          <p class="section-kicker">Selected artifacts</p>
-          <h2>Designed to make the mind visible.</h2>
+          <p class="section-kicker">Artifacts</p>
+          <h2>What the surface exposes.</h2>
         </div>
-        <p class="section-note">Not a service page. More like an exhibit: each piece shows a different way I compress chaos into structure.</p>
       </div>
 
       <div class="work-grid">
         <a class="work-card large purple" href="https://github.com/ScDomi/rl-car-racing-dqn">
-          <span class="work-tag">RL / Computer Vision</span>
+          <span class="work-tag">RL / Vision</span>
           <h3>DQN CarRacing Agent</h3>
-          <p>Turning pixels into behavior: perception, feedback, memory, failure, iteration. A model learning the world by bumping into it.</p>
+          <p>Pixels → action. Feedback, memory, failure, iteration.</p>
           <div class="card-visual road"><i></i><i></i><i></i></div>
         </a>
 
         <a class="work-card bright" href="https://github.com/ScDomi/emnist-deep-learning-showcase">
           <span class="work-tag">Deep Learning</span>
           <h3>EMNIST Recognition</h3>
-          <p>From noisy handwritten symbols to measurable decisions: training loops, transfer learning, tuning, evaluation.</p>
+          <p>Messy symbols becoming measurable decisions.</p>
           <div class="glyph-cloud"><b>A</b><b>7</b><b>g</b><b>Q</b><b>2</b></div>
         </a>
 
         <a class="work-card dark" href="https://github.com/ScDomi/math-cs-foundations">
           <span class="work-tag">Foundations</span>
           <h3>Math & CS Foundations</h3>
-          <p>Algorithms, logic, constraints, simulations. The basic machinery underneath the shiny stuff.</p>
+          <p>Algorithms, constraints, logic, simulations.</p>
           <div class="mini-code"><span>prime_sieve()</span><span>sudoku(X)</span><span>turmite.step()</span></div>
         </a>
 
-        <a class="work-card signal" href="posts/openclaw-vs-hermes-harness.html">
+        <a class="work-card signal" href="https://github.com/ScDomi">
           <span class="work-tag">Agents</span>
-          <h3>Local Agent OS</h3>
-          <p>Tools, memory, logs and workflows — the infrastructure layer where AI becomes operational instead of decorative.</p>
+          <h3>Local Agent Systems</h3>
+          <p>Tools, memory, logs and workflows turning AI into infrastructure.</p>
           <div class="node-map"><i></i><i></i><i></i><i></i></div>
         </a>
       </div>
     </section>
 
-    <section id="thinking" class="wrap section identity-panel">
+    <section id="system" class="wrap section identity-panel">
       <div class="identity-lockup dark-logo-panel">
         <img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx X sigil and wordmark">
       </div>
       <div class="identity-copy">
-        <p class="section-kicker">Identity</p>
-        <h2>scryx is the direction, not the costume.</h2>
-        <p><code>scryx</code> is the technical identity around the work: precise, pattern-hungry, anti-default. The point is still me — how I think, what I notice, what I build when an idea starts pulling on me.</p>
+        <p class="section-kicker">scryx</p>
+        <h2>the technical identity layer.</h2>
+        <p>Not separate from me. Just the sharper interface: anti-default, pattern-first, built around artifacts.</p>
       </div>
     </section>
 
-    <section id="proof" class="wrap section proof-wall">
+    <section id="range" class="wrap section proof-wall">
       <div class="proof-tile">
         <strong>Modeling</strong>
-        <span>ML, evaluation, computer vision, experiments</span>
+        <span>ML, evaluation, vision</span>
       </div>
       <div class="proof-tile">
         <strong>Systems</strong>
-        <span>agents, tools, local workflows, memory loops</span>
+        <span>agents, tools, workflows</span>
       </div>
       <div class="proof-tile">
         <strong>Abstraction</strong>
-        <span>algorithms, logic, constraints, foundations</span>
+        <span>algorithms, logic, constraints</span>
       </div>
       <div class="proof-tile">
         <strong>Taste</strong>
-        <span>interfaces, writing, visual direction, signal control</span>
+        <span>interface, signal, restraint</span>
       </div>
-    </section>
-
-    <section class="wrap section posts-panel">
-      <div class="section-heading-row">
-        <div>
-          <p class="section-kicker">Fragments</p>
-          <h2>Thought residue.</h2>
-        </div>
-        <p class="section-note">Notes are secondary here. Useful when they reveal the engine behind the artifacts.</p>
-      </div>
-      <ul class="post-list" id="post-list"></ul>
     </section>
   </main>
 
@@ -144,7 +128,5 @@ leave evidence → not pitch</code></pre>
       <small>scryx · rules are defaults, not truth</small>
     </div>
   </footer>
-  <script src="assets/content.js?v=20260928-scryx-rebuild-4"></script>
-  <script src="assets/render.js?v=20260928-scryx-rebuild-4"></script>
 </body>
 </html>
