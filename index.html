@@ -6,10 +6,9 @@
   <title>scryx / ScDomi</title>
   <meta name="description" content="scryx / ScDomi — technical brain surface, artifacts and systems." />
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="stylesheet" href="assets/style.css?v=20260928-scryx-brain-1" />
+  <link rel="stylesheet" href="assets/style.css?v=20260929-project-details-1" />
 </head>
 <body class="home-scryx brain-interface">
-  <!-- scryx: rules are defaults, not truth -->
   <header class="site-header glass-header">
     <div class="wrap nav-row">
       <a class="brand brand-mark" href="index.html"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>scryx</span></a>
@@ -17,7 +16,6 @@
         <a href="#interface">Interface</a>
         <a href="#artifacts">Artifacts</a>
         <a href="#map">Map</a>
-        <a href="https://github.com/ScDomi">GitHub</a>
       </nav>
     </div>
   </header>
@@ -35,10 +33,10 @@ signal: high
 noise: filtered
 
 <span class="dim">$</span> show evidence
-models          <span class="dim">→</span> learning behavior
+vision          <span class="dim">→</span> detection + control
+language        <span class="dim">→</span> QA + evaluation
 agents          <span class="dim">→</span> memory + tools
-simulations     <span class="dim">→</span> rules moving
-foundations     <span class="dim">→</span> logic underneath
+foundations     <span class="dim">→</span> rules underneath
 
 <span class="dim">$</span> cursor
 _</code></pre>
@@ -52,86 +50,129 @@ _</code></pre>
     </section>
 
     <section class="wrap signal-deck" aria-label="live brain modules">
-      <div class="signal-card active">
-        <span>input</span>
-        <strong>pattern</strong>
-        <small>what keeps repeating?</small>
-      </div>
-      <div class="signal-card">
-        <span>process</span>
-        <strong>model</strong>
-        <small>can it be simulated?</small>
-      </div>
-      <div class="signal-card">
-        <span>output</span>
-        <strong>artifact</strong>
-        <small>make it visible.</small>
-      </div>
-      <div class="signal-card ghost">
-        <span>identity</span>
-        <strong>scryx</strong>
-        <small>signature layer.</small>
-      </div>
+      <div class="signal-card active"><span>input</span><strong>pattern</strong><small>first: what repeats?</small></div>
+      <div class="signal-card"><span>process</span><strong>model</strong><small>then: make it runnable.</small></div>
+      <div class="signal-card"><span>output</span><strong>artifact</strong><small>ship evidence.</small></div>
+      <div class="signal-card ghost"><span>filter</span><strong>taste</strong><small>less noise.</small></div>
     </section>
 
     <section id="artifacts" class="wrap section showcase-section">
       <div class="section-heading-row quiet-heading">
         <div>
           <p class="section-kicker">Artifacts</p>
-          <h2>things that escaped the head.</h2>
+          <h2>click into the system.</h2>
         </div>
+        <p class="section-note">Cards open context first. GitHub is inside when the thing actually makes sense.</p>
       </div>
 
-      <div class="work-grid brain-grid">
-        <a class="work-card large purple" href="https://github.com/ScDomi/rl-car-racing-dqn">
+      <div class="work-grid brain-grid project-grid">
+        <button class="work-card project-card large purple" data-project="gesture" onclick="openProject('gesture')">
+          <span class="work-tag">CV / YOLO</span>
+          <h3>gesture vision</h3>
+          <p>Hand signs → boxes/classes. Dataset chaos included.</p>
+          <div class="image-strip"><img src="assets/projects/gesture/gesture-1.jpg" alt="YOLO gesture example"><img src="assets/projects/gesture/gesture-2.jpg" alt="YOLO gesture example"></div>
+        </button>
+
+        <button class="work-card project-card bright" data-project="squad" onclick="openProject('squad')">
+          <span class="work-tag">NLP / QA</span>
+          <h3>SQuAD QA benchmark</h3>
+          <p>Context + question → answer. Models compared, not worshipped.</p>
+          <div class="doc-preview"><img src="assets/projects/nlp/finetuning-large-language-models.pdf.png" alt="LLM fine-tuning documentation preview"></div>
+        </button>
+
+        <button class="work-card project-card dark" data-project="rl" onclick="openProject('rl')">
           <span class="work-tag">RL / Vision</span>
-          <h3>DQN CarRacing Agent</h3>
-          <p>Pixels in. Steering out.</p>
-          <div class="card-visual road"><i></i><i></i><i></i></div>
-        </a>
+          <h3>DQN racing agent</h3>
+          <p>Pixels in. Steering out. Reward decides the personality.</p>
+          <div class="doc-preview"><img src="assets/projects/rl/training-results.png" alt="RL training results"></div>
+        </button>
 
-        <a class="work-card bright" href="https://github.com/ScDomi/emnist-deep-learning-showcase">
-          <span class="work-tag">Deep Learning</span>
-          <h3>EMNIST Recognition</h3>
-          <p>Noise becomes classification.</p>
-          <div class="glyph-cloud"><b>A</b><b>7</b><b>g</b><b>Q</b><b>2</b></div>
-        </a>
-
-        <a class="work-card dark" href="https://github.com/ScDomi/math-cs-foundations">
+        <button class="work-card project-card signal" data-project="foundations" onclick="openProject('foundations')">
           <span class="work-tag">Foundations</span>
-          <h3>Math & CS Foundations</h3>
-          <p>Small rules. Weird worlds.</p>
-          <div class="mini-code"><span>prime_sieve()</span><span>sudoku(X)</span><span>turmite.step()</span></div>
-        </a>
-
-        <a class="work-card signal" href="https://github.com/ScDomi">
-          <span class="work-tag">Agents</span>
-          <h3>Local Agent Systems</h3>
-          <p>Tools, memory, logs, workflows.</p>
-          <div class="node-map"><i></i><i></i><i></i><i></i></div>
-        </a>
+          <h3>math/cs foundations</h3>
+          <p>Small rules. Weird worlds. Proof that details matter.</p>
+          <div class="doc-preview"><img src="assets/projects/foundations/turmites.png" alt="Turmites simulation"></div>
+        </button>
       </div>
     </section>
 
     <section id="map" class="wrap section brain-map">
-      <div class="map-node core">
-        <img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx">
-      </div>
-      <div class="map-node n1"><strong>models</strong><span>training loops / evaluation / vision</span></div>
-      <div class="map-node n2"><strong>systems</strong><span>agents / memory / workflows</span></div>
-      <div class="map-node n3"><strong>rules</strong><span>math / logic / constraints</span></div>
-      <div class="map-node n4"><strong>taste</strong><span>interface / signal / restraint</span></div>
-      <svg class="map-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M50 50 L20 22 M50 50 L82 27 M50 50 L24 78 M50 50 L78 76" />
-      </svg>
+      <div class="map-node core"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx"></div>
+      <div class="map-node n1"><strong>vision</strong><span>images / boxes / control</span></div>
+      <div class="map-node n2"><strong>language</strong><span>questions / answers / eval</span></div>
+      <div class="map-node n3"><strong>systems</strong><span>agents / memory / workflows</span></div>
+      <div class="map-node n4"><strong>rules</strong><span>math / logic / constraints</span></div>
+      <svg class="map-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M50 50 L20 22 M50 50 L82 27 M50 50 L24 78 M50 50 L78 76" /></svg>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrap footer-row">
-      <small>© 2026 Domi</small>
-      <small>scryx</small>
+  <dialog class="project-dialog" id="project-dialog">
+    <button class="dialog-close" aria-label="close">×</button>
+    <div class="dialog-grid">
+      <div class="dialog-media" id="dialog-media"></div>
+      <div class="dialog-copy">
+        <p class="section-kicker" id="dialog-kicker"></p>
+        <h2 id="dialog-title"></h2>
+        <p class="dialog-simple" id="dialog-simple"></p>
+        <div class="tech-box"><span>technical read</span><p id="dialog-tech"></p></div>
+        <ul class="detail-list" id="dialog-points"></ul>
+        <a class="github-button" id="dialog-github" href="#" target="_blank" rel="noreferrer">open GitHub repo →</a>
+      </div>
     </div>
-  </footer>
+  </dialog>
+
+  <footer class="site-footer"><div class="wrap footer-row"><small>© 2026 Domi</small><small>scryx</small></div></footer>
+
+  <script>
+    const projects = {
+      gesture: {
+        kicker: 'computer vision / object detection', title: 'gesture vision',
+        simple: 'A camera sees a hand gesture and the model says what it is. Simple idea. Annoying details.',
+        tech: 'YOLO-style object detection on merged gesture datasets. The actual work is not just training: label semantics had to be normalized, examples inspected, and the output made visible.',
+        points: ['7 gesture classes', 'merged Roboflow-style datasets', 'label perspective cleanup', 'fine-tuned detector + visual samples'],
+        github: 'https://github.com/ScDomi/gesture-vision-yolo',
+        media: '<div class="modal-gallery"><img src="assets/projects/gesture/gesture-1.jpg"><img src="assets/projects/gesture/gesture-2.jpg"></div><code class="media-caption">image → bbox → class</code>'
+      },
+      squad: {
+        kicker: 'nlp / question answering', title: 'SQuAD QA benchmark',
+        simple: 'Give the system a paragraph and a question. It has to answer from the text. No magic, just reading under pressure.',
+        tech: 'A SQuAD-style QA setup around context/question/answer triples: tokenizer artifacts, T5 fine-tuning, and room for comparison against larger reference models like ChatGPT/LLaMA.',
+        points: ['known benchmark task', 'T5 QA fine-tuning', 'answer quality inspection', 'LLM comparison framing'],
+        github: 'https://github.com/ScDomi/squad-qa-benchmark',
+        media: '<div class="qa-card"><span>context</span><p>... a paragraph with the answer hidden inside ...</p><span>question</span><p>what did the model actually read?</p><span>answer</span><p class="violet">the smallest useful signal.</p></div><img class="doc-thumb" src="assets/projects/nlp/finetuning-large-language-models.pdf.png">'
+      },
+      rl: {
+        kicker: 'reinforcement learning / control', title: 'DQN racing agent',
+        simple: 'The agent sees pixels from a racing game and learns which action is less stupid next.',
+        tech: 'Deep Q-learning for visual control: frame preprocessing, reward signal, exploration/exploitation and training curves. Not a chatbot thing — an agent thing.',
+        points: ['pixel-based state', 'discrete actions', 'reward-driven behavior', 'training/evaluation plots'],
+        github: 'https://github.com/ScDomi/rl-car-racing-dqn',
+        media: '<img class="wide-shot" src="assets/projects/rl/training-results.png"><code class="media-caption">reward curve as behavior trace</code>'
+      },
+      foundations: {
+        kicker: 'math / cs / simulations', title: 'foundations',
+        simple: 'Tiny rules create strange systems. That is basically half of computer science being honest.',
+        tech: 'A foundations collection around algorithms, logic, simulations and constraint systems — the low-level thinking behind the flashier ML work.',
+        points: ['turmites / cellular behavior', 'search + constraints', 'algorithmic thinking', 'visual rule systems'],
+        github: 'https://github.com/ScDomi/math-cs-foundations',
+        media: '<img class="wide-shot" src="assets/projects/foundations/turmites.png"><code class="media-caption">simple rules, visible complexity</code>'
+      }
+    };
+    const dialog = document.getElementById('project-dialog');
+    const closeBtn = dialog.querySelector('.dialog-close');
+    window.openProject = function openProject(key) {
+      const p = projects[key];
+      document.getElementById('dialog-kicker').textContent = p.kicker;
+      document.getElementById('dialog-title').textContent = p.title;
+      document.getElementById('dialog-simple').textContent = p.simple;
+      document.getElementById('dialog-tech').textContent = p.tech;
+      document.getElementById('dialog-media').innerHTML = p.media;
+      document.getElementById('dialog-github').href = p.github;
+      document.getElementById('dialog-points').innerHTML = p.points.map(x => `<li>${x}</li>`).join('');
+      dialog.showModal();
+    };
+    closeBtn.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+  </script>
 </body>
 </html>
