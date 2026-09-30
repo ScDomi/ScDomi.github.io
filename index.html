@@ -12,6 +12,7 @@
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
   <canvas class="spark-canvas" id="spark-canvas" aria-hidden="true"></canvas>
   <canvas class="matrix-canvas" id="matrix-canvas" aria-hidden="true"></canvas>
+  <canvas class="webgl-core-canvas" id="webgl-core-canvas" aria-hidden="true"></canvas>
   <div class="cursor-orb" id="cursor-orb" aria-hidden="true"></div>
   <div class="scanline-layer" aria-hidden="true"></div>
   <div class="boot-overlay" id="boot-overlay" aria-hidden="true"><code id="boot-log"></code></div>
@@ -255,6 +256,34 @@ truth: refuses presets
       requestAnimationFrame(raf);
       lenis.on('scroll', () => { window.ScrollTrigger?.update(); updateScrollInterface(); });
     }
+
+    function mountIntegratedWebGL(){
+      const canvas = document.getElementById('webgl-core-canvas');
+      if (!canvas || reduceMotion) return;
+      const gl = canvas.getContext('webgl', { antialias: false, alpha: true, powerPreference: 'low-power' });
+      if (!gl) return;
+      const vert = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+      const frag = `precision mediump float;uniform vec2 r;uniform float t;uniform float s;
+        mat2 rot(float a){float c=cos(a),x=sin(a);return mat2(c,-x,x,c);} 
+        void main(){vec2 uv=(gl_FragCoord.xy-.5*r)/min(r.x,r.y);uv*=rot(s*2.8+t*.04);float a=atan(uv.y,uv.x);float d=length(uv);
+          float ring=smoothstep(.42,.39,abs(d-.42-.08*sin(a*4.+t*.7+s*5.)));
+          float x=1.-smoothstep(.025,.085,abs(abs(uv.x)-abs(uv.y)));
+          float grid=(step(.985,sin((uv.x+s)*42.))*step(.985,sin((uv.y-s)*42.)))*.35;
+          vec3 col=mix(vec3(.45,.16,1.),vec3(.05,1.,.72),sin(a*3.+t+s*8.)*.5+.5);
+          float alpha=(ring*.23+x*.16+grid)*(1.-smoothstep(.35,1.25,d));
+          gl_FragColor=vec4(col,alpha);}`;
+      function shader(type, src){ const sh=gl.createShader(type); gl.shaderSource(sh, src); gl.compileShader(sh); return sh; }
+      const prg = gl.createProgram(); gl.attachShader(prg, shader(gl.VERTEX_SHADER, vert)); gl.attachShader(prg, shader(gl.FRAGMENT_SHADER, frag)); gl.linkProgram(prg); gl.useProgram(prg);
+      const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prg,'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+      const rr=gl.getUniformLocation(prg,'r'), tt=gl.getUniformLocation(prg,'t'), ss=gl.getUniformLocation(prg,'s');
+      let scroll=0; const onScroll=()=>{ const max=document.documentElement.scrollHeight-innerHeight; scroll=max>0?scrollY/max:0; }; addEventListener('scroll',onScroll,{passive:true}); onScroll();
+      function resize(){ const dpr=Math.min(devicePixelRatio||1, lowPower ? 1 : 1.4); canvas.width=innerWidth*dpr; canvas.height=innerHeight*dpr; gl.viewport(0,0,canvas.width,canvas.height); }
+      addEventListener('resize', resize); resize();
+      function draw(now){ gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform2f(rr, canvas.width, canvas.height); gl.uniform1f(tt, now*.001); gl.uniform1f(ss, scroll); gl.drawArrays(gl.TRIANGLE_STRIP,0,4); requestAnimationFrame(draw); }
+      requestAnimationFrame(draw);
+    }
+    mountIntegratedWebGL();
 
     const projects = {
       gesture: {
