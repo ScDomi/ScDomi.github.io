@@ -11,6 +11,7 @@
 </head>
 <body class="home-scryx brain-interface active-lite">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
+  <canvas class="spark-canvas" id="spark-canvas" aria-hidden="true"></canvas>
   <div class="cursor-orb" id="cursor-orb" aria-hidden="true"></div>
   <div class="scroll-system" aria-hidden="true"><span></span><b id="scroll-percent">00</b></div>
   <header class="site-header glass-header">
@@ -153,6 +154,20 @@ truth: refuses presets
           <div class="rule-visual"><i></i><i></i><i></i><i></i><b></b></div>
         </button>
         </div>
+      </div>
+    </section>
+
+    <section class="project-scroll" id="project-scroll" aria-label="project scroll spotlight">
+      <div class="project-stage">
+        <div class="stage-bg" aria-hidden="true"><span></span><span></span><span></span></div>
+        <aside class="stage-rail"><span>PROJECT STREAM</span><b id="stage-count">01 / 07</b></aside>
+        <div class="stage-copy">
+          <p class="section-kicker" id="stage-kicker">CV / YOLO</p>
+          <h2 id="stage-title">gesture vision</h2>
+          <p id="stage-desc">Hand signs into boxes and classes — messy labels turned into visible detection.</p>
+          <div class="stage-tags" id="stage-tags"><span>YOLO</span><span>dataset cleanup</span><span>visual proof</span></div>
+        </div>
+        <div class="stage-visual" id="stage-visual" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
       </div>
     </section>
 
@@ -311,6 +326,46 @@ truth: refuses presets
     }
     renderField();
 
+    const sparkCanvas = document.getElementById('spark-canvas');
+    const sparkCtx = sparkCanvas?.getContext('2d');
+    const sparks = Array.from({ length: 120 }, () => ({ x: Math.random(), y: Math.random(), z: Math.random(), s: Math.random() * 2 + .6, a: Math.random() * .55 + .08 }));
+    function renderSparks(){
+      if (!sparkCanvas || !sparkCtx) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2), w = sparkCanvas.clientWidth, h = sparkCanvas.clientHeight;
+      if (sparkCanvas.width !== Math.floor(w*dpr) || sparkCanvas.height !== Math.floor(h*dpr)) { sparkCanvas.width=Math.floor(w*dpr); sparkCanvas.height=Math.floor(h*dpr); sparkCtx.setTransform(dpr,0,0,dpr,0,0); }
+      sparkCtx.clearRect(0,0,w,h);
+      const scroll = Number(getComputedStyle(document.documentElement).getPropertyValue('--scroll')) || 0;
+      for (const p of sparks) {
+        p.y = (p.y + .0007 + p.z*.0016 + scroll*.0005) % 1;
+        const x = p.x*w + Math.sin((p.y+scroll)*8+p.z*5)*28;
+        const y = p.y*h;
+        const grad = sparkCtx.createRadialGradient(x,y,0,x,y,p.s*7);
+        grad.addColorStop(0, `rgba(255,255,255,${p.a})`); grad.addColorStop(.35, `rgba(185,101,255,${p.a*.45})`); grad.addColorStop(1, 'rgba(185,101,255,0)');
+        sparkCtx.fillStyle = grad; sparkCtx.beginPath(); sparkCtx.arc(x,y,p.s*7,0,Math.PI*2); sparkCtx.fill();
+      }
+      requestAnimationFrame(renderSparks);
+    }
+    renderSparks();
+
+    const spotlightProjects = [
+      ['CV / YOLO','gesture vision','Hand signs into boxes and classes — messy labels turned into visible detection.',['YOLO','dataset cleanup','visual proof'],'gesture'],
+      ['NLP / QA','SQuAD QA Benchmark','A paragraph, a question, one answer. Small task, brutal honesty test.',['SQuAD','T5','LLM compare'],'squad'],
+      ['RL / VISION','DQN Racing Agent','Pixels in, steering out — behavior learned through reward instead of instructions.',['DQN','control','reward trace'],'rl'],
+      ['REALTIME CV','emotion stream','Webcam in, face signal out — the live loop candidate hiding in the archive.',['webcam','face signal','archive hunt'],'emotion'],
+      ['IOT / SYSTEMS','UbiquePulse','Sensors, flows and app pieces — code touching reality instead of just screens.',['ESP32','Node-RED','WebApp'],'ubique'],
+      ['MARKETS / AGENT','Alpaca Markets','Automation with a seatbelt: data, risk, execution, then maybe confidence.',['broker API','risk first','paper bot'],'alpaca'],
+      ['FOUNDATIONS','Math & CS Foundations','Small rules making weird worlds — the non-flashy layer explaining the flashy one.',['logic','search','simulations'],'foundations']
+    ];
+    function setStageProject(i){
+      const p = spotlightProjects[i]; if (!p) return;
+      document.getElementById('stage-kicker').textContent = p[0];
+      document.getElementById('stage-title').textContent = p[1];
+      document.getElementById('stage-desc').textContent = p[2];
+      document.getElementById('stage-tags').innerHTML = p[3].map(t=>`<span>${t}</span>`).join('');
+      document.getElementById('stage-count').textContent = `${String(i+1).padStart(2,'0')} / ${String(spotlightProjects.length).padStart(2,'0')}`;
+      document.getElementById('project-scroll').dataset.project = p[4];
+    }
+
     if (window.gsap && window.ScrollTrigger && !window.matchMedia('(max-width: 760px)').matches) {
       gsap.registerPlugin(ScrollTrigger);
       gsap.defaults({ ease: 'none' });
@@ -339,6 +394,20 @@ truth: refuses presets
         scrollTrigger: { trigger: '.artifact-field-shell', start: 'top 70%', end: 'top 20%', scrub: .8 }
       });
       gsap.to('.brain-terminal', { y: -180, opacity: .18, filter: 'blur(6px)', scrollTrigger: { trigger: '#scroll-theatre', start: 'top 85%', end: 'top 20%', scrub: 1 }});
+
+      setStageProject(0);
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '#project-scroll', start: 'top top', end: `+=${spotlightProjects.length * 620}`,
+          scrub: .9, pin: '.project-stage', anticipatePin: 1,
+          onUpdate: self => setStageProject(Math.min(spotlightProjects.length - 1, Math.floor(self.progress * spotlightProjects.length)))
+        }
+      })
+        .fromTo('.stage-copy', { y: 80, opacity: .35, filter: 'blur(8px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: .7, immediateRender: false }, 0)
+        .fromTo('.stage-visual i', { y: 140, opacity: .15, rotate: 16 }, { y: 0, opacity: 1, rotate: 0, stagger: .06, duration: .9, immediateRender: false }, .1)
+        .to('.stage-visual', { rotate: 10, scale: 1.08, duration: 2.4 }, .5)
+        .to('.stage-bg span', { x: 'random(-160,160)', y: 'random(-100,100)', rotate: 'random(-25,25)', stagger: .1, duration: 2.6 }, 0)
+        .to('.project-stage', { backgroundColor: '#05020a', duration: 2.5 }, 0);
     }
   </script>
 </body>
