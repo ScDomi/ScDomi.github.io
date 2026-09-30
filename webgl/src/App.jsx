@@ -16,15 +16,18 @@ const projects = [
   ['FOUNDATIONS', 'math + cs', 'logic graph / search tree / rules moving', '#d8c7ff'],
 ];
 
-function ScryxCore({ scroll }) {
+function ScryxCore({ scroll, smooth }) {
   const group = useRef();
   const inner = useRef();
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const t = state.clock.elapsedTime;
-    group.current.rotation.y = t * 0.18 + scroll.current * 2.8;
-    group.current.rotation.x = Math.sin(t * 0.4) * 0.16 + scroll.current * .35;
-    inner.current.rotation.z = -t * 0.35;
-    group.current.position.z = -scroll.current * 3.5;
+    smooth.current = THREE.MathUtils.damp(smooth.current, scroll.current, 4.2, delta);
+    const s = smooth.current;
+    group.current.rotation.y = t * 0.18 + s * 3.6;
+    group.current.rotation.x = Math.sin(t * 0.4) * 0.16 + s * .45;
+    inner.current.rotation.z = -t * 0.35 - s * 4;
+    group.current.position.z = -s * 4.2;
+    group.current.position.x = Math.sin(s * Math.PI * 2) * .7;
   });
   return (
     <group ref={group}>
@@ -42,7 +45,7 @@ function ScryxCore({ scroll }) {
   );
 }
 
-function ParticleField({ scroll }) {
+function ParticleField({ smooth }) {
   const points = useRef();
   const { positions, colors } = useMemo(() => {
     const count = 1250;
@@ -62,18 +65,24 @@ function ParticleField({ scroll }) {
     return { positions: p, colors: c };
   }, []);
   useFrame((state) => {
-    points.current.rotation.y = state.clock.elapsedTime * 0.025 + scroll.current * .5;
-    points.current.position.z = scroll.current * 4;
+    const s = smooth.current;
+    points.current.rotation.y = state.clock.elapsedTime * 0.025 + s * .9;
+    points.current.rotation.x = Math.sin(s * Math.PI) * .12;
+    points.current.position.z = s * 6;
   });
   return <points ref={points}><bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /><bufferAttribute attach="attributes-color" args={[colors, 3]} /></bufferGeometry><pointsMaterial size={0.026} vertexColors transparent opacity={0.75} depthWrite={false} /></points>;
 }
 
-function ProjectConstellation({ scroll, setActive }) {
+function ProjectConstellation({ smooth, setActive }) {
   const group = useRef();
-  useFrame(() => {
-    const idx = Math.min(projects.length - 1, Math.max(0, Math.floor(scroll.current * projects.length)));
-    setActive(idx);
-    group.current.rotation.y = -scroll.current * 1.8;
+  const last = useRef(-1);
+  useFrame((state) => {
+    const s = smooth.current;
+    const idx = Math.min(projects.length - 1, Math.max(0, Math.floor(s * projects.length)));
+    if (idx !== last.current) { last.current = idx; setActive(idx); }
+    group.current.rotation.y = -s * 2.15 + state.clock.elapsedTime * .03;
+    group.current.position.x = Math.sin(s * Math.PI * 2) * -.65;
+    group.current.position.z = -1.5 + Math.cos(s * Math.PI) * .75;
   });
   const nodes = projects.map((p, i) => {
     const a = (i / projects.length) * Math.PI * 2;
@@ -83,7 +92,37 @@ function ProjectConstellation({ scroll, setActive }) {
   return <group ref={group}>{nodes.map(({ p, pos, i }) => <Float key={p[0]} speed={1 + i * .06} floatIntensity={0.35}><mesh position={pos}><icosahedronGeometry args={[.16, 1]} /><meshStandardMaterial color={p[3]} emissive={p[3]} emissiveIntensity={1.4} /></mesh><Html position={[pos[0] + .28, pos[1] + .05, pos[2]]} className="node-label"><b>./{p[0]}</b><span>{p[1]}</span></Html></Float>)}<Line points={nodes.map(n => n.pos)} color="#7347ff" transparent opacity={0.35} lineWidth={1} /></group>;
 }
 
+function SignalRibbons({ smooth }) {
+  const group = useRef();
+  const lines = useMemo(() => Array.from({ length: 9 }, (_, i) => {
+    const z = -2 - i * 1.15;
+    return Array.from({ length: 18 }, (_, j) => [
+      (j - 8.5) * .55,
+      Math.sin(j * .75 + i) * .18 + (i % 3 - 1) * .55,
+      z + Math.sin(j * .4) * .25,
+    ]);
+  }), []);
+  useFrame((state) => {
+    const s = smooth.current;
+    group.current.position.z = s * 8;
+    group.current.rotation.z = Math.sin(state.clock.elapsedTime * .35 + s * 5) * .05;
+  });
+  return <group ref={group}>{lines.map((line, i) => <Line key={i} points={line} color={i % 2 ? '#b965ff' : '#24ffba'} transparent opacity={0.14 + (i % 3) * .045} lineWidth={1} />)}</group>;
+}
+
+function CameraRig({ smooth }) {
+  useFrame(({ camera }, delta) => {
+    const s = smooth.current;
+    camera.position.x = THREE.MathUtils.damp(camera.position.x, Math.sin(s * Math.PI * 2) * 1.15, 3, delta);
+    camera.position.y = THREE.MathUtils.damp(camera.position.y, .25 - s * 1.2, 3, delta);
+    camera.position.z = THREE.MathUtils.damp(camera.position.z, 8 - s * 2.4, 3, delta);
+    camera.lookAt(Math.sin(s * Math.PI) * .5, -.15 - s * .55, -2.2 - s * 2.5);
+  });
+  return null;
+}
+
 function Scene({ scroll, setActive }) {
+  const smooth = useRef(0);
   return <Canvas camera={{ position: [0, 0, 8], fov: 55 }} dpr={[1, 1.55]} gl={{ antialias: true, powerPreference: 'high-performance' }}>
     <color attach="background" args={['#020104']} />
     <fog attach="fog" args={['#05020a', 6, 24]} />
@@ -91,10 +130,12 @@ function Scene({ scroll, setActive }) {
     <pointLight position={[4, 3, 4]} color="#b965ff" intensity={8} />
     <pointLight position={[-5, -2, 2]} color="#24ffba" intensity={4} />
     <Suspense fallback={null}>
+      <CameraRig smooth={smooth} />
       <Stars radius={60} depth={22} count={1200} factor={2.1} fade speed={0.5} />
-      <ParticleField scroll={scroll} />
-      <ScryxCore scroll={scroll} />
-      <ProjectConstellation scroll={scroll} setActive={setActive} />
+      <SignalRibbons smooth={smooth} />
+      <ParticleField smooth={smooth} />
+      <ScryxCore scroll={scroll} smooth={smooth} />
+      <ProjectConstellation smooth={smooth} setActive={setActive} />
       <Text position={[0, -2.6, 0]} fontSize={0.22} color="#d8c7ff" anchorX="center">hold signal // scroll camera // decrypt artifacts</Text>
     </Suspense>
   </Canvas>;
