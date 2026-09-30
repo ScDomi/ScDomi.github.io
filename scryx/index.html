@@ -9,7 +9,9 @@
   <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="stylesheet" href="assets/style.css?v=20260929-project-details-1" />
 </head>
-<body class="home-scryx brain-interface">
+<body class="home-scryx brain-interface active-lite">
+  <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
+  <div class="cursor-orb" id="cursor-orb" aria-hidden="true"></div>
   <header class="site-header glass-header">
     <div class="wrap nav-row">
       <a class="brand brand-mark" href="scryx/"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>scryx</span></a>
@@ -48,7 +50,8 @@ truth: refuses presets
       <div class="brain-copy">
         <p class="eyebrow">ScDomi / scryx</p>
         <h1>brain surface.</h1>
-        <p class="lead">A public interface for the technical part of my head.</p>
+        <p class="lead">A public interface for the technical part of my head — projects as signals, not business cards.</p>
+        <div class="interface-readout"><span>field: public</span><span>audio: off</span><span>proof: artifacts</span></div>
       </div>
     </section>
 
@@ -68,7 +71,13 @@ truth: refuses presets
         <p class="section-note">Cards open context first. GitHub is inside when the thing actually makes sense.</p>
       </div>
 
-      <div class="work-grid brain-grid project-grid">
+      <div class="artifact-field-shell">
+        <svg class="artifact-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M12 24 C30 12 42 18 50 30 S74 43 88 22" />
+          <path d="M18 72 C36 54 50 82 68 58 S80 46 92 68" />
+          <path d="M28 18 C24 42 40 50 52 56 S70 68 74 88" />
+        </svg>
+        <div class="work-grid brain-grid project-grid artifact-field">
         <button class="work-card project-card large purple" data-project="gesture" onclick="openProject('gesture')">
           <span class="work-tag">CV / YOLO</span>
           <h3>gesture vision</h3>
@@ -124,6 +133,7 @@ truth: refuses presets
           <div class="card-spec"><span>logic</span><span>search</span><span>simulations</span></div>
           <div class="rule-visual"><i></i><i></i><i></i><i></i><b></b></div>
         </button>
+        </div>
       </div>
     </section>
 
@@ -231,6 +241,42 @@ truth: refuses presets
     };
     closeBtn.addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+
+    const orb = document.getElementById('cursor-orb');
+    window.addEventListener('pointermove', (e) => {
+      document.documentElement.style.setProperty('--mx', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--my', `${e.clientY}px`);
+      if (orb) {
+        orb.animate({ transform: `translate(${e.clientX}px, ${e.clientY}px)` }, { duration: 420, fill: 'forwards', easing: 'cubic-bezier(.2,.8,.2,1)' });
+      }
+    }, { passive: true });
+
+    const canvas = document.getElementById('field-canvas');
+    const ctx = canvas?.getContext('2d');
+    const particles = Array.from({ length: 70 }, (_, i) => ({
+      x: Math.random(), y: Math.random(), r: Math.random() * 1.8 + .25,
+      vx: (Math.random() - .5) * .00045, vy: (Math.random() - .5) * .00036,
+      a: Math.random() * .42 + .08
+    }));
+    function renderField(){
+      if (!ctx || !canvas) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      if (canvas.width !== Math.floor(w * dpr) || canvas.height !== Math.floor(h * dpr)) {
+        canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
+      }
+      ctx.clearRect(0,0,w,h);
+      for (const p of particles) {
+        p.x = (p.x + p.vx + 1) % 1; p.y = (p.y + p.vy + 1) % 1;
+        ctx.beginPath(); ctx.fillStyle = `rgba(216,199,255,${p.a})`; ctx.arc(p.x*w, p.y*h, p.r, 0, Math.PI*2); ctx.fill();
+      }
+      for (let i=0;i<particles.length;i++) for (let j=i+1;j<particles.length;j++) {
+        const a=particles[i], b=particles[j], dx=(a.x-b.x)*w, dy=(a.y-b.y)*h, dist=Math.hypot(dx,dy);
+        if (dist < 120) { ctx.strokeStyle=`rgba(143,77,255,${(1-dist/120)*.12})`; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(a.x*w,a.y*h); ctx.lineTo(b.x*w,b.y*h); ctx.stroke(); }
+      }
+      requestAnimationFrame(renderField);
+    }
+    renderField();
   </script>
 </body>
 </html>
