@@ -12,7 +12,11 @@
 <body class="home-scryx brain-interface active-lite">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
   <canvas class="spark-canvas" id="spark-canvas" aria-hidden="true"></canvas>
+  <canvas class="matrix-canvas" id="matrix-canvas" aria-hidden="true"></canvas>
   <div class="cursor-orb" id="cursor-orb" aria-hidden="true"></div>
+  <div class="scanline-layer" aria-hidden="true"></div>
+  <div class="boot-overlay" id="boot-overlay" aria-hidden="true"><code id="boot-log"></code></div>
+  <div class="hack-hud" aria-hidden="true"><span>root@scryx</span><b id="hud-state">signal:clean</b><i>rules != truth</i></div>
   <div class="scroll-system" aria-hidden="true"><span></span><b id="scroll-percent">00</b></div>
   <header class="site-header glass-header">
     <div class="wrap nav-row">
@@ -294,6 +298,8 @@ truth: refuses presets
       document.documentElement.style.setProperty('--scroll', progress.toFixed(4));
       document.documentElement.style.setProperty('--scroll-deg', `${(progress * 360).toFixed(1)}deg`);
       if (scrollPercent) scrollPercent.textContent = String(Math.round(progress * 100)).padStart(2, '0');
+      const hud = document.getElementById('hud-state');
+      if (hud) hud.textContent = progress > .72 ? 'map:expanded' : progress > .38 ? 'artifacts:streaming' : progress > .14 ? 'core:opening' : 'signal:clean';
     }
     updateScrollInterface();
     window.addEventListener('scroll', updateScrollInterface, { passive: true });
@@ -346,6 +352,43 @@ truth: refuses presets
       requestAnimationFrame(renderSparks);
     }
     renderSparks();
+
+    const matrixCanvas = document.getElementById('matrix-canvas');
+    const matrixCtx = matrixCanvas?.getContext('2d');
+    const glyphs = '01{}[]<>/\\$#λΣΔrootforktruthrulesdefaults';
+    let matrixDrops = [];
+    function renderMatrix(){
+      if (!matrixCanvas || !matrixCtx) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2), w = matrixCanvas.clientWidth, h = matrixCanvas.clientHeight;
+      if (matrixCanvas.width !== Math.floor(w*dpr) || matrixCanvas.height !== Math.floor(h*dpr)) {
+        matrixCanvas.width=Math.floor(w*dpr); matrixCanvas.height=Math.floor(h*dpr); matrixCtx.setTransform(dpr,0,0,dpr,0,0);
+        matrixDrops = Array.from({length: Math.ceil(w/24)}, () => Math.random()*h);
+      }
+      matrixCtx.fillStyle = 'rgba(3,3,4,.075)'; matrixCtx.fillRect(0,0,w,h);
+      matrixCtx.font = '12px ui-monospace, SFMono-Regular, Menlo, monospace';
+      matrixCtx.textAlign = 'center';
+      const scroll = Number(getComputedStyle(document.documentElement).getPropertyValue('--scroll')) || 0;
+      matrixDrops.forEach((y,i) => {
+        const x = i*24 + 12;
+        const ch = glyphs[Math.floor(Math.random()*glyphs.length)];
+        matrixCtx.fillStyle = Math.random() > .965 ? 'rgba(255,255,255,.75)' : `rgba(185,101,255,${.08 + scroll*.18})`;
+        matrixCtx.fillText(ch, x, y);
+        matrixDrops[i] = y > h + Math.random()*900 ? -20 : y + 1.2 + scroll*2.2;
+      });
+      requestAnimationFrame(renderMatrix);
+    }
+    renderMatrix();
+
+    const bootLog = document.getElementById('boot-log');
+    const bootOverlay = document.getElementById('boot-overlay');
+    const bootLines = ['$ ./scryx --surface public', 'loading artifacts ........ ok', 'audio disabled .......... ok', 'rules mounted as defaults', 'truth: refusing presets', 'interface unlocked'];
+    if (bootLog && bootOverlay && !sessionStorage.getItem('scryxBooted')) {
+      let idx = 0;
+      const tick = setInterval(() => {
+        bootLog.textContent += bootLines[idx++] + '\n';
+        if (idx >= bootLines.length) { clearInterval(tick); sessionStorage.setItem('scryxBooted','1'); setTimeout(()=>bootOverlay.classList.add('done'), 450); }
+      }, 120);
+    } else if (bootOverlay) bootOverlay.classList.add('done');
 
     const spotlightProjects = [
       ['CV / YOLO','gesture vision','Hand signs into boxes and classes — messy labels turned into visible detection.',['YOLO','dataset cleanup','visual proof'],'gesture'],
