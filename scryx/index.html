@@ -14,6 +14,8 @@
   <canvas class="spark-canvas" id="spark-canvas" aria-hidden="true"></canvas>
   <canvas class="matrix-canvas" id="matrix-canvas" aria-hidden="true"></canvas>
   <canvas class="webgl-core-canvas" id="webgl-core-canvas" aria-hidden="true"></canvas>
+  <div class="flying-sigil" id="flying-sigil" aria-hidden="true"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt=""></div>
+  <div class="shader-depth-readout" aria-hidden="true"><span>shader field</span><b id="shader-depth">00.000</b></div>
   <div class="cursor-orb" id="cursor-orb" aria-hidden="true"></div>
   <div class="scanline-layer" aria-hidden="true"></div>
   <div class="boot-overlay" id="boot-overlay" aria-hidden="true"><code id="boot-log"></code></div>
@@ -281,7 +283,23 @@ truth: refuses presets
       let scroll=0; const onScroll=()=>{ const max=document.documentElement.scrollHeight-innerHeight; scroll=max>0?scrollY/max:0; }; addEventListener('scroll',onScroll,{passive:true}); onScroll();
       function resize(){ const dpr=Math.min(devicePixelRatio||1, lowPower ? 1 : 1.4); canvas.width=innerWidth*dpr; canvas.height=innerHeight*dpr; gl.viewport(0,0,canvas.width,canvas.height); }
       addEventListener('resize', resize); resize();
-      function draw(now){ gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform2f(rr, canvas.width, canvas.height); gl.uniform1f(tt, now*.001); gl.uniform1f(ss, scroll); gl.drawArrays(gl.TRIANGLE_STRIP,0,4); requestAnimationFrame(draw); }
+      const sigil = document.getElementById('flying-sigil');
+      const depth = document.getElementById('shader-depth');
+      function draw(now){
+        const time = now*.001;
+        if (sigil) {
+          const x = Math.sin(scroll * Math.PI * 2.2 + time*.22) * 30;
+          const y = Math.cos(scroll * Math.PI * 1.65 + time*.18) * 18;
+          const scale = .62 + scroll * .42;
+          const rx = 58 + Math.sin(time*.4 + scroll*5) * 18;
+          const ry = Math.sin(scroll * Math.PI * 2) * 34;
+          const rz = scroll * 520 + time * 12;
+          sigil.style.transform = `translate3d(calc(-50% + ${x}vw), calc(-50% + ${y}vh), 0) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg) scale(${scale})`;
+          sigil.style.opacity = String(Math.max(.18, .58 - scroll*.18));
+        }
+        if (depth) depth.textContent = scroll.toFixed(3);
+        gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform2f(rr, canvas.width, canvas.height); gl.uniform1f(tt, time); gl.uniform1f(ss, scroll); gl.drawArrays(gl.TRIANGLE_STRIP,0,4); requestAnimationFrame(draw);
+      }
       requestAnimationFrame(draw);
     }
     mountIntegratedWebGL();
