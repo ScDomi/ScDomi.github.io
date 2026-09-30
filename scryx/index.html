@@ -39,8 +39,10 @@ agents          <span class="dim">→</span> memory + tools
 simulations     <span class="dim">→</span> rules moving
 foundations     <span class="dim">→</span> logic underneath
 
-<span class="dim">$</span> cursor
-_</code></pre>
+<span class="dim">$</span> blink default
+rule: on probation
+truth: refuses presets
+<span class="dim">↳</span> fork the rule.</code></pre>
       </div>
 
       <div class="brain-copy">
@@ -71,28 +73,49 @@ _</code></pre>
           <span class="work-tag">CV / YOLO</span>
           <h3>gesture vision</h3>
           <p>Hand signs → boxes/classes.</p>
-          <div class="card-visual road"><i></i><i></i><i></i></div>
+          <div class="card-visual detection-sigil"><i></i><i></i><i></i><b></b></div>
         </button>
 
         <button class="work-card project-card bright" data-project="squad" onclick="openProject('squad')">
           <span class="work-tag">NLP / QA</span>
           <h3>SQuAD QA Benchmark</h3>
           <p>Context becomes answer.</p>
-          <div class="glyph-cloud"><b>Q</b><b>A</b><b>T5</b><b>L</b><b>?</b></div>
+          <div class="qa-flow"><span>context</span><i></i><span>question</span><i></i><strong>answer</strong></div>
         </button>
 
         <button class="work-card project-card dark" data-project="rl" onclick="openProject('rl')">
           <span class="work-tag">RL / Vision</span>
           <h3>DQN Racing Agent</h3>
           <p>Pixels in. Steering out.</p>
-          <div class="mini-code"><span>state = frame_stack</span><span>action = argmax(Q)</span><span>reward += survive()</span></div>
+          <div class="track-visual"><i></i><b></b><span></span></div>
+        </button>
+
+        <button class="work-card project-card signal" data-project="emotion" onclick="openProject('emotion')">
+          <span class="work-tag">Realtime CV</span>
+          <h3>emotion stream</h3>
+          <p>Face signal, live loop.</p>
+          <div class="face-signal"><i></i><i></i><b></b><span></span></div>
+        </button>
+
+        <button class="work-card project-card purple" data-project="ubique" onclick="openProject('ubique')">
+          <span class="work-tag">IoT / Systems</span>
+          <h3>UbiquePulse</h3>
+          <p>Hardware, app, flow.</p>
+          <div class="iot-map"><i></i><i></i><i></i><b></b></div>
+        </button>
+
+        <button class="work-card project-card bright" data-project="alpaca" onclick="openProject('alpaca')">
+          <span class="work-tag">Markets / Agent</span>
+          <h3>Alpaca Markets</h3>
+          <p>Trading system starts here.</p>
+          <div class="market-visual"><i></i><i></i><i></i><i></i><b></b></div>
         </button>
 
         <button class="work-card project-card signal" data-project="foundations" onclick="openProject('foundations')">
           <span class="work-tag">Foundations</span>
           <h3>Math & CS Foundations</h3>
           <p>Small rules. Weird worlds.</p>
-          <div class="node-map"><i></i><i></i><i></i><i></i></div>
+          <div class="rule-visual"><i></i><i></i><i></i><i></i><b></b></div>
         </button>
       </div>
     </section>
@@ -142,6 +165,31 @@ _</code></pre>
         github: 'https://github.com/ScDomi/squad-qa-benchmark',
         media: '<div class="qa-card"><span>context</span><p>... a paragraph with the answer hidden inside ...</p><span>question</span><p>what did the model actually read?</p><span>answer</span><p class="violet">the smallest useful signal.</p></div><img class="doc-thumb" src="assets/projects/nlp/finetuning-large-language-models.pdf.png">'
       },
+
+      emotion: {
+        kicker: 'realtime computer vision / archive hunt', title: 'emotion stream',
+        simple: 'Webcam in, face signal out. The cool part is not the label — it is that the loop reacts live.',
+        tech: 'Planned cleanup target from the MacBook archive: realtime face/emotion recognition around camera capture, face detection and frame-by-frame inference. Source hunt is pending until MacBook SSH/File Sharing is open over Tailscale.',
+        points: ['realtime webcam loop', 'face/emotion inference target', 'portfolio candidate', 'private source still being recovered'],
+        github: '',
+        media: '<div class="qa-card"><span>frame</span><p>camera → face crop → emotion logits</p><span>loop</span><p>latency matters more than notebook prettiness</p><span>status</span><p class="violet">archive hunt pending</p></div><code class="media-caption">this one gets real once the MacBook opens</code>'
+      },
+      ubique: {
+        kicker: 'iot / embedded / system design', title: 'UbiquePulse',
+        simple: 'A real system, not just a notebook: sensors, hardware, flows and an app trying to talk to each other without becoming soup.',
+        tech: 'Existing archive candidate with ESP32/Raspberry Pi material, Node-RED flows, WebApp pieces, system diagrams and project documentation. Strong visual material for a systems card/detail page.',
+        points: ['hardware + web app', 'Node-RED/system diagrams', 'project documentation', 'good website detail candidate'],
+        github: '',
+        media: '<div class="qa-card"><span>devices</span><p>ESP32 / sensors / RFID-ish hardware layer</p><span>flow</span><p>Node-RED + web surface</p><span>artifact</span><p class="violet">system diagrams available</p></div>'
+      },
+      alpaca: {
+        kicker: 'markets / automation', title: 'Alpaca Markets',
+        simple: 'A trading system project with a colleague. Dangerous if sloppy, interesting if treated like infrastructure.',
+        tech: 'Collaborative repo access exists. Work should start on a new branch and separate research/backtesting, broker API integration, risk controls and execution logic instead of pretending a notebook is a strategy.',
+        points: ['collaborative repo', 'new branch workflow', 'broker API integration', 'risk before hype'],
+        github: 'https://github.com/pleonastic6/Alpaca_Markets',
+        media: '<div class="qa-card"><span>rule</span><p>no live trading before boring checks pass</p><span>layers</span><p>data → signal → risk → execution</p><span>default</span><p class="violet">paper first, ego later</p></div>'
+      },
       rl: {
         kicker: 'reinforcement learning / control', title: 'DQN racing agent',
         simple: 'The agent sees pixels from a racing game and learns which action is less stupid next.',
@@ -168,7 +216,9 @@ _</code></pre>
       document.getElementById('dialog-simple').textContent = p.simple;
       document.getElementById('dialog-tech').textContent = p.tech;
       document.getElementById('dialog-media').innerHTML = p.media;
-      document.getElementById('dialog-github').href = p.github;
+      const gh = document.getElementById('dialog-github');
+      gh.href = p.github || '#';
+      gh.style.display = p.github ? 'inline-flex' : 'none';
       document.getElementById('dialog-points').innerHTML = p.points.map(x => `<li>${x}</li>`).join('');
       dialog.showModal();
     };
