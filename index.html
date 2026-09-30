@@ -11,6 +11,7 @@
 <body class="home-scryx brain-interface active-lite">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
   <div class="cursor-orb" id="cursor-orb" aria-hidden="true"></div>
+  <div class="scroll-system" aria-hidden="true"><span></span><b id="scroll-percent">00</b></div>
   <header class="site-header glass-header">
     <div class="wrap nav-row">
       <a class="brand brand-mark" href="index.html"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>scryx</span></a>
@@ -249,6 +250,18 @@ truth: refuses presets
         orb.animate({ transform: `translate(${e.clientX}px, ${e.clientY}px)` }, { duration: 420, fill: 'forwards', easing: 'cubic-bezier(.2,.8,.2,1)' });
       }
     }, { passive: true });
+
+    const scrollPercent = document.getElementById('scroll-percent');
+    function updateScrollInterface(){
+      const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, window.scrollY / max));
+      document.documentElement.style.setProperty('--scroll', progress.toFixed(4));
+      document.documentElement.style.setProperty('--scroll-deg', `${(progress * 360).toFixed(1)}deg`);
+      if (scrollPercent) scrollPercent.textContent = String(Math.round(progress * 100)).padStart(2, '0');
+    }
+    updateScrollInterface();
+    window.addEventListener('scroll', updateScrollInterface, { passive: true });
+    window.addEventListener('resize', updateScrollInterface);
 
     const canvas = document.getElementById('field-canvas');
     const ctx = canvas?.getContext('2d');
