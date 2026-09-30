@@ -6,7 +6,7 @@
   <title>scryx / ScDomi</title>
   <meta name="description" content="scryx / ScDomi — technical brain surface, artifacts and systems." />
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="stylesheet" href="assets/style.css?v=20260930-detail-scroll-2" />
+  <link rel="stylesheet" href="assets/style.css?v=20260930-perf-mobile-1" />
 </head>
 <body class="home-scryx brain-interface active-lite">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
@@ -209,8 +209,11 @@ truth: refuses presets
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script>
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (window.Lenis && !reduceMotion && !window.matchMedia('(max-width: 760px)').matches) {
-      const lenis = new Lenis({ duration: 1.18, smoothWheel: true, wheelMultiplier: .82, touchMultiplier: .9, lerp: .085 });
+    const isMobile = window.matchMedia('(max-width: 760px)').matches;
+    const lowPower = reduceMotion || navigator.hardwareConcurrency <= 4 || isMobile;
+    document.documentElement.classList.toggle('low-power', lowPower);
+    if (window.Lenis && !reduceMotion && !isMobile && navigator.hardwareConcurrency >= 6) {
+      const lenis = new Lenis({ duration: .92, smoothWheel: true, wheelMultiplier: .9, touchMultiplier: .9, lerp: .12 });
       function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
       requestAnimationFrame(raf);
       lenis.on('scroll', () => { window.ScrollTrigger?.update(); updateScrollInterface(); });
@@ -320,14 +323,14 @@ truth: refuses presets
 
     const canvas = document.getElementById('field-canvas');
     const ctx = canvas?.getContext('2d');
-    const particles = Array.from({ length: 70 }, (_, i) => ({
+    const particles = Array.from({ length: lowPower ? 32 : 46 }, (_, i) => ({
       x: Math.random(), y: Math.random(), r: Math.random() * 1.8 + .25,
       vx: (Math.random() - .5) * .00045, vy: (Math.random() - .5) * .00036,
       a: Math.random() * .42 + .08
     }));
     function renderField(){
       if (!ctx || !canvas) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = lowPower ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       const w = canvas.clientWidth, h = canvas.clientHeight;
       if (canvas.width !== Math.floor(w * dpr) || canvas.height !== Math.floor(h * dpr)) {
         canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -347,10 +350,10 @@ truth: refuses presets
 
     const sparkCanvas = document.getElementById('spark-canvas');
     const sparkCtx = sparkCanvas?.getContext('2d');
-    const sparks = Array.from({ length: 120 }, () => ({ x: Math.random(), y: Math.random(), z: Math.random(), s: Math.random() * 2 + .6, a: Math.random() * .55 + .08 }));
+    const sparks = Array.from({ length: lowPower ? 46 : 78 }, () => ({ x: Math.random(), y: Math.random(), z: Math.random(), s: Math.random() * 2 + .6, a: Math.random() * .55 + .08 }));
     function renderSparks(){
       if (!sparkCanvas || !sparkCtx) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2), w = sparkCanvas.clientWidth, h = sparkCanvas.clientHeight;
+      const dpr = lowPower ? 1 : Math.min(window.devicePixelRatio || 1, 1.5), w = sparkCanvas.clientWidth, h = sparkCanvas.clientHeight;
       if (sparkCanvas.width !== Math.floor(w*dpr) || sparkCanvas.height !== Math.floor(h*dpr)) { sparkCanvas.width=Math.floor(w*dpr); sparkCanvas.height=Math.floor(h*dpr); sparkCtx.setTransform(dpr,0,0,dpr,0,0); }
       sparkCtx.clearRect(0,0,w,h);
       const scroll = Number(getComputedStyle(document.documentElement).getPropertyValue('--scroll')) || 0;
@@ -369,10 +372,11 @@ truth: refuses presets
     const matrixCanvas = document.getElementById('matrix-canvas');
     const matrixCtx = matrixCanvas?.getContext('2d');
     const glyphs = '01{}[]<>/\\$#λΣΔrootforktruthrulesdefaults';
-    let matrixDrops = [];
+    let matrixDrops = [], matrixFrame = 0;
     function renderMatrix(){
       if (!matrixCanvas || !matrixCtx) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2), w = matrixCanvas.clientWidth, h = matrixCanvas.clientHeight;
+      if (lowPower || ++matrixFrame % 2) { requestAnimationFrame(renderMatrix); return; }
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.25), w = matrixCanvas.clientWidth, h = matrixCanvas.clientHeight;
       if (matrixCanvas.width !== Math.floor(w*dpr) || matrixCanvas.height !== Math.floor(h*dpr)) {
         matrixCanvas.width=Math.floor(w*dpr); matrixCanvas.height=Math.floor(h*dpr); matrixCtx.setTransform(dpr,0,0,dpr,0,0);
         matrixDrops = Array.from({length: Math.ceil(w/24)}, () => Math.random()*h);
@@ -429,7 +433,7 @@ truth: refuses presets
       }
     }
 
-    if (window.gsap && window.ScrollTrigger && !window.matchMedia('(max-width: 760px)').matches) {
+    if (window.gsap && window.ScrollTrigger && !isMobile) {
       gsap.registerPlugin(ScrollTrigger);
       gsap.defaults({ ease: 'none' });
       const theatreTl = gsap.timeline({
@@ -471,6 +475,19 @@ truth: refuses presets
         .to('.stage-visual', { rotate: 10, scale: 1.08, duration: 2.4 }, .5)
         .to('.stage-bg span', { x: 'random(-160,160)', y: 'random(-100,100)', rotate: 'random(-25,25)', stagger: .1, duration: 2.6 }, 0)
         .to('.project-stage', { backgroundColor: '#05020a', duration: 2.5 }, 0);
+    } else {
+      setStageProject(0);
+      const updateMobileStage = () => {
+        const el = document.getElementById('project-scroll');
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const span = Math.max(1, rect.height - window.innerHeight);
+        const progress = Math.min(1, Math.max(0, -rect.top / span));
+        setStageProject(Math.min(spotlightProjects.length - 1, Math.floor(progress * spotlightProjects.length)));
+      };
+      window.addEventListener('scroll', updateMobileStage, { passive: true });
+      window.addEventListener('resize', updateMobileStage);
+      updateMobileStage();
     }
   </script>
 </body>
