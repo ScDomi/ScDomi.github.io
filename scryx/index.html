@@ -7,7 +7,7 @@
   <title>scryx / ScDomi</title>
   <meta name="description" content="scryx / ScDomi — technical brain surface, artifacts and systems." />
   <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="stylesheet" href="assets/style.css?v=20260930-perf-mobile-1" />
+  <link rel="stylesheet" href="assets/style.css?v=20260930-blackbox-1" />
 </head>
 <body class="home-scryx brain-interface active-lite">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
@@ -18,6 +18,8 @@
   <div class="boot-overlay" id="boot-overlay" aria-hidden="true"><code id="boot-log"></code></div>
   <div class="hack-hud" aria-hidden="true"><span>root@scryx</span><b id="hud-state">signal:clean</b><i>rules != truth</i></div>
   <div class="detail-mesh" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="breach-feed" aria-hidden="true"><span>syslog</span><b>trace / fork / verify</b><i>no gods, no defaults</i></div>
+  <button class="cmd-trigger" id="cmd-trigger" type="button" aria-label="open command palette">⌘ /</button>
   <div class="scroll-system" aria-hidden="true"><span></span><b id="scroll-percent">00</b></div>
   <header class="site-header glass-header">
     <div class="wrap nav-row">
@@ -67,6 +69,31 @@ truth: refuses presets
       <div class="signal-card"><span>signal</span><strong>pattern</strong><small>what actually repeats?</small></div>
       <div class="signal-card"><span>test</span><strong>model</strong><small>make the guess runnable.</small></div>
       <div class="signal-card ghost"><span>proof</span><strong>artifact</strong><small>show me, don’t sell me.</small></div>
+    </section>
+
+    <section class="wrap exploit-lab" aria-label="hacker interface lab">
+      <div class="lab-head">
+        <p class="section-kicker">blackbox lab</p>
+        <h2>beautiful systems should look a little illegal.</h2>
+        <p>Not green-matrix cosplay — more like a private debugger for projects, signals and suspiciously clean decisions.</p>
+      </div>
+      <div class="lab-grid">
+        <article class="lab-panel lab-visual">
+          <span class="panel-label">surveillance texture</span>
+          <div class="net-viz"><i></i><i></i><i></i><i></i><i></i><b></b></div>
+          <small>packet field / no user data / aesthetic only</small>
+        </article>
+        <article class="lab-panel lab-terminal">
+          <span class="panel-label">exploit chain</span>
+          <code>scan artifacts --depth=public<br>fork rule --if default<br>decrypt project.alpaca --paper-first<br>trace signal --until proof<br><em>status: weird but controlled</em></code>
+        </article>
+        <article class="lab-panel lab-keycard">
+          <span class="panel-label">access card</span>
+          <h3>scryxOS</h3>
+          <p>Identity layer for an anti-default technical brain. Press <kbd>⌘ /</kbd> for commands.</p>
+          <div class="key-lines"><i></i><i></i><i></i><i></i></div>
+        </article>
+      </div>
     </section>
 
     <section class="scroll-theatre" id="scroll-theatre" aria-label="scroll controlled interface sequence">
@@ -203,6 +230,16 @@ truth: refuses presets
     </div>
   </dialog>
 
+  <dialog class="command-dialog" id="command-dialog" aria-label="scryx command palette">
+    <div class="cmd-modal">
+      <div class="cmd-top"><span>command palette</span><button type="button" id="cmd-close">esc</button></div>
+      <button data-jump="#artifacts"><b>open artifacts</b><span>jump to project grid</span></button>
+      <button data-jump="#project-scroll"><b>decrypt projects</b><span>scroll the project stream</span></button>
+      <button data-jump="#map"><b>trace map</b><span>open the outward brain view</span></button>
+      <button data-jump="#interface"><b>return boot</b><span>back to surface entry</span></button>
+    </div>
+  </dialog>
+
   <footer class="site-footer"><div class="wrap footer-row"><small>© 2026 Domi</small><small>scryx</small></div></footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
@@ -296,6 +333,22 @@ truth: refuses presets
     };
     closeBtn.addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+
+    const cmdDialog = document.getElementById('command-dialog');
+    const cmdTrigger = document.getElementById('cmd-trigger');
+    const cmdClose = document.getElementById('cmd-close');
+    const openCmd = () => cmdDialog?.showModal();
+    cmdTrigger?.addEventListener('click', openCmd);
+    cmdClose?.addEventListener('click', () => cmdDialog?.close());
+    window.addEventListener('keydown', e => {
+      if ((e.metaKey || e.ctrlKey) && e.key === '/') { e.preventDefault(); openCmd(); }
+      if (e.key === 'Escape' && cmdDialog?.open) cmdDialog.close();
+    });
+    cmdDialog?.addEventListener('click', e => { if (e.target === cmdDialog) cmdDialog.close(); });
+    cmdDialog?.querySelectorAll('[data-jump]').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelector(btn.dataset.jump)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      cmdDialog.close();
+    }));
 
     const orb = document.getElementById('cursor-orb');
     window.addEventListener('pointermove', (e) => {
