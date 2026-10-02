@@ -447,3 +447,9 @@ body.home-scryx .webgl-core-canvas{opacity:.16!important;filter:saturate(.9) con
   .project-grid .project-card{backdrop-filter:blur(6px)!important}
   .artifact-field-shell,.project-stage{box-shadow:0 14px 46px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.04)!important}
 }
+
+/* card background images: real project visuals instead of abstract CSS glyphs */
+.card-bg-img{position:absolute;right:1rem;bottom:1rem;width:min(42vw,220px);height:min(32vh,160px);border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.card-bg-img img{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.92) contrast(1.08) brightness(.88)}
+.card-bg-img::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(5,5,5,.22),rgba(5,5,5,.62));pointer-events:none}
+@media(max-width:760px){.card-bg-img{width:min(52vw,200px);height:120px}}
