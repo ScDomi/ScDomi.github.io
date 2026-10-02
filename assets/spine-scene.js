@@ -128,11 +128,13 @@ function boot() {
   // ---------- load real vertebra meshes, then build the scene ----------
   const loader = new OBJLoader();
   const baseUrl = 'assets/models/spine/';
-  Promise.all(VERTEBRAE.map(name =>
+  const spineLoad = Promise.all(VERTEBRAE.map(name =>
     new Promise((res, rej) => loader.load(`${baseUrl}${name}.obj`, res, undefined, rej))
-  )).then(objects => buildSpine(objects)).catch(err => console.warn('spine meshes failed, particles only', err));
+  ));
+  const brainLoad = new Promise((res, rej) => loader.load('assets/models/brain.obj', res, undefined, rej)).catch(() => null);
+  Promise.all([spineLoad, brainLoad]).then(([objects, brain]) => buildSpine(objects, brain)).catch(err => console.warn('spine meshes failed, particles only', err));
 
-  function buildSpine(objects) {
+  function buildSpine(objects, brainObj) {
     const spine = new THREE.Group();
     scene.add(spine);
 
@@ -244,6 +246,89 @@ function boot() {
       spine.add(disc);
     }
 
+    // ---------- the brain: real CT cortex, docked on top of the spinal cord ----------
+    // same anatomical frame (mm, Z-up) → same S/qFix transform, sits right above C3.
+    let brain = null, brainCoreMat = null, brainPulsePts = null;
+    const BRAIN_LIFT = 1.15; // extra gap so the medulla reads as the brainstem joining C1–C3
+    if (brainObj) {
+      let bg = null;
+      brainObj.traverse(c => { if (c.isMesh && !bg) bg = c.geometry; });
+      if (bg) {
+        bg.computeBoundingBox();
+        const bc = bg.boundingBox.getCenter(new THREE.Vector3());
+        const local = bg.clone().translate(-bc.x, -bc.y, -bc.z);
+        const brainMat = new THREE.MeshStandardMaterial({ color: 0x4a3f6e, metalness: 0.5, roughness: 0.42, emissive: 0x241a48, emissiveIntensity: 1.5 });
+        const brainWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), new THREE.LineBasicMaterial({ color: 0xb98cff, transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false }));
+        const brainSolid = new THREE.Mesh(local, brainMat);
+        const brainFresnel = new THREE.Mesh(local, fresnelMat.clone());
+        brainFresnel.material.fragmentShader = fresnelMat.fragmentShader.replace('0.29, 0.9, 1.0', '0.65, 0.45, 1.0'); // violet cortex rim
+        const bInner = new THREE.Group();
+        bInner.add(brainSolid, brainWire, brainFresnel);
+        bInner.quaternion.copy(qFix);            // anatomical Z-up → Y-up
+        bInner.scale.setScalar(S);
+        // position: centroid over the spinal column top, brainstem (low Z of mesh) faces down into C3
+        const colTop = centers[0]; // C3 centroid (world)
+        bInner.position.set(colTop.x, 0, colTop.z);
+        // place the medulla (lowest anatomical Z = brainstem) just above the column top
+        const minToCentroidMM = bc.z - bg.boundingBox.min.z;
+        bInner.position.y = colTop.y + (minToCentroidMM * S) * 0.72;
+        brain = new THREE.Group();
+        brain.add(bInner);
+        spine.add(brain);
+        brain.userData = { inner: bInner, mat: brainMat, phase: 0.0, focusK: 0, solid: brainSolid };
+        window.__spineBrain = brain;
+        window.__spineCenters = centers;
+        window.__spineS = S;
+
+        // glowing "neural core" tube running up from the spinal cord into the cortex
+        const colTopW = new THREE.Vector3(colTop.x, colTop.y, colTop.z);
+        const brainC = new THREE.Vector3().copy(bInner.position);
+        const upPath = new THREE.CatmullRomCurve3([
+          new THREE.Vector3(colTopW.x, colTopW.y - 0.4, colTopW.z),
+          new THREE.Vector3(colTopW.x, colTopW.y + 0.8, colTopW.z),
+          new THREE.Vector3(brainC.x, brainC.y - 0.5, brainC.z),
+          new THREE.Vector3(brainC.x, brainC.y + 0.9, brainC.z)
+        ]);
+        brainCoreMat = new THREE.MeshBasicMaterial({ color: 0x8f7bff, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false });
+        const brainCore = new THREE.Mesh(new THREE.TubeGeometry(upPath, 40, 0.05, 8, false), brainCoreMat);
+        const brainCoreGlow = new THREE.Mesh(new THREE.TubeGeometry(upPath, 20, 0.22, 8, false), new THREE.MeshBasicMaterial({ color: 0x6a4dff, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false }));
+        spine.add(brainCore, brainCoreGlow);
+
+        // cortical pulse points shimmering over the brain surface
+        const bpCount = lowPower ? 60 : 130;
+        const bp = new Float32Array(bpCount * 3);
+        const bseed = new Float32Array(bpCount);
+        // scatter points on the brain bounding surface (approx via random vertices)
+        const posAttr = local.getAttribute('position');
+        for (let i = 0; i < bpCount; i++) {
+          const vi = Math.floor(Math.random() * posAttr.count);
+          bp[i*3] = posAttr.getX(vi); bp[i*3+1] = posAttr.getY(vi); bp[i*3+2] = posAttr.getZ(vi);
+          bseed[i] = Math.random();
+        }
+        const bpGeo = new THREE.BufferGeometry();
+        bpGeo.setAttribute('position', new THREE.BufferAttribute(bp, 3));
+        bpGeo.setAttribute('aSeed', new THREE.BufferAttribute(bseed, 1));
+        brainPulsePts = new THREE.Points(bpGeo, new THREE.ShaderMaterial({
+          transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+          uniforms: { uTime: { value: 0 } },
+          vertexShader: `attribute float aSeed; uniform float uTime; varying float vA;
+            void main(){ vec3 p=position; vec4 mv=modelViewMatrix*vec4(p,1.0);
+              float tw = 0.5 + 0.5*sin(uTime*(1.5+aSeed*3.0)+aSeed*40.0);
+              vA = 0.15 + tw*0.75;
+              gl_PointSize = (2.0 + aSeed*3.0) * clamp(6.0/max(0.1,-mv.z),0.6,3.0);
+              gl_Position = projectionMatrix*mv; }`,
+          fragmentShader: `varying float vA;
+            void main(){ vec2 uv=gl_PointCoord-0.5; float d=length(uv);
+              float a=smoothstep(0.5,0.0,d)*vA;
+              gl_FragColor=vec4(mix(vec3(0.56,0.35,1.0),vec3(0.4,0.9,1.0),vA), a); }`
+        }));
+        brainPulsePts.quaternion.copy(qFix);
+        brainPulsePts.scale.setScalar(S);
+        brainPulsePts.position.copy(bInner.position);
+        spine.add(brainPulsePts);
+      }
+    }
+
     // ---------- glowing core threading the vertebral canal ----------
     const core = new THREE.Mesh(
       new THREE.TubeGeometry(spineCurve, 160, 0.045, 8, false),
@@ -299,9 +384,9 @@ function boot() {
     // per screen: [key, name, kind, poster image, ambient video loop (optional)]
     const screens = [];
     const projectScreens = [
-      ['gesture', '01 gesture vision', 'cv / yolo', 'assets/projects/gesture/gesture-1.jpg', 'assets/videos/gesture-loop.mp4'],
+      ['gesture', '01 gesture vision', 'cv / yolo', 'assets/projects/gesture/gesture-1.jpg', null],
       ['squad', '02 squad qa', 'nlp / qa', 'assets/projects/nlp/finetuning-large-language-models.pdf.png', null],
-      ['rl', '03 dqn racing', 'rl / vision', 'assets/projects/DQN-Car.png', 'assets/videos/rl-loop.mp4'],
+      ['rl', '03 dqn racing', 'rl / vision', 'assets/projects/DQN-Car.png', null],
       ['emotion', '04 emotion stream', 'realtime cv', null, null],
       ['ubique', '05 ubiquepulse', 'iot / systems', 'assets/projects/IOT.png', null],
       ['alpaca', '06 alpaca markets', 'markets / agent', 'assets/projects/stocks.png', null],
@@ -588,6 +673,16 @@ function boot() {
       coreLight.intensity = 20 + Math.sin(t * 5.2) * 7;
       discMat.opacity = 0.4 + Math.sin(t * 2) * 0.14;
 
+      // brain: slow breathing + cortical shimmer
+      if (brain) {
+        const bu = brain.userData;
+        bu.mat.emissiveIntensity = 1.0 + Math.sin(t * 1.1) * 0.25;
+        bu.inner.scale.setScalar(S * (1 + Math.sin(t * 0.9) * 0.01));
+        bu.inner.rotation.y = Math.sin(t * 0.22) * 0.03;
+        if (brainCoreMat) brainCoreMat.opacity = 0.6 + Math.sin(t * 3.1) * 0.25;
+        if (brainPulsePts) brainPulsePts.material.uniforms.uTime.value = t;
+      }
+
       // packets on the traces
       for (let i = 0; i < PACKET_N; i++) {
         const pk = packets[i];
@@ -663,7 +758,8 @@ function boot() {
       // gentle whole-column sway
       spine.rotation.y = Math.sin(t * 0.09) * 0.04 + mouse.x * 0.02;
 
-      // camera descends the real curve with a slow orbit — close, AT-style
+      // camera descends from the brain (top) down the real curve with a slow orbit
+      // scroll 0 = brain/hero, scroll 1 = bottom of the column
       const path = Math.min(0.94, scroll * 0.94);
       spineCurve.getPointAt(Math.min(1, path + 0.04), focusPt);
       const ang = scroll * Math.PI * 1.7 + t * 0.045 + mouse.x * 0.3;
@@ -673,8 +769,13 @@ function boot() {
         focusPt.y + 2.1 + Math.sin(t * 0.3) * 0.25 + mouse.y * 0.7,
         focusPt.z + Math.sin(ang) * rad
       );
+      // look at the column; near the top tilt the gaze up so the brain enters the upper frame
       camTarget.copy(focusPt);
-      camTarget.y -= 0.4;
+      camTarget.y = focusPt.y - 0.4;
+      if (brain) {
+        const topness = 1 - Math.min(1, scroll / 0.18);
+        camTarget.y = focusPt.y - 0.4 + topness * 2.0; // gentle tilt up so the brain sits in the upper third
+      }
       camera.lookAt(camTarget);
       rimLight.position.set(camera.position.x + 4, camera.position.y + 5, camera.position.z + 5);
 
