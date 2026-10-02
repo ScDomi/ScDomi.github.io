@@ -13,6 +13,7 @@
   <header class="topbar">
     <a class="brand" href="/scryx/" aria-label="back to scryx"><span class="mark">×</span><span>scryx</span></a>
     <nav>
+      <a href="#compare">compare</a>
       <a href="#boundary">boundary</a>
       <a href="#gradient">gradient</a>
       <a href="#network">network</a>
@@ -30,6 +31,28 @@
         <button id="resetBtn">reset</button>
         <label>speed <input id="speed" type="range" min="1" max="10" value="5" /></label>
         <span class="live-pill"><i></i> realtime training</span>
+      </div>
+    </section>
+
+    <section id="compare" class="compare wrap">
+      <div class="panel copy">
+        <p class="kicker">00 / MODEL ZOO</p>
+        <h2>same points. different assumptions.</h2>
+        <p>Clustering asks “what naturally groups?”. Regression asks “what value?”. Logistic regression asks “which side?”. A multilayer perceptron asks “what shape do I need if the simple line fails?”.</p>
+      </div>
+      <div class="compare-board">
+        <div class="tabs" role="tablist" aria-label="model comparison">
+          <button class="tab active" data-mode="cluster">clustering</button>
+          <button class="tab" data-mode="linear">linear regression</button>
+          <button class="tab" data-mode="logistic">logistic regression</button>
+          <button class="tab" data-mode="mlp">MLP</button>
+        </div>
+        <canvas id="compareCanvas" width="1080" height="560" aria-label="comparison of clustering, linear regression, logistic regression and multilayer perceptron"></canvas>
+        <div class="math-card" aria-live="polite">
+          <strong id="mathTitle">k-means clustering</strong>
+          <code id="mathFormula">min Σᵢ ||xᵢ - μ_{cᵢ}||²</code>
+          <p id="mathText">No labels. It moves centroids until nearby points agree on a cluster.</p>
+        </div>
       </div>
     </section>
 

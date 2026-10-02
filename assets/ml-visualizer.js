@@ -10,8 +10,14 @@ const trainBtn = document.getElementById('trainBtn');
 const stepBtn = document.getElementById('stepBtn');
 const resetBtn = document.getElementById('resetBtn');
 const speed = document.getElementById('speed');
+const compareCanvas = document.getElementById('compareCanvas');
+const cctx = compareCanvas.getContext('2d');
+const mathTitle = document.getElementById('mathTitle');
+const mathFormula = document.getElementById('mathFormula');
+const mathText = document.getElementById('mathText');
+const tabs = [...document.querySelectorAll('.tab')];
 
-let points, w, b, epoch, running, path, frame;
+let points, w, b, epoch, running, path, frame, compareMode = 'cluster';
 
 function reset(){
   points = [];
@@ -151,7 +157,38 @@ function drawNetwork(){
 }
 function edge(svg,a,b){const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('class',((a.ni+b.ni+epoch)%7===0)?'edge hot':'edge');l.setAttribute('x1',a.x);l.setAttribute('y1',a.y);l.setAttribute('x2',b.x);l.setAttribute('y2',b.y);svg.appendChild(l)}
 function node(svg,n,hot){const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('class',hot?'node hot':'node');c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);c.setAttribute('r',28);svg.appendChild(c)}
-function drawAll(){drawPlane();drawLoss();drawNetwork();}
+const compareInfo = {
+  cluster:['k-means clustering','min Σᵢ ||xᵢ - μ_{cᵢ}||²','No labels. It moves centroids until nearby points agree on a cluster.'],
+  linear:['linear regression','ŷ = w·x + b  //  min Σ(ŷ - y)²','Predicts a number. Best fit is the line that makes squared error small.'],
+  logistic:['logistic regression','p(y=1|x)=σ(w·x+b)','Predicts probability. Same linear score, squeezed through sigmoid into 0…1.'],
+  mlp:['multilayer perceptron','h=σ(W₁x+b₁),  ŷ=σ(W₂h+b₂)','Adds hidden layers, so the boundary can bend instead of pretending the world is linear.']
+};
+function drawCompare(){
+  cctx.clearRect(0,0,compareCanvas.width,compareCanvas.height);
+  cctx.fillStyle='#05030b'; cctx.fillRect(0,0,compareCanvas.width,compareCanvas.height);
+  const W=compareCanvas.width,H=compareCanvas.height;
+  const gx=x=>W*(.5+x/5.2), gy=y=>H*(.52-y/3.8);
+  for(let x=0;x<W;x+=44){cctx.strokeStyle='rgba(255,255,255,.055)';cctx.beginPath();cctx.moveTo(x,0);cctx.lineTo(x,H);cctx.stroke();}
+  for(let y=0;y<H;y+=44){cctx.strokeStyle='rgba(255,255,255,.055)';cctx.beginPath();cctx.moveTo(0,y);cctx.lineTo(W,y);cctx.stroke();}
+  if(compareMode==='cluster'){
+    const centers=[{x:-1.25,y:-.7,c:'#5bd6ff'},{x:1.2,y:.75,c:'#a673ff'}];
+    centers.forEach((m,mi)=>{cctx.strokeStyle=m.c;cctx.lineWidth=2;cctx.setLineDash([8,10]);cctx.beginPath();cctx.arc(gx(m.x),gy(m.y),105+20*Math.sin(frame*.04+mi),0,Math.PI*2);cctx.stroke();cctx.setLineDash([]);cctx.fillStyle=m.c;cctx.beginPath();cctx.arc(gx(m.x),gy(m.y),14,0,Math.PI*2);cctx.fill();});
+    points.forEach(p=>{const d0=(p.x+1.25)**2+(p.y+.7)**2,d1=(p.x-1.2)**2+(p.y-.75)**2; cctx.fillStyle=d0<d1?'#5bd6ff':'#a673ff'; cctx.beginPath();cctx.arc(gx(p.x),gy(p.y),6,0,Math.PI*2);cctx.fill();});
+  } else if(compareMode==='linear'){
+    points.forEach(p=>{const yy=p.x*.55 + (p.label?.65:-.35); cctx.fillStyle=p.label?'#a673ff':'#5bd6ff'; cctx.beginPath();cctx.arc(gx(p.x),gy(yy),6,0,Math.PI*2);cctx.fill();});
+    cctx.strokeStyle='rgba(119,255,200,.95)';cctx.lineWidth=4;cctx.beginPath();cctx.moveTo(gx(-2.6),gy(-1.2));cctx.lineTo(gx(2.6),gy(1.2));cctx.stroke();
+  } else if(compareMode==='logistic'){
+    for(let x=0;x<W;x+=18){for(let y=0;y<H;y+=18){const px=(x/W-.5)*5.2,py=(.52-y/H)*3.8; const v=sigmoid(w.x*px+w.y*py+b); cctx.fillStyle=v>.5?`rgba(143,77,255,${.05+.13*v})`:`rgba(91,214,255,${.05+.13*(1-v)})`; cctx.fillRect(x,y,18,18)}}
+    points.forEach(p=>{cctx.fillStyle=p.label?'#a673ff':'#5bd6ff';cctx.beginPath();cctx.arc(gx(p.x),gy(p.y),6,0,Math.PI*2);cctx.fill();});
+    cctx.strokeStyle='rgba(255,255,255,.92)';cctx.lineWidth=4;cctx.beginPath();cctx.moveTo(gx(-2.6),gy(-(w.x*-2.6+b)/(w.y||1e-6)));cctx.lineTo(gx(2.6),gy(-(w.x*2.6+b)/(w.y||1e-6)));cctx.stroke();
+  } else {
+    for(let x=0;x<W;x+=16){for(let y=0;y<H;y+=16){const px=(x/W-.5)*5.2,py=(.52-y/H)*3.8; const curve=Math.sin(px*2.2+frame*.015)*.45 + Math.cos(px*.9)*.25; const v=py>curve; cctx.fillStyle=v?'rgba(143,77,255,.16)':'rgba(91,214,255,.14)'; cctx.fillRect(x,y,16,16)}}
+    cctx.strokeStyle='rgba(119,255,200,.92)';cctx.lineWidth=4;cctx.beginPath();for(let i=0;i<=180;i++){const x=-2.6+i/180*5.2,y=Math.sin(x*2.2+frame*.015)*.45+Math.cos(x*.9)*.25; if(i)cctx.lineTo(gx(x),gy(y));else cctx.moveTo(gx(x),gy(y));}cctx.stroke();
+    points.forEach(p=>{cctx.fillStyle=p.label?'#a673ff':'#5bd6ff';cctx.beginPath();cctx.arc(gx(p.x),gy(p.y),6,0,Math.PI*2);cctx.fill();});
+  }
+  const [title,formula,text]=compareInfo[compareMode]; mathTitle.textContent=title; mathFormula.textContent=formula; mathText.textContent=text;
+}
+function drawAll(){drawPlane();drawLoss();drawNetwork();drawCompare();}
 
 function loop(){
   frame++;
@@ -162,4 +199,5 @@ function loop(){
 trainBtn.onclick=()=>{running=!running;trainBtn.textContent=running?'pause realtime':'resume realtime'};
 stepBtn.onclick=()=>trainStep();
 resetBtn.onclick=()=>reset();
+tabs.forEach(tab=>tab.onclick=()=>{compareMode=tab.dataset.mode;tabs.forEach(t=>t.classList.toggle('active',t===tab));drawCompare();});
 reset(); loop();
