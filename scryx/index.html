@@ -10,15 +10,30 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=20260930-blackbox-1" />
+  <link rel="stylesheet" href="assets/style.css?v=20261002-spine-cursor-2" />
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
 </head>
 <body class="home-scryx brain-interface active-lite">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
   <canvas class="spark-canvas" id="spark-canvas" aria-hidden="true"></canvas>
   <canvas class="matrix-canvas" id="matrix-canvas" aria-hidden="true"></canvas>
   <canvas class="webgl-core-canvas" id="webgl-core-canvas" aria-hidden="true"></canvas>
+  <canvas class="spine-canvas" id="spine-canvas" aria-hidden="true"></canvas>
+  <div class="spine-panels" id="spine-panels" aria-hidden="true"></div>
   <div class="shader-depth-readout" aria-hidden="true"><span>scryx field</span><b id="shader-depth">00.000</b></div>
   <div class="cursor-orb" id="cursor-orb" aria-hidden="true"></div>
+  <div class="cursor-system" id="cursor-system" aria-hidden="true">
+    <div class="cursor-ring" id="cursor-ring"></div>
+    <div class="cursor-reticle" id="cursor-reticle">
+      <i class="c-dot"></i><i class="c-arm n"></i><i class="c-arm e"></i><i class="c-arm s"></i><i class="c-arm w"></i>
+      <div class="cursor-meta"><span id="cursor-label"></span><b id="cursor-coords">0000/0000</b></div>
+    </div>
+  </div>
   <div class="scanline-layer" aria-hidden="true"></div>
   <div class="boot-overlay" id="boot-overlay" aria-hidden="true"><code id="boot-log"></code></div>
   <div class="hack-hud" aria-hidden="true"><span>root@scryx</span><b id="hud-state">signal:clean</b><i>rules != truth</i></div>
@@ -246,11 +261,20 @@ default: editable
     </div>
   </dialog>
 
-  <footer class="site-footer"><div class="wrap footer-row"><small>© 2026 Domi</small><small>scryx</small></div></footer>
+  <footer class="site-footer"><div class="wrap footer-row"><small>© 2026 Domi</small><small>scryx</small><small class="mesh-credit">vertebra meshes: BodyParts3D © DBCLS, CC BY-SA 2.1</small></div></footer>
+
+  <div class="cookie-consent" id="cookie-consent" role="dialog" aria-live="polite" aria-label="cookie notice" hidden>
+    <p>this site can remember your command-palette + consent choice locally. no tracking unless you say yes.</p>
+    <div class="cookie-actions">
+      <button type="button" id="cookie-decline">essentials only</button>
+      <button type="button" id="cookie-accept">allow local memory</button>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script type="module" src="assets/spine-scene.js?v=spine-5"></script>
   <script>
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isMobile = window.matchMedia('(max-width: 760px)').matches;
@@ -409,6 +433,38 @@ default: editable
         orb.animate({ transform: `translate(${e.clientX}px, ${e.clientY}px)` }, { duration: 420, fill: 'forwards', easing: 'cubic-bezier(.2,.8,.2,1)' });
       }
     }, { passive: true });
+
+    // custom reticle cursor: instant dot/arms, lagging ring, context label + coords
+    (function cursorSystem(){
+      if (isMobile || window.matchMedia('(pointer: coarse)').matches) return;
+      const sys = document.getElementById('cursor-system');
+      const ring = document.getElementById('cursor-ring');
+      const ret = document.getElementById('cursor-reticle');
+      const label = document.getElementById('cursor-label');
+      const coords = document.getElementById('cursor-coords');
+      if (!sys || !ring || !ret) return;
+      let x = innerWidth / 2, y = innerHeight / 2, rx = x, ry = y;
+      const lag = reduceMotion ? 1 : .16;
+      window.addEventListener('pointermove', (e) => {
+        x = e.clientX; y = e.clientY;
+        sys.classList.add('on');
+        if (coords) coords.textContent = `${String(Math.round(x)).padStart(4, '0')}/${String(Math.round(y)).padStart(4, '0')}`;
+        const hit = e.target.closest?.('a, button, .project-card, .spine-chip, [data-cursor]');
+        let txt = '';
+        if (hit) txt = hit.dataset.cursor || (hit.classList?.contains('spine-chip') ? 'open' : hit.classList?.contains('project-card') ? 'inspect' : hit.tagName === 'A' ? 'jump' : 'exec');
+        if (label) label.textContent = txt;
+        sys.classList.toggle('is-hover', !!hit);
+      }, { passive: true });
+      window.addEventListener('pointerdown', () => sys.classList.add('is-down'));
+      window.addEventListener('pointerup', () => sys.classList.remove('is-down'));
+      document.documentElement.addEventListener('mouseleave', () => sys.classList.remove('on'));
+      (function chase(){
+        rx += (x - rx) * lag; ry += (y - ry) * lag;
+        ret.style.transform = `translate(${x}px, ${y}px)`;
+        ring.style.transform = `translate(${rx}px, ${ry}px)`;
+        requestAnimationFrame(chase);
+      })();
+    })();
 
     const scrollPercent = document.getElementById('scroll-percent');
     function updateScrollInterface(){
@@ -597,6 +653,24 @@ default: editable
       window.addEventListener('resize', updateMobileStage);
       updateMobileStage();
     }
+
+    // cookie consent: opt-in local memory only, no tracking without a yes
+    (function cookieConsent(){
+      const box = document.getElementById('cookie-consent');
+      if (!box) return;
+      const KEY = 'scryxConsent';
+      let stored = null;
+      try { stored = localStorage.getItem(KEY); } catch (e) {}
+      if (!stored) { box.hidden = false; }
+      const set = v => {
+        try { localStorage.setItem(KEY, v); } catch (e) {}
+        window.scryxConsent = v;
+        box.hidden = true;
+      };
+      document.getElementById('cookie-accept')?.addEventListener('click', () => set('allow'));
+      document.getElementById('cookie-decline')?.addEventListener('click', () => set('essential'));
+      window.scryxConsent = stored || 'unset';
+    })();
   </script>
 </body>
 </html>
