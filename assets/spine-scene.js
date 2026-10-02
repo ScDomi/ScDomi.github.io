@@ -15,6 +15,12 @@ const canvas = document.getElementById('spine-canvas');
 // top → bottom anatomical order
 const VERTEBRAE = ['c3', 'c5', 'c7', 't2', 't4', 't6', 't8', 't10', 't12', 'l1', 'l3', 'l5'];
 
+// portrait / narrow viewports need a wider orbit so the column fits the frame
+const aspectRadius = () => {
+  const a = innerWidth / Math.max(1, innerHeight);
+  return THREE.MathUtils.clamp(1.0 / Math.max(0.55, a / 1.4), 1.0, 2.1);
+};
+
 if (!canvas || reduceMotion) {
   // leave the existing GLSL core canvas as the visual fallback
 } else {
@@ -114,6 +120,7 @@ function boot() {
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
   addEventListener('resize', () => {
     camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, lowPower ? 1 : 1.4));
     renderer.setSize(innerWidth, innerHeight);
   });
 
@@ -478,7 +485,7 @@ function boot() {
       } else draw(null);
       return tex;
     }
-    if (!isMobile) {
+    if (!isMobile || innerWidth >= 480) {
       projectScreens.forEach(([key, name, kind, img, vid], i) => {
         const grp = new THREE.Group();
         const frame = new THREE.Mesh(frameGeo, new THREE.MeshBasicMaterial({ color: 0x0b1420, transparent: true, opacity: 0.92 }));
@@ -495,7 +502,7 @@ function boot() {
           key, grp, screen, frame, edge,
           tHome: 0.06 + (i / (projectScreens.length - 1)) * 0.88,
           tOff: Math.sin(i * 3.7) * 0.04,
-          radius: 2.5 + (i % 3) * 0.6,
+          radius: (2.5 + (i % 3) * 0.6) * Math.min(1.3, aspectRadius()),
           speed: (i % 2 ? -1 : 1) * (0.2 + (i % 3) * 0.06),
           phase: i * 2.13,
           vertIdx: vi,
@@ -763,7 +770,7 @@ function boot() {
       const path = Math.min(0.94, scroll * 0.94);
       spineCurve.getPointAt(Math.min(1, path + 0.04), focusPt);
       const ang = scroll * Math.PI * 1.7 + t * 0.045 + mouse.x * 0.3;
-      const rad = 6.1 + Math.sin(scroll * Math.PI * 2.4) * 1.1;
+      const rad = (6.1 + Math.sin(scroll * Math.PI * 2.4) * 1.1) * aspectRadius();
       camera.position.set(
         focusPt.x + Math.cos(ang) * rad,
         focusPt.y + 2.1 + Math.sin(t * 0.3) * 0.25 + mouse.y * 0.7,
