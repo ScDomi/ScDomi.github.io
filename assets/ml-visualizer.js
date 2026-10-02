@@ -11,7 +11,7 @@ const stepBtn = document.getElementById('stepBtn');
 const resetBtn = document.getElementById('resetBtn');
 const speed = document.getElementById('speed');
 
-let points, w, b, epoch, running, path;
+let points, w, b, epoch, running, path, frame;
 
 function reset(){
   points = [];
@@ -30,8 +30,9 @@ function reset(){
   w = {x:-.65,y:.38};
   b = -.12;
   epoch = 0;
-  running = false;
+  running = true;
   path = [];
+  frame = 0;
   drawAll();
 }
 
@@ -93,7 +94,8 @@ function drawPlane(){
 
   for(const p of points){
     const pred = model(p); const wrong = (pred>.5)!==!!p.label;
-    ctx.beginPath(); ctx.arc(mapX(p.x),mapY(p.y), wrong?8:6,0,Math.PI*2);
+    const pulse = (Math.sin(frame*.08 + p.x*4 + p.y*3)+1)*.5;
+    ctx.beginPath(); ctx.arc(mapX(p.x),mapY(p.y), (wrong?8:6)+pulse*1.8,0,Math.PI*2);
     ctx.fillStyle = p.label ? '#a673ff' : '#5bd6ff'; ctx.fill();
     ctx.strokeStyle = wrong ? '#ff6b9a' : 'rgba(255,255,255,.72)'; ctx.lineWidth= wrong?2.5:1.2; ctx.stroke();
   }
@@ -125,6 +127,7 @@ function drawLoss(){
   lctx.beginPath(); path.forEach((p,i)=>{const x=px(p.x),y=py(p.y); if(i)lctx.lineTo(x,y); else lctx.moveTo(x,y);}); lctx.stroke();
   lctx.shadowBlur=0;
   const cur=path[path.length-1]||{x:w.x,y:w.y};
+  lctx.strokeStyle=`rgba(119,255,200,${.18+.22*Math.sin(frame*.08)})`; lctx.lineWidth=2; lctx.beginPath(); lctx.arc(px(cur.x),py(cur.y),18+Math.sin(frame*.08)*6,0,Math.PI*2); lctx.stroke();
   lctx.fillStyle='#77ffc8'; lctx.beginPath(); lctx.arc(px(cur.x),py(cur.y),9,0,Math.PI*2); lctx.fill();
   lctx.fillStyle='rgba(243,236,255,.7)'; lctx.font='700 15px ui-monospace,Menlo,monospace'; lctx.fillText('loss landscape: every pixel is a possible model',24,36);
 }
@@ -142,7 +145,7 @@ function drawNetwork(){
   for(const a of byLayer(0)) for(const c of byLayer(1)) edge(svg,a,c);
   for(const a of byLayer(1)) for(const c of byLayer(2)) edge(svg,a,c);
   nodes.forEach((n,i)=>node(svg,n,(i+epoch)%5===0));
-  const t=(epoch%80)/80;
+  const t=((epoch+frame*.35)%80)/80;
   const x=130 + t*(760-130), y=160 + Math.sin(t*Math.PI*2+epoch*.04)*52;
   const pulse=document.createElementNS('http://www.w3.org/2000/svg','circle'); pulse.setAttribute('class','pulse'); pulse.setAttribute('cx',x); pulse.setAttribute('cy',y); pulse.setAttribute('r',7); svg.appendChild(pulse);
 }
@@ -150,8 +153,13 @@ function edge(svg,a,b){const l=document.createElementNS('http://www.w3.org/2000/
 function node(svg,n,hot){const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('class',hot?'node hot':'node');c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);c.setAttribute('r',28);svg.appendChild(c)}
 function drawAll(){drawPlane();drawLoss();drawNetwork();}
 
-function loop(){ if(running){ for(let i=0;i<Number(speed.value);i++) trainStep(); } requestAnimationFrame(loop); }
-trainBtn.onclick=()=>{running=!running;trainBtn.textContent=running?'pause training':'run training'};
+function loop(){
+  frame++;
+  if(running){ for(let i=0;i<Number(speed.value);i++) trainStep(); }
+  else { drawAll(); }
+  requestAnimationFrame(loop);
+}
+trainBtn.onclick=()=>{running=!running;trainBtn.textContent=running?'pause realtime':'resume realtime'};
 stepBtn.onclick=()=>trainStep();
 resetBtn.onclick=()=>reset();
 reset(); loop();
