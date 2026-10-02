@@ -139,9 +139,10 @@ function boot() {
     new Promise((res, rej) => loader.load(`${baseUrl}${name}.obj`, res, undefined, rej))
   ));
   const brainLoad = new Promise((res, rej) => loader.load('assets/models/brain.obj', res, undefined, rej)).catch(() => null);
-  Promise.all([spineLoad, brainLoad]).then(([objects, brain]) => buildSpine(objects, brain)).catch(err => console.warn('spine meshes failed, particles only', err));
+  const jellyLoad = new Promise((res, rej) => loader.load('assets/models/ambient/jellyfish.obj', res, undefined, rej)).catch(() => null);
+  Promise.all([spineLoad, brainLoad, jellyLoad]).then(([objects, brain, jelly]) => buildSpine(objects, brain, jelly)).catch(err => console.warn('spine meshes failed, particles only', err));
 
-  function buildSpine(objects, brainObj) {
+  function buildSpine(objects, brainObj, jellyObj) {
     const spine = new THREE.Group();
     scene.add(spine);
 
@@ -333,6 +334,55 @@ function boot() {
         brainPulsePts.scale.setScalar(S);
         brainPulsePts.position.copy(bInner.position);
         spine.add(brainPulsePts);
+      }
+    }
+
+    // ---------- ambient "neural jellyfish" drifting in the deep background ----------
+    // real CT data: cerebral ventricles + choroid plexus + optic chiasm merged —
+    // an organic branching creature that reads like a jellyfish / signal organism.
+    let jelly = null, jellyPulsePts = null;
+    if (jellyObj) {
+      let jg = null;
+      jellyObj.traverse(c => { if (c.isMesh && !jg) jg = c.geometry; });
+      if (jg) {
+        jg.computeBoundingBox();
+        const jc = jg.boundingBox.getCenter(new THREE.Vector3());
+        const jLocal = jg.clone().translate(-jc.x, -jc.y, -jc.z);
+        const jellyMat = new THREE.MeshStandardMaterial({ color: 0x3a2f58, metalness: 0.4, roughness: 0.55, emissive: 0x1c1038, emissiveIntensity: 1.3, transparent: true, opacity: 0.9 });
+        const jellyWire = new THREE.LineSegments(new THREE.WireframeGeometry(jLocal), new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false }));
+        const jellyFresnel = new THREE.Mesh(jLocal, fresnelMat.clone());
+        jellyFresnel.material.fragmentShader = fresnelMat.fragmentShader.replace('0.29, 0.9, 1.0', '0.5, 0.75, 1.0');
+        const jInner = new THREE.Group();
+        jInner.add(new THREE.Mesh(jLocal, jellyMat), jellyWire, jellyFresnel);
+        jInner.quaternion.copy(qFix);
+        // world size: about as tall as ~5 vertebrae
+        const jHeightMM = jg.boundingBox.max.z - jg.boundingBox.min.z;
+        const jScale = (SPINE_H * 0.28) / jHeightMM;
+        jInner.scale.setScalar(jScale);
+        jelly = new THREE.Group();
+        jelly.add(jInner);
+        scene.add(jelly); // NOT a child of spine — free-floating in world space
+        jelly.userData = { inner: jInner, mat: jellyMat, jScale };
+        window.__spineJelly = jelly;
+
+        // shimmering motes across its surface
+        const jpCount = lowPower ? 40 : 90;
+        const jp = new Float32Array(jpCount * 3);
+        const jseed = new Float32Array(jpCount);
+        const jposAttr = jLocal.getAttribute('position');
+        for (let i = 0; i < jpCount; i++) {
+          const vi = Math.floor(Math.random() * jposAttr.count);
+          jp[i*3] = jposAttr.getX(vi); jp[i*3+1] = jposAttr.getY(vi); jp[i*3+2] = jposAttr.getZ(vi);
+          jseed[i] = Math.random();
+        }
+        const jpGeo = new THREE.BufferGeometry();
+        jpGeo.setAttribute('position', new THREE.BufferAttribute(jp, 3));
+        jpGeo.setAttribute('aSeed', new THREE.BufferAttribute(jseed, 1));
+        jellyPulsePts = new THREE.Points(jpGeo, brainPulsePts ? brainPulsePts.material.clone() : new THREE.PointsMaterial({ color: 0x9df1ff, size: 0.1, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false }));
+        if (jellyPulsePts.material.uniforms) jellyPulsePts.material.uniforms.uTime = { value: 0 };
+        jellyPulsePts.quaternion.copy(qFix);
+        jellyPulsePts.scale.setScalar(jScale);
+        jelly.add(jellyPulsePts);
       }
     }
 
@@ -688,6 +738,24 @@ function boot() {
         bu.inner.rotation.y = Math.sin(t * 0.22) * 0.03;
         if (brainCoreMat) brainCoreMat.opacity = 0.6 + Math.sin(t * 3.1) * 0.25;
         if (brainPulsePts) brainPulsePts.material.uniforms.uTime.value = t;
+      }
+
+      // ambient jellyfish: slow autonomous drift + pulse, parallax off the spine
+      if (jelly) {
+        const ju = jelly.userData;
+        const jt = t * 0.05;
+        // hover near the camera focus, gently bobbing — stays loosely in frame
+        jelly.position.set(
+          focusPt.x - 4.2 + Math.sin(jt * 0.8) * 1.4,
+          focusPt.y + 1.2 + Math.sin(jt * 1.1) * 1.6,
+          focusPt.z - 2.6 + Math.cos(jt * 0.6) * 1.1
+        );
+        jelly.rotation.y = jt * 0.5;
+        jelly.rotation.z = Math.sin(jt * 0.9) * 0.12;
+        const jpulse = 1 + Math.sin(t * 1.6) * 0.05;
+        ju.inner.scale.setScalar(ju.jScale * jpulse * 1.2);
+        ju.mat.emissiveIntensity = 1.25 + Math.sin(t * 1.6) * 0.45;
+        if (jellyPulsePts && jellyPulsePts.material.uniforms) jellyPulsePts.material.uniforms.uTime.value = t;
       }
 
       // packets on the traces
