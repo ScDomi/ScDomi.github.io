@@ -221,3 +221,23 @@ body.home-scryx{background:#030304!important;color:#f4f1ea!important}.home-scryx
 .showcase-section{padding-top:clamp(2.5rem,6vw,5rem)!important}.artifact-field-shell{min-height:auto!important;padding:1rem!important;background:linear-gradient(180deg,rgba(244,241,234,.045),rgba(244,241,234,.014))!important}.project-grid.brain-grid{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:1rem!important}.project-grid .project-card{background:linear-gradient(155deg,rgba(244,241,234,.07),rgba(244,241,234,.025) 48%,rgba(0,0,0,.18))!important;border-color:rgba(244,241,234,.16)!important;opacity:1!important;filter:none!important}.scroll-theatre{min-height:96vh!important;margin:clamp(1.5rem,4vw,4rem) 0 0!important}.theatre-sticky{height:92vh!important}.project-scroll{min-height:205vh!important;margin:clamp(1rem,4vw,4rem) 0!important}.project-stage{height:94vh!important}.exploit-lab{padding-bottom:clamp(2rem,5vw,4rem)!important}@media(max-width:900px){.project-grid.brain-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}@media(max-width:760px){.project-grid.brain-grid{grid-template-columns:1fr!important}.project-scroll{min-height:320svh!important}.scroll-theatre{min-height:105svh!important}}
 /* cleanup after direction correction: no floating X, no background stock posters */
 .flying-x,.flying-sigil,.ambient-poster{display:none!important}
+/* logo-matched background palette: obsidian + graphite glass + violet blade glow */
+body.home-scryx{background:
+  radial-gradient(900px 520px at 78% 8%,rgba(108,35,255,.16),transparent 60%),
+  radial-gradient(760px 440px at 12% 18%,rgba(210,188,255,.08),transparent 58%),
+  radial-gradient(820px 560px at 58% 78%,rgba(75,25,160,.13),transparent 62%),
+  linear-gradient(135deg,#000 0%,#030208 36%,#08060d 64%,#010102 100%)!important;
+  color:#f1edf7!important;
+}
+body.home-scryx::before{opacity:.22!important;background:
+  linear-gradient(115deg,transparent 0 22%,rgba(226,211,255,.045) 22.08% 22.18%,transparent 22.3% 60%,rgba(126,55,255,.055) 60.08% 60.18%,transparent 60.3%),
+  radial-gradient(circle at var(--mx,50vw) var(--my,50vh),rgba(148,69,255,.16),transparent 30%),
+  linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),
+  linear-gradient(0deg,rgba(255,255,255,.018) 1px,transparent 1px)!important;
+  background-size:auto,auto,88px 88px,88px 88px!important;
+}
+body.home-scryx::after{opacity:.26!important;background:
+  radial-gradient(circle at 50% 18%,transparent 0 28%,rgba(0,0,0,.34) 68%,rgba(0,0,0,.72) 100%),
+  linear-gradient(180deg,rgba(255,255,255,.035),transparent 24%,rgba(0,0,0,.38))!important;
+}
+.webgl-core-canvas{opacity:.30!important;mix-blend-mode:screen!important;filter:saturate(1.05) contrast(1.18) brightness(.74)!important}.field-canvas{opacity:.25!important;filter:saturate(.85) brightness(.85)!important}.matrix-canvas{opacity:.08!important;filter:hue-rotate(46deg) saturate(.7)!important}.spark-canvas{opacity:.20!important}.cursor-orb{background:radial-gradient(circle,rgba(159,78,255,.16),rgba(62,38,92,.09) 36%,transparent 70%)!important;opacity:.55!important}.glass-header{background:linear-gradient(180deg,rgba(0,0,0,.78),rgba(6,4,10,.48))!important;border-bottom-color:rgba(196,169,255,.16)!important}.terminal-panel,.signal-card,.lab-panel,.work-card,.artifact-field-shell,.project-stage,.brain-map{background:linear-gradient(145deg,rgba(18,15,24,.72),rgba(4,3,7,.86) 62%,rgba(0,0,0,.76))!important;border-color:rgba(180,145,255,.18)!important;box-shadow:0 30px 110px rgba(0,0,0,.62),inset 0 1px 0 rgba(234,222,255,.055)!important}.terminal-panel::after,.lab-panel::after,.work-card::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.06),transparent 22%,transparent 70%,rgba(122,54,255,.06));opacity:.55}.brain-copy h1,.brand-mark span{color:#f2eef8!important;text-shadow:0 0 34px rgba(113,42,255,.16)!important}.lead,.lab-head p,.stage-copy p{color:rgba(241,237,247,.68)!important}.eyebrow,.section-kicker,.work-tag{color:rgba(202,178,255,.72)!important;border-color:rgba(174,126,255,.22)!important}.shader-depth-readout{background:rgba(3,2,7,.68)!important;border-color:rgba(177,132,255,.22)!important;color:rgba(223,208,255,.68)!important}.violet,.metric{color:#c7a9ff!important}.cmd-trigger{background:#d8c8ff!important;color:#050307!important;border-color:#d8c8ff!important}
