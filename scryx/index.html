@@ -570,13 +570,17 @@ default: editable
     const bootLog = document.getElementById('boot-log');
     const bootOverlay = document.getElementById('boot-overlay');
     const bootLines = ['$ ./scryx --surface public', 'loading artifacts ........ ok', 'audio disabled .......... ok', 'rules mounted as defaults', 'truth: refusing presets', 'interface unlocked'];
-    if (bootLog && bootOverlay && !sessionStorage.getItem('scryxBooted')) {
+    // Mobile should show the actual page immediately; the boot layer looked like the site was broken.
+    if (bootLog && bootOverlay && !sessionStorage.getItem('scryxBooted') && !isMobile && !reduceMotion) {
       let idx = 0;
       const tick = setInterval(() => {
         bootLog.textContent += bootLines[idx++] + '\n';
         if (idx >= bootLines.length) { clearInterval(tick); sessionStorage.setItem('scryxBooted','1'); setTimeout(()=>bootOverlay.classList.add('done'), 450); }
       }, 120);
-    } else if (bootOverlay) bootOverlay.classList.add('done');
+    } else if (bootOverlay) {
+      bootOverlay.classList.add('done');
+      try { sessionStorage.setItem('scryxBooted','1'); } catch (e) {}
+    }
 
     const spotlightProjects = [
       ['CV / YOLO','gesture vision','Hand signs into boxes and classes — messy labels turned into visible detection.',['YOLO','dataset cleanup','visual proof'],'gesture'],
