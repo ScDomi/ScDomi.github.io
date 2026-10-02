@@ -29,6 +29,7 @@
       <a class="brand brand-mark" href="scryx/"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>scryx</span></a>
       <nav class="nav">
         <a href="/scryx/">Interface</a>
+        <a href="/dl/">Deep Learning</a>
         <a href="#compare">Compare</a>
         <a href="#geometry">Geometry</a>
         <a href="#network">Network</a>
@@ -58,6 +59,15 @@ status: training loop running</code></pre>
         <h1>same data. different rules.</h1>
         <p class="lead">Not a course slide. A moving blackboard: watch how each model draws its assumption on the same points.</p>
         <div class="interface-readout"><span>points: fixed</span><span>rule: changes</span><span>truth: visual</span></div>
+        <div class="xor-hero chalk-stage">
+          <canvas id="xorCanvas" width="640" height="420" aria-label="a straight line failing to separate XOR points"></canvas>
+          <div class="xor-readout">
+            <span>chapter −1 / the wall</span>
+            <strong>a line cannot solve XOR.</strong>
+            <p>Watch it try. Accuracy parks near coin-flip. That failure is the whole reason deep learning exists.</p>
+            <a href="/dl/">see the fix → deep learning</a>
+          </div>
+        </div>
         <div class="controls" aria-label="visualizer controls">
           <button id="trainBtn" type="button">pause realtime</button>
           <button id="stepBtn" type="button">single step</button>
@@ -173,7 +183,7 @@ status: training loop running</code></pre>
         </div>
         <div class="chalk-stage digit-think-card">
           <aside class="chapter-rail"><b>05</b><span>model thoughts</span><i></i></aside>
-          <div class="digit-result"><span>prediction</span><strong id="digitPrediction">—</strong></div>
+          <div class="digit-result"><span>prediction</span><strong id="digitPrediction">—</strong><em id="digitConfusion">draw something — the model will argue with itself here</em></div>
           <canvas id="digitThinkCanvas" width="760" height="520" aria-label="digit recognizer thinking visualization"></canvas>
         </div>
       </div>

@@ -1,8 +1,8 @@
 const sigmoid = z => 1 / (1 + Math.exp(-z));
 const plane = document.getElementById('plane');
-const ctx = plane.getContext('2d');
+const ctx = plane ? plane.getContext('2d') : null;
 const lossCanvas = document.getElementById('lossCanvas');
-const lctx = lossCanvas.getContext('2d');
+const lctx = lossCanvas ? lossCanvas.getContext('2d') : null;
 const lossValue = document.getElementById('lossValue');
 const accValue = document.getElementById('accValue');
 const epochValue = document.getElementById('epochValue');
@@ -13,7 +13,7 @@ const prevScene = document.getElementById('prevScene');
 const nextScene = document.getElementById('nextScene');
 const speed = document.getElementById('speed');
 const compareCanvas = document.getElementById('compareCanvas');
-const cctx = compareCanvas.getContext('2d');
+const cctx = compareCanvas ? compareCanvas.getContext('2d') : null;
 const mathTitle = document.getElementById('mathTitle');
 const mathFormula = document.getElementById('mathFormula');
 const mathText = document.getElementById('mathText');
@@ -21,6 +21,7 @@ const stepCount = document.getElementById('stepCount');
 const stepTitle = document.getElementById('stepTitle');
 const stepText = document.getElementById('stepText');
 const tabs = [...document.querySelectorAll('.tab')];
+const hasMlDom = !!(plane && lossCanvas && compareCanvas && trainBtn);
 
 let points, w, b, epoch, running, path, frame, compareMode = 'cluster', stepIndex = 0;
 
@@ -48,7 +49,7 @@ function reset(){
     points.push({ x: cx + (rnd()-.5)*1.8 + (rnd()-.5)*.5, y: cy + (rnd()-.5)*1.5, label: cls });
   }
   w = {x:-.65,y:.38}; b = -.12; epoch = 0; running = true; path = []; frame = 0;
-  trainBtn.textContent = 'pause realtime';
+  if(trainBtn) trainBtn.textContent = 'pause realtime';
   drawAll();
 }
 function model(p){ return sigmoid(w.x*p.x + w.y*p.y + b); }
@@ -58,6 +59,7 @@ function metrics(){
   return {loss: loss/points.length, acc: correct/points.length};
 }
 function trainStep(){
+  if(!hasMlDom) return;
   let dwx=0,dwy=0,db=0;
   for(const p of points){ const err = model(p)-p.label; dwx += err*p.x; dwy += err*p.y; db += err; }
   const lr = .09;
@@ -66,9 +68,10 @@ function trainStep(){
   const m = metrics(); path.push({x:w.x,y:w.y,loss:m.loss}); if(path.length>260) path.shift();
   drawAll();
 }
-const mapX = x => plane.width*(.5 + x/5.2);
-const mapY = y => plane.height*(.5 - y/4.0);
+const mapX = x => plane ? plane.width*(.5 + x/5.2) : 0;
+const mapY = y => plane ? plane.height*(.5 - y/4.0) : 0;
 function drawPlane(){
+  if(!ctx) return;
   ctx.clearRect(0,0,plane.width,plane.height);
   const grd = ctx.createRadialGradient(plane.width*.55,plane.height*.34,20,plane.width*.55,plane.height*.34,plane.width*.75);
   grd.addColorStop(0,'rgba(143,77,255,.16)');grd.addColorStop(1,'rgba(0,0,0,0)');
@@ -82,6 +85,7 @@ function drawPlane(){
 }
 function lossAt(wx,wy){ let sum=0; for(const p of points){const y=sigmoid(wx*p.x+wy*p.y+b); sum += -(p.label*Math.log(y+1e-8)+(1-p.label)*Math.log(1-y+1e-8));} return sum/points.length; }
 function drawLoss(){
+  if(!lctx) return;
   const W=lossCanvas.width,H=lossCanvas.height;
   lctx.clearRect(0,0,W,H); lctx.fillStyle='#05030b'; lctx.fillRect(0,0,W,H);
   drawGrid(lctx,W,H,60);
@@ -103,7 +107,7 @@ function drawLoss(){
   lctx.fillStyle='rgba(244,234,255,.68)'; lctx.font='800 14px ui-monospace,Menlo,monospace'; lctx.fillText('updates →',right-110,bottom+42); lctx.save(); lctx.translate(left-56,top+120); lctx.rotate(-Math.PI/2); lctx.fillText('mistake / loss',0,0); lctx.restore();
 }
 function drawNetwork(){
-  const svg=document.getElementById('networkSvg'); svg.innerHTML='';
+  const svg=document.getElementById('networkSvg'); if(!svg) return; svg.innerHTML='';
   const layers=[[130,145,210,275],[450,90,150,210,270,330],[760,150,210,270]], nodes=[];
   layers.forEach((arr,li)=>arr.slice(1).forEach((y,ni)=>nodes.push({li,ni,x:arr[0],y})));
   const byLayer=li=>nodes.filter(n=>n.li===li); for(const a of byLayer(0)) for(const c of byLayer(1)) edge(svg,a,c); for(const a of byLayer(1)) for(const c of byLayer(2)) edge(svg,a,c);
@@ -120,6 +124,7 @@ function drawGrid(context,W,H,step){ context.strokeStyle='rgba(255,255,255,.065)
 function gxFactory(W){return x=>W*(.5+x/5.2)} function gyFactory(H){return y=>H*(.52-y/3.8)}
 function drawPoint(context,x,y,color,r=7){context.fillStyle=color;context.beginPath();context.arc(x,y,r,0,Math.PI*2);context.fill();context.strokeStyle='rgba(255,255,255,.65)';context.lineWidth=1.2;context.stroke();}
 function drawCompare(){
+  if(!cctx) return;
   cctx.clearRect(0,0,compareCanvas.width,compareCanvas.height); cctx.fillStyle='#05030b'; cctx.fillRect(0,0,compareCanvas.width,compareCanvas.height);
   const W=compareCanvas.width,H=compareCanvas.height,gx=gxFactory(W),gy=gyFactory(H); drawGrid(cctx,W,H,56);
   if(compareMode==='cluster') drawCluster(gx,gy); else if(compareMode==='linear') drawLinear(gx,gy); else if(compareMode==='logistic') drawLogistic(gx,gy,W,H); else drawMlp(gx,gy,W,H);
@@ -152,16 +157,17 @@ function drawMlp(gx,gy,W,H){
   points.forEach(p=>drawPoint(cctx,gx(p.x),gy(p.y),p.label?'#a673ff':'#8fdcff',7));
 }
 function drawAll(){drawPlane();drawLoss();drawNetwork();drawCompare();}
-function loop(){ frame++; if(running){ const steps = Math.max(1, Number(speed.value)); if(frame % 2 === 0){ for(let i=0;i<steps;i++) trainStep(); } else drawAll(); } else { drawAll(); } requestAnimationFrame(loop); }
-trainBtn.onclick=()=>{running=!running;trainBtn.textContent=running?'pause realtime':'resume realtime'};
-stepBtn.onclick=()=>{running=false;trainBtn.textContent='resume realtime';trainStep();};
-resetBtn.onclick=()=>reset();
-prevScene.onclick=()=>{stepIndex=(stepIndex+stepCopy.length-1)%stepCopy.length; drawCompare();};
-nextScene.onclick=()=>{stepIndex=(stepIndex+1)%stepCopy.length; drawCompare();};
-tabs.forEach(tab=>tab.onclick=()=>{compareMode=tab.dataset.mode;tabs.forEach(t=>t.classList.toggle('active',t===tab)); stepIndex=0; drawCompare();});
+function loop(){ frame++; if(running){ const steps = speed ? Math.max(1, Number(speed.value)) : 1; if(frame % 2 === 0){ for(let i=0;i<steps;i++) trainStep(); } else drawAll(); } else { drawAll(); } requestAnimationFrame(loop); }
+if(trainBtn) trainBtn.onclick=()=>{running=!running;trainBtn.textContent=running?'pause realtime':'resume realtime'};
+if(stepBtn) stepBtn.onclick=()=>{running=false;if(trainBtn)trainBtn.textContent='resume realtime';trainStep();};
+if(resetBtn) resetBtn.onclick=()=>reset();
+if(prevScene) prevScene.onclick=()=>{stepIndex=(stepIndex+stepCopy.length-1)%stepCopy.length; drawCompare();};
+if(nextScene) nextScene.onclick=()=>{stepIndex=(stepIndex+1)%stepCopy.length; drawCompare();};
+tabs.forEach(tab=>tab.onclick=()=>{compareMode=tab.dataset.mode||compareMode;tabs.forEach(t=>t.classList.toggle('active',t===tab)); stepIndex=0; drawCompare();});
 
 function initDigitLab(){
   const dc=document.getElementById('digitCanvas'), tc=document.getElementById('digitThinkCanvas'), predEl=document.getElementById('digitPrediction');
+  const confEl=document.getElementById('digitConfusion');
   const clearBtn=document.getElementById('clearDigit'), demoBtn=document.getElementById('demoDigit');
   if(!dc||!tc) return;
   const dctx=dc.getContext('2d'), tctx=tc.getContext('2d');
@@ -190,12 +196,51 @@ function initDigitLab(){
   function scoreDigit(t){let s=0,on=0;for(let i=0;i<N*N;i++){s+=pixels[i]*(t[i]?1.2:-.35);on+=pixels[i];}return s-(on*.08)}
   function think(){
     const scores=glyphs.map(scoreDigit), max=Math.max(...scores), probs=scores.map(s=>Math.exp((s-max)/3)), sum=probs.reduce((a,b)=>a+b,0), conf=probs.map(p=>p/sum), best=conf.indexOf(Math.max(...conf));
-    predEl.textContent=pixels.some(Boolean)?best:'—';
+    const hasInk=pixels.some(Boolean);
+    predEl.textContent=hasInk?best:'—';
+    if(confEl){
+      if(!hasInk){ confEl.textContent='draw something — the model will argue with itself here'; confEl.classList.remove('hot'); }
+      else{
+        const order=[...conf.keys()].sort((a,b)=>conf[b]-conf[a]), runner=order[1], gap=conf[best]-conf[runner];
+        const unsure=gap<.18;
+        confEl.textContent=unsure
+          ? `torn: ${best} vs ${runner} — only ${Math.round(gap*100)}pt apart. that indecision is the model's honesty.`
+          : `closest confusion: looks ${Math.round(conf[runner]*100)}% like a ${runner}. margin to runner-up: ${Math.round(gap*100)}pt.`;
+        confEl.classList.toggle('hot',unsure);
+      }
+    }
     tctx.clearRect(0,0,tc.width,tc.height);tctx.fillStyle='#05030b';tctx.fillRect(0,0,tc.width,tc.height);drawGrid(tctx,tc.width,tc.height,52);
     tctx.fillStyle='rgba(244,234,255,.7)';tctx.font='800 15px ui-monospace,Menlo,monospace';tctx.fillText('single-layer readout: each digit gets one score = Σ pixel × weight',28,34);
     for(let d=0;d<10;d++){const x=34+(d%5)*142,y=72+Math.floor(d/5)*190;tctx.fillStyle='rgba(255,255,255,.72)';tctx.font='900 24px ui-monospace,Menlo,monospace';tctx.fillText(String(d),x,y);for(let i=0;i<N*N;i++){const px=x+(i%N)*10,py=y+18+Math.floor(i/N)*10,w=glyphs[d][i],inp=pixels[i];tctx.fillStyle=w?`rgba(255,207,122,${.18+.5*inp})`:`rgba(143,220,255,${.04+.12*inp})`;tctx.fillRect(px,py,8,8);}const bar=conf[d]*104;tctx.fillStyle=d===best&&pixels.some(Boolean)?'#ffcf7a':'rgba(166,115,255,.62)';tctx.fillRect(x,y+112,bar,10);tctx.strokeStyle='rgba(255,255,255,.16)';tctx.strokeRect(x,y+112,104,10);tctx.fillStyle='rgba(244,234,255,.62)';tctx.font='700 11px ui-monospace,Menlo,monospace';tctx.fillText(`${Math.round(conf[d]*100)}%`,x,y+142);}
   }
   drawDigit();
+}
+
+function initXorHero(){
+  const cv=document.getElementById('xorCanvas'); if(!cv) return;
+  const x=cv.getContext('2d'), W=cv.width, H=cv.height;
+  // XOR points: same-colored pairs sit diagonally — no single line can split them
+  const pts=[]; let seed=11; const rnd=()=>((seed=(seed*16807)%2147483647)-1)/2147483646;
+  [[-1,-1,0],[1,1,0],[-1,1,1],[1,-1,1]].forEach(([cx,cy,l])=>{ for(let i=0;i<9;i++) pts.push({x:cx*.52+(rnd()-.5)*.5, y:cy*.55+(rnd()-.5)*.5, l}); });
+  const mx=v=>W*(.5+v/2.6), my=v=>H*(.5-v/2.4);
+  let t=0;
+  (function render(){
+    t+=.016; x.clearRect(0,0,W,H); x.fillStyle='#05030b'; x.fillRect(0,0,W,H);
+    x.strokeStyle='rgba(255,255,255,.06)'; for(let g=0;g<W;g+=40){x.beginPath();x.moveTo(g,0);x.lineTo(g,H);x.stroke();} for(let g=0;g<H;g+=40){x.beginPath();x.moveTo(0,g);x.lineTo(W,g);x.stroke();}
+    // the desperate line: sweeps every angle, best-case accuracy stays ~50%
+    const bestA=-.35+.55*Math.sin(t*.9), ang=t*.5, wx=Math.cos(ang), wy=Math.sin(ang);
+    let correct=0; pts.forEach(p=>{const pred=sigmoid((wx*p.x+wy*p.y+bestA)*4)>.5?1:0; if(pred===p.l)correct++;});
+    const acc=Math.max(correct, pts.length-correct)/pts.length; // a line can also be flipped — same failure
+    const nx=-wy, ny=wx; x.strokeStyle='rgba(255,107,154,.9)'; x.lineWidth=3.5; x.shadowColor='rgba(255,107,154,.55)'; x.shadowBlur=14;
+    x.beginPath(); x.moveTo(mx(-bestA*wx-nx*2),my(-bestA*wy-ny*2)); x.lineTo(mx(-bestA*wx+nx*2),my(-bestA*wy+ny*2)); x.stroke(); x.shadowBlur=0;
+    pts.forEach(p=>{const pred=sigmoid((wx*p.x+wy*p.y+bestA)*4)>.5?1:0, wrong=(pred!==p.l && Math.abs(pred-p.l)===1);
+      x.beginPath(); x.arc(mx(p.x),my(p.y),6,0,Math.PI*2); x.fillStyle=p.l?'#a673ff':'#8fdcff'; x.fill();
+      x.strokeStyle=wrong?'rgba(255,107,154,.95)':'rgba(255,255,255,.5)'; x.lineWidth=wrong?2.4:1; x.stroke();});
+    x.fillStyle='rgba(255,207,122,.95)'; x.font='900 30px ui-monospace,Menlo,monospace'; x.fillText((acc*100).toFixed(0)+'%',W-96,44);
+    x.fillStyle='rgba(244,234,255,.45)'; x.font='800 11px ui-monospace,Menlo,monospace'; x.fillText('best linear accuracy',W-190,44);
+    x.fillText('line sweeping all angles — still stuck at coin-flip',24,H-20);
+    requestAnimationFrame(render);
+  })();
 }
 
 function initScryxShell(){
@@ -207,4 +252,4 @@ function initScryxShell(){
   const resize=()=>{dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;[field,spark].forEach(c=>{c.width=W*dpr;c.height=H*dpr;c.style.width=W+'px';c.style.height=H+'px'});fctx.setTransform(dpr,0,0,dpr,0,0);sctx.setTransform(dpr,0,0,dpr,0,0)}; window.addEventListener('resize',resize);resize();
   const render=()=>{t+=.004;fctx.clearRect(0,0,W,H);sctx.clearRect(0,0,W,H); const g=fctx.createRadialGradient(W*.68,H*.18,20,W*.68,H*.18,Math.max(W,H)*.78);g.addColorStop(0,'rgba(166,115,255,.18)');g.addColorStop(.45,'rgba(45,30,80,.12)');g.addColorStop(1,'rgba(0,0,0,0)');fctx.fillStyle=g;fctx.fillRect(0,0,W,H); for(let i=0;i<nodes.length;i++){const n=nodes[i],x=n.x*W+Math.sin(t*2+n.p)*28,y=n.y*H+Math.cos(t*1.7+n.p)*22; sctx.fillStyle=i%7===0?'rgba(255,207,122,.65)':'rgba(202,169,255,.42)';sctx.beginPath();sctx.arc(x,y,n.r,0,Math.PI*2);sctx.fill(); for(let j=i+1;j<nodes.length;j+=9){const m=nodes[j],x2=m.x*W+Math.sin(t*2+m.p)*28,y2=m.y*H+Math.cos(t*1.7+m.p)*22,dist=Math.hypot(x-x2,y-y2);if(dist<170){sctx.strokeStyle=`rgba(202,169,255,${(1-dist/170)*.16})`;sctx.lineWidth=1;sctx.beginPath();sctx.moveTo(x,y);sctx.lineTo(x2,y2);sctx.stroke();}}} requestAnimationFrame(render);}; render();
 }
-initScryxShell(); initDigitLab(); reset(); loop();
+initScryxShell(); initDigitLab(); initXorHero(); reset(); loop();

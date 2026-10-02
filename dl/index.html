@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <base href="../" />
+  <title>Deep Learning Visualized / scryx</title>
+  <meta name="description" content="Interactive deep learning visualizer: activation functions and their dead zones, a live convolution kernel, attention scores, and loss-landscape descents." />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
+  <link rel="stylesheet" href="assets/style.css?v=20260930-blackbox-1" />
+  <link rel="stylesheet" href="assets/ml-visualizer.css?v=stepwise-1" />
+</head>
+<body class="home-scryx brain-interface active-lite ml-page dl-page">
+  <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
+  <canvas class="spark-canvas" id="spark-canvas" aria-hidden="true"></canvas>
+  <canvas class="matrix-canvas" aria-hidden="true"></canvas>
+  <canvas class="webgl-core-canvas" aria-hidden="true"></canvas>
+  <div class="cursor-orb" id="cursor-orb" aria-hidden="true"></div>
+  <div class="scanline-layer" aria-hidden="true"></div>
+  <div class="hack-hud" aria-hidden="true"><span>dl@scryx</span><b id="hud-state">depth:folding</b><i>the fix, visualized</i></div>
+  <div class="detail-mesh" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="scroll-system" aria-hidden="true"><span></span><b id="scroll-percent">00</b></div>
+
+  <header class="site-header glass-header">
+    <div class="wrap nav-row">
+      <a class="brand brand-mark" href="scryx/"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>scryx</span></a>
+      <nav class="nav">
+        <a href="/scryx/">Interface</a>
+        <a href="/ml/">ML</a>
+        <a href="#xor">The Fix</a>
+        <a href="#activation">Activations</a>
+        <a href="#cnn">Convolution</a>
+        <a href="#attention">Attention</a>
+        <a href="#landscape">Landscape</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap brain-hero ml-hero" id="interface">
+      <div class="terminal-panel brain-terminal ml-terminal" aria-label="dl terminal">
+        <div class="term-top"><i></i><i></i><i></i><span>~/scryx/deep_learning</span></div>
+        <pre><code><span class="dim">$</span> why deep --honest
+one line            <span class="dim">→</span> fails on XOR. proven on /ml/.
+hidden layers       <span class="dim">→</span> fold space until the line works
+activation          <span class="dim">→</span> the bend has a name, and a dead zone
+attention           <span class="dim">→</span> tokens scoring tokens. a lookup, not magic
+
+<span class="dim">$</span> rule
+depth is not depth of thought. it is depth of folding.
+
+<span class="dim">$</span> live
+status: gradients flowing (mostly)</code></pre>
+      </div>
+      <div class="brain-copy">
+        <p class="eyebrow">DL / visual intuition</p>
+        <h1>fold space until the rule works.</h1>
+        <p class="lead">The ML page showed where one line dies. This page shows the machinery that replaces it — every trick made visible, no fog.</p>
+        <div class="interface-readout"><span>layers: bend</span><span>gradient: flows</span><span>proof: pixels</span></div>
+      </div>
+    </section>
+
+    <section id="xor" class="wrap section ml-chapter">
+      <div class="section-heading-row quiet-heading">
+        <div>
+          <p class="section-kicker">chapter 00 / the fix</p>
+          <h2>XOR, solved live in front of you.</h2>
+        </div>
+        <p class="section-note">Same cursed dataset as the homepage — but now a 2-2-1 network trains with real backprop in your browser. Watch the boundary bend itself into existence.</p>
+      </div>
+      <div class="chalk-stage compare-stage">
+        <aside class="chapter-rail"><b>00</b><span>backprop, actually</span><i></i></aside>
+        <div class="step-readout" aria-live="polite">
+          <span id="dlXorEpoch">epoch 0</span>
+          <strong id="dlXorLoss">loss: —</strong>
+          <p id="dlXorText">Training a real 2→2→1 network on XOR with backpropagation. The white contour is where the network is exactly unsure — watch it fold.</p>
+        </div>
+        <canvas id="dlXorCanvas" width="1440" height="620" aria-label="multilayer perceptron learning XOR live via backpropagation"></canvas>
+        <div class="math-card" aria-live="polite">
+          <strong>2 → 2 → 1 backprop</strong>
+          <code>h = tanh(W₁x + b₁) &nbsp;&nbsp; ŷ = σ(W₂h + b₂)</code>
+          <p>Every frame is one real gradient step. Nothing is scripted — if it solves XOR, it solved XOR.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="activation" class="wrap section ml-chapter split-chapter">
+      <div class="panel copy">
+        <p class="section-kicker">chapter 01 / the bend</p>
+        <h2>an activation is a bend with a dead zone.</h2>
+        <p>Sigmoid squishes. Tanh squishes symmetrically. ReLU just chops. The dashed curve is the gradient — where it flatlines, learning dies. That is why everyone stopped using sigmoid in hidden layers.</p>
+        <div class="formula-stack">
+          <code>σ(z) = 1/(1+e⁻ᶻ) &nbsp;→&nbsp; σ′ maxes at 0.25</code>
+          <code>relu(z) = max(0,z) &nbsp;→&nbsp; gradient is 0 or 1</code>
+        </div>
+        <div class="tabs" role="tablist" aria-label="activation function">
+          <button class="tab active" data-act="relu" type="button">ReLU</button>
+          <button class="tab" data-act="sigmoid" type="button">Sigmoid</button>
+          <button class="tab" data-act="tanh" type="button">Tanh</button>
+        </div>
+        <dl class="stats">
+          <div><dt>max gradient</dt><dd id="actGrad">—</dd></div>
+          <div><dt>dead zone</dt><dd id="actDead">—</dd></div>
+        </dl>
+      </div>
+      <div class="chalk-stage canvas-card">
+        <aside class="chapter-rail"><b>01</b><span>curve + gradient</span><i></i></aside>
+        <canvas id="actCanvas" width="980" height="680" aria-label="activation function and its gradient"></canvas>
+      </div>
+    </section>
+
+    <section id="cnn" class="wrap section ml-chapter split-chapter reverse">
+      <div class="chalk-stage canvas-card landscape">
+        <aside class="chapter-rail"><b>02</b><span>kernel walking</span><i></i></aside>
+        <canvas id="cnnCanvas" width="1080" height="600" aria-label="convolution kernel sliding over an image building a feature map"></canvas>
+      </div>
+      <div class="panel copy">
+        <p class="section-kicker">chapter 02 / convolution</p>
+        <h2>a CNN is a stencil that learned what to look for.</h2>
+        <p>A 3×3 kernel slides over the image; each stop produces one number in the feature map. Same weights everywhere — that weight sharing is the entire trick. Watch an edge detector do its rounds.</p>
+        <div class="formula-stack">
+          <code>out[i,j] = Σ kernel ⊙ patch(i,j)</code>
+          <code>shared weights → translation invariance</code>
+        </div>
+      </div>
+    </section>
+
+    <section id="attention" class="wrap section ml-chapter">
+      <div class="section-heading-row quiet-heading">
+        <div>
+          <p class="section-kicker">chapter 03 / attention</p>
+          <h2>attention is a lookup, not magic.</h2>
+        </div>
+        <p class="section-note">Every token scores every token: Q·K, scaled, softmaxed. Hover a cell to read the score. The bright rows show who each word listens to.</p>
+      </div>
+      <div class="chalk-stage compare-stage attention-stage">
+        <aside class="chapter-rail"><b>03</b><span>Q·Kᵀ / √d</span><i></i></aside>
+        <canvas id="attnCanvas" width="1440" height="720" aria-label="self attention score matrix between tokens"></canvas>
+        <div class="math-card" aria-live="polite">
+          <strong id="attnTitle">hover the matrix</strong>
+          <code id="attnFormula">softmax(Q·Kᵀ / √d) · V</code>
+          <p id="attnText">Each cell is how much the row-token listens to the column-token. Raw score first, softmax after — the difference between opinion and attention.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="landscape" class="wrap section ml-chapter split-chapter">
+      <div class="panel copy">
+        <p class="section-kicker">chapter 04 / the terrain</p>
+        <h2>same loss, two learning rates, two fates.</h2>
+        <p>Gradient descent on a real loss surface with a valley and a ridge. The cautious rate creeps down the ravine. The ambitious rate overshoots, ricochets, and sometimes escapes to a worse basin. Step size is a personality trait.</p>
+        <div class="formula-stack">
+          <code>w ← w − η·∇L</code>
+          <code>η small: slow but loyal &nbsp;/&nbsp; η big: fast but chaotic</code>
+        </div>
+        <dl class="stats">
+          <div><dt>careful η end loss</dt><dd id="lrSmallLoss">—</dd></div>
+          <div><dt>bold η end loss</dt><dd id="lrBigLoss">—</dd></div>
+        </dl>
+      </div>
+      <div class="chalk-stage canvas-card">
+        <aside class="chapter-rail"><b>04</b><span>two descents</span><i></i></aside>
+        <canvas id="landCanvas" width="980" height="680" aria-label="loss landscape with two gradient descent paths at different learning rates"></canvas>
+      </div>
+    </section>
+
+    <section class="wrap section ml-chapter">
+      <div class="chalk-stage dl-outro">
+        <p class="section-kicker">exit</p>
+        <h2>depth folds. that’s the whole trick.</h2>
+        <p>You saw where the line dies, what the bend costs, how a stencil sees, how tokens listen, and why step size is fate. The rest is engineering.</p>
+        <div class="controls">
+          <a class="dl-link-btn" href="/ml/">← back to ML visualized</a>
+          <a class="dl-link-btn" href="/scryx/">back to the interface</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/ml-visualizer.js?v=stepwise-1"></script>
+  <script src="assets/dl-visualizer.js?v=dl-1"></script>
+</body>
+</html>
