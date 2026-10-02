@@ -296,16 +296,41 @@ function boot() {
     spine.add(new THREE.Points(packetGeo, new THREE.PointsMaterial({ color: 0x9df1ff, size: 0.15, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true })));
 
     // flying 3D screen panels orbiting the spine (active-theory style)
+    // per screen: [key, name, kind, poster image, ambient video loop (optional)]
     const screens = [];
     const projectScreens = [
-      ['gesture', '01 gesture vision', 'cv / yolo', 'assets/projects/gesture/gesture-1.jpg'],
-      ['squad', '02 squad qa', 'nlp / qa', 'assets/projects/nlp/finetuning-large-language-models.pdf.png'],
-      ['rl', '03 dqn racing', 'rl / vision', 'assets/projects/DQN-Car.png'],
-      ['emotion', '04 emotion stream', 'realtime cv', null],
-      ['ubique', '05 ubiquepulse', 'iot / systems', 'assets/projects/IOT.png'],
-      ['alpaca', '06 alpaca markets', 'markets / agent', 'assets/projects/stocks.png'],
-      ['foundations', '07 foundations', 'math / cs', 'assets/projects/foundations/turmites.png']
+      ['gesture', '01 gesture vision', 'cv / yolo', 'assets/projects/gesture/gesture-1.jpg', 'assets/videos/gesture-loop.mp4'],
+      ['squad', '02 squad qa', 'nlp / qa', 'assets/projects/nlp/finetuning-large-language-models.pdf.png', null],
+      ['rl', '03 dqn racing', 'rl / vision', 'assets/projects/DQN-Car.png', 'assets/videos/rl-loop.mp4'],
+      ['emotion', '04 emotion stream', 'realtime cv', null, null],
+      ['ubique', '05 ubiquepulse', 'iot / systems', 'assets/projects/IOT.png', null],
+      ['alpaca', '06 alpaca markets', 'markets / agent', 'assets/projects/stocks.png', null],
+      ['foundations', '07 foundations', 'math / cs', 'assets/projects/foundations/turmites.png', null]
     ];
+    // wires a looping video onto a screen mesh; canvas poster stays as fallback
+    function attachVideo(screenMesh, url) {
+      if (!url || !screenMesh) return;
+      const vid = document.createElement('video');
+      vid.muted = true; vid.loop = true; vid.playsInline = true; vid.autoplay = true;
+      vid.preload = 'metadata';
+      vid.style.display = 'none';
+      document.body.appendChild(vid);
+      let swapped = false;
+      const swap = () => {
+        if (swapped || vid.readyState < 2 || !vid.videoWidth) return;
+        swapped = true;
+        const vt = new THREE.VideoTexture(vid);
+        vt.colorSpace = THREE.SRGBColorSpace;
+        screenMesh.material.map = vt;
+        screenMesh.material.needsUpdate = true;
+        vid.play().catch(() => {});
+      };
+      vid.addEventListener('error', () => { vid.remove(); }, { once: true });
+      vid.addEventListener('loadeddata', swap, { once: true });
+      vid.src = url;
+      // safety retry for slow loads
+      const iv = setInterval(() => { if (swapped) { clearInterval(iv); return; } swap(); }, 1500);
+    }
     const texLoader = new THREE.TextureLoader();
     const screenGeo = new THREE.PlaneGeometry(1.72, 1.09);
     const frameGeo = new THREE.PlaneGeometry(1.82, 1.2);
@@ -369,7 +394,7 @@ function boot() {
       return tex;
     }
     if (!isMobile) {
-      projectScreens.forEach(([key, name, kind, img], i) => {
+      projectScreens.forEach(([key, name, kind, img, vid], i) => {
         const grp = new THREE.Group();
         const frame = new THREE.Mesh(frameGeo, new THREE.MeshBasicMaterial({ color: 0x0b1420, transparent: true, opacity: 0.92 }));
         frame.position.z = -0.012;
@@ -377,6 +402,7 @@ function boot() {
         edge.position.z = -0.02;
         edge.scale.setScalar(1.02);
         const screen = new THREE.Mesh(screenGeo, new THREE.MeshBasicMaterial({ map: makeScreenTexture(name, kind, img, i), transparent: true }));
+        if (vid) attachVideo(screen, vid);
         grp.add(frame, edge, screen);
         const vi = Math.min(i * 2, vertebrae.length - 1);
         spine.add(grp);
