@@ -32,8 +32,9 @@ function boot() {
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x030304, 0.03);
-  const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 160);
+  const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 160);
   camera.position.set(0, 1.2, 10);
+  window.__spineCamera = camera;
 
   scene.add(new THREE.AmbientLight(0x35304a, 2.1));
   const coreLight = new THREE.PointLight(0x35d8ff, 30, 18, 1.8);
@@ -136,8 +137,16 @@ function boot() {
     scene.add(spine);
 
     // anatomical data: Z-up, millimeters → rotate to Y-up, scale to world
-    const boneMatBase = new THREE.MeshStandardMaterial({ color: 0x232b3d, metalness: 0.78, roughness: 0.3, emissive: 0x0a1220, emissiveIntensity: 1 });
-    const wireMat = new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.085, blending: THREE.AdditiveBlending, depthWrite: false });
+    const boneMatBase = new THREE.MeshStandardMaterial({ color: 0x2b3550, metalness: 0.82, roughness: 0.26, emissive: 0x0b1626, emissiveIntensity: 1 });
+    const wireMat = new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.11, blending: THREE.AdditiveBlending, depthWrite: false });
+    const fresnelMat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.FrontSide,
+      vertexShader: `varying vec3 vN; varying vec3 vV;
+        void main(){ vN = normalize(normalMatrix * normal); vec4 mv = modelViewMatrix * vec4(position, 1.0); vV = -mv.xyz; gl_Position = projectionMatrix * mv; }`,
+      fragmentShader: `varying vec3 vN; varying vec3 vV;
+        void main(){ float f = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.4); gl_FragColor = vec4(vec3(0.29, 0.9, 1.0), f * 0.4); }`
+    });
+    const ringFocusMat = new THREE.MeshBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
     const discMat = new THREE.MeshBasicMaterial({ color: 0x2fd6ff, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
 
     // raw centroids in anatomical mm space define the shared frame
@@ -164,7 +173,10 @@ function boot() {
       mat.emissive = new THREE.Color(0x0a1420);
       const local = geo.clone().translate(-c.x, -c.y, -c.z);
       const inner = new THREE.Group();
-      inner.add(new THREE.Mesh(local, mat), new THREE.LineSegments(new THREE.WireframeGeometry(local), wireMat));
+      inner.add(new THREE.Mesh(local, mat), new THREE.Mesh(local, fresnelMat), new THREE.LineSegments(new THREE.WireframeGeometry(local), wireMat));
+      const focusRing = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.025, 6, 40), ringFocusMat.clone());
+      focusRing.rotation.x = Math.PI / 2;
+      inner.add(focusRing);
       inner.quaternion.copy(qFix);
       inner.scale.setScalar(S);
       inner.rotation.z = Math.sin(i * 7.3) * 0.02; // micro variation, ±~1°
@@ -177,7 +189,7 @@ function boot() {
       );
       holder.position.copy(world);
       spine.add(holder);
-      holder.userData = { geo, mat, inner, center: world, phase: i * 1.7, focusK: 0 };
+      holder.userData = { geo, mat, inner, focusRing, center: world, phase: i * 1.7, focusK: 0 };
       centers.push(world);
       vertebrae.push(holder);
     }
@@ -283,6 +295,112 @@ function boot() {
     packetGeo.setAttribute('position', new THREE.BufferAttribute(packetPos, 3));
     spine.add(new THREE.Points(packetGeo, new THREE.PointsMaterial({ color: 0x9df1ff, size: 0.15, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true })));
 
+    // flying 3D screen panels orbiting the spine (active-theory style)
+    const screens = [];
+    const projectScreens = [
+      ['gesture', '01 gesture vision', 'cv / yolo', 'assets/projects/gesture/gesture-1.jpg'],
+      ['squad', '02 squad qa', 'nlp / qa', 'assets/projects/nlp/finetuning-large-language-models.pdf.png'],
+      ['rl', '03 dqn racing', 'rl / vision', 'assets/projects/DQN-Car.png'],
+      ['emotion', '04 emotion stream', 'realtime cv', null],
+      ['ubique', '05 ubiquepulse', 'iot / systems', 'assets/projects/IOT.png'],
+      ['alpaca', '06 alpaca markets', 'markets / agent', 'assets/projects/stocks.png'],
+      ['foundations', '07 foundations', 'math / cs', 'assets/projects/foundations/turmites.png']
+    ];
+    const texLoader = new THREE.TextureLoader();
+    const screenGeo = new THREE.PlaneGeometry(1.72, 1.09);
+    const frameGeo = new THREE.PlaneGeometry(1.82, 1.2);
+    function makeScreenTexture(name, kind, imgUrl, idx) {
+      const cv = document.createElement('canvas');
+      cv.width = 512; cv.height = 324;
+      const g = cv.getContext('2d');
+      const tex = new THREE.CanvasTexture(cv);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 4;
+      const draw = img => {
+        g.fillStyle = '#05070c';
+        g.fillRect(0, 0, 512, 324);
+        if (img) {
+          const s = Math.max(512 / img.width, 248 / img.height);
+          const w = img.width * s, h = img.height * s;
+          g.globalAlpha = 0.92;
+          g.drawImage(img, (512 - w) / 2, (248 - h) / 2, w, h);
+          g.globalAlpha = 1;
+          g.fillStyle = 'rgba(5,7,12,.28)';
+          g.fillRect(0, 0, 512, 248);
+        } else {
+          // typographic fallback panel (no photo yet)
+          g.strokeStyle = 'rgba(73,230,255,.35)';
+          g.lineWidth = 1.5;
+          for (let r = 0; r < 5; r++) {
+            g.beginPath();
+            g.arc(256, 124, 26 + r * 18, r * 0.7, r * 0.7 + 4.4);
+            g.stroke();
+          }
+          g.fillStyle = 'rgba(73,230,255,.8)';
+          g.font = '700 13px ui-monospace, Menlo, monospace';
+          g.textAlign = 'center';
+          g.fillText('SIGNAL RECOVERY PENDING', 256, 128);
+        }
+        const grad = g.createLinearGradient(0, 220, 0, 324);
+        grad.addColorStop(0, 'rgba(5,7,12,0)');
+        grad.addColorStop(0.35, '#05070c');
+        g.fillStyle = grad;
+        g.fillRect(0, 210, 512, 114);
+        g.fillStyle = '#49e6ff';
+        g.fillRect(22, 262, 26, 2);
+        g.textAlign = 'left';
+        g.font = '800 21px ui-monospace, Menlo, monospace';
+        g.fillStyle = '#eaf6ff';
+        g.fillText(name.toUpperCase(), 22, 292);
+        g.font = '700 13px ui-monospace, Menlo, monospace';
+        g.fillStyle = 'rgba(157,148,181,.9)';
+        g.fillText(kind.toUpperCase(), 22, 312);
+        g.textAlign = 'right';
+        g.fillStyle = 'rgba(73,230,255,.75)';
+        g.fillText(String(idx + 1).padStart(2, '0') + ' / ' + String(projectScreens.length).padStart(2, '0'), 490, 312);
+        tex.needsUpdate = true;
+      };
+      if (imgUrl) {
+        const im = new Image();
+        im.onload = () => draw(im);
+        im.onerror = () => draw(null);
+        im.src = imgUrl;
+      } else draw(null);
+      return tex;
+    }
+    if (!isMobile) {
+      projectScreens.forEach(([key, name, kind, img], i) => {
+        const grp = new THREE.Group();
+        const frame = new THREE.Mesh(frameGeo, new THREE.MeshBasicMaterial({ color: 0x0b1420, transparent: true, opacity: 0.92 }));
+        frame.position.z = -0.012;
+        const edge = new THREE.Mesh(new THREE.PlaneGeometry(1.82, 1.2), new THREE.MeshBasicMaterial({ color: 0x2fd6ff, transparent: true, opacity: 0.0, blending: THREE.AdditiveBlending, depthWrite: false }));
+        edge.position.z = -0.02;
+        edge.scale.setScalar(1.02);
+        const screen = new THREE.Mesh(screenGeo, new THREE.MeshBasicMaterial({ map: makeScreenTexture(name, kind, img, i), transparent: true }));
+        grp.add(frame, edge, screen);
+        const vi = Math.min(i * 2, vertebrae.length - 1);
+        spine.add(grp);
+        screens.push({
+          key, grp, screen, frame, edge,
+          tHome: 0.06 + (i / (projectScreens.length - 1)) * 0.88,
+          tOff: Math.sin(i * 3.7) * 0.04,
+          radius: 2.5 + (i % 3) * 0.6,
+          speed: (i % 2 ? -1 : 1) * (0.2 + (i % 3) * 0.06),
+          phase: i * 2.13,
+          vertIdx: vi,
+          hoverK: 0,
+          line: null
+        });
+      });
+      const screenLineMat = new THREE.LineBasicMaterial({ color: 0x6fe7ff, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending, depthWrite: false });
+      for (const s of screens) {
+        const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+        s.line = new THREE.Line(g, screenLineMat);
+        spine.add(s.line);
+      }
+      window.__spineScreens = screens;
+    }
+
     // ---------- branch nodes + HTML panels ----------
     const panelRoot = document.getElementById('spine-panels');
     const anchors = [];
@@ -346,14 +464,18 @@ function boot() {
     addAnchor(0.77, -1, -0.05, 'signal', 'node');
     addAnchor(0.97, -1, -0.35, 'pattern', 'node');
 
-    const chipProjects = [
-      ['gesture', '01 gesture vision'], ['squad', '02 squad qa'], ['rl', '03 dqn racing'],
-      ['emotion', '04 emotion stream'], ['ubique', '05 ubiquepulse'], ['alpaca', '06 alpaca markets'], ['foundations', '07 foundations']
-    ];
-    const chipT = [0.1, 0.28, 0.38, 0.56, 0.64, 0.85, 0.9];
-    chipProjects.forEach(([key, name], i) => {
-      addAnchor(chipT[i], i % 2 === 0 ? -1 : 1, 0, name, 'chip', () => window.openProject?.(key));
-    });
+    const screenWorld = new THREE.Vector3();
+
+    // ---------- satellite swarm: small flying things around the column ----------
+    const satGeos = [new THREE.TetrahedronGeometry(0.09), new THREE.OctahedronGeometry(0.08), new THREE.BoxGeometry(0.11, 0.11, 0.11)];
+    const satMats = [cyanMat, violetMat, new THREE.MeshBasicMaterial({ color: 0xdff7ff })];
+    const sats = [];
+    const SAT_N = lowPower ? 8 : 14;
+    for (let i = 0; i < SAT_N; i++) {
+      const m = new THREE.Mesh(satGeos[i % 3], satMats[i % 3]);
+      spine.add(m);
+      sats.push({ m, t: Math.random(), v: (0.008 + Math.random() * 0.02) * (i % 2 ? 1 : -1), r: 1.6 + Math.random() * 2.6, sp: (Math.random() * 0.7 + 0.3) * (i % 2 ? 1 : -1), ph: Math.random() * Math.PI * 2 });
+    }
 
     // ---------- click ripples ----------
     const ripples = [];
@@ -384,6 +506,29 @@ function boot() {
       const idx = Math.round(best * (SAMPLES - 1));
       r.m.quaternion.setFromUnitVectors(zAxis, frames.tangents[idx]);
       r.m.visible = true;
+    });
+
+    // hover + click on the flying 3D screens
+    let hoverScreen = null;
+    const screenMeshes = [];
+    for (const s of screens) { screenMeshes.push(s.screen); s.screen.userData.owner = s; s.frame.userData.owner = s; screenMeshes.push(s.frame); }
+    addEventListener('pointermove', e => {
+      if (!screens.length) return;
+      ndc.set((e.clientX / innerWidth) * 2 - 1, -((e.clientY / innerHeight) * 2 - 1));
+      raycaster.setFromCamera(ndc, camera);
+      const hit = raycaster.intersectObjects(screenMeshes, false)[0];
+      const s = hit ? hit.object.userData.owner : null;
+      if (s !== hoverScreen) {
+        hoverScreen = s;
+        window.__spineFocus = s ? s.vertIdx : -1;
+        window.__spineHoverLabel = s ? 'open' : '';
+        document.dispatchEvent(new CustomEvent('spine-hover'));
+      }
+    }, { passive: true });
+    addEventListener('pointerdown', e => {
+      if (hoverScreen && !e.target.closest('dialog')) {
+        window.openProject?.(hoverScreen.key);
+      }
     });
 
     function updatePanels() {
@@ -434,9 +579,43 @@ function boot() {
         u.focusK += (target - u.focusK) * 0.12;
         u.mat.emissive.setHex(0x0a1420).lerp(focusColor, u.focusK * 0.5);
         u.mat.emissiveIntensity = 1 + u.focusK * 5;
+        u.focusRing.material.opacity = u.focusK * 0.85;
+        u.focusRing.scale.setScalar(1 + u.focusK * 0.4);
+        u.focusRing.rotation.z = t * 1.2;
         const s = 1 + Math.sin(t * 1.4 + u.phase) * 0.008 + u.focusK * 0.05;
         u.inner.scale.setScalar(S * s);
         u.inner.rotation.y = Math.sin(t * 0.5 + u.phase) * 0.012;
+      }
+
+      // flying screens orbit the column as real 3D planes, tethered to their vertebra
+      for (const s of screens) {
+        const ts = Math.min(0.995, Math.max(0.005, s.tHome + Math.sin(t * 0.12 + s.phase) * 0.02 + s.tOff));
+        const baseR = sampleFrame(ts, screenWorld, nTmp, bTmp); // spine space
+        const a = s.phase + t * s.speed;
+        screenWorld.addScaledVector(nTmp, Math.cos(a) * (baseR + s.radius))
+                   .addScaledVector(bTmp, Math.sin(a) * (baseR + s.radius) * 0.8)
+                   .addScaledVector(frames.tangents[Math.min(SAMPLES - 1, Math.round(ts * SAMPLES))], Math.sin(t * 0.6 + s.phase) * 0.3);
+        s.grp.position.copy(screenWorld);
+        s.grp.lookAt(camera.position);          // soft billboard, keeps real depth/parallax
+        s.grp.rotateZ(Math.sin(t * 0.4 + s.phase) * 0.05); // gentle screen tilt
+        s.hoverK += ((hoverScreen === s ? 1 : 0) - s.hoverK) * 0.15;
+        s.grp.scale.setScalar(1 + s.hoverK * 0.14);
+        s.edge.material.opacity = 0.12 + s.hoverK * 0.75;
+        const lp = s.line.geometry.attributes.position;
+        lp.setXYZ(0, centers[s.vertIdx].x, centers[s.vertIdx].y, centers[s.vertIdx].z);
+        lp.setXYZ(1, screenWorld.x, screenWorld.y, screenWorld.z);
+        lp.needsUpdate = true;
+        s.line.material.opacity = 0.16 + s.hoverK * 0.5;
+      }
+
+      // satellites swarm
+      for (const sat of sats) {
+        sat.t = (sat.t + dt * sat.v + 1) % 1;
+        const r0 = sampleFrame(sat.t, tmpV, nTmp, bTmp);
+        const sa = sat.ph + t * sat.sp;
+        tmpV.addScaledVector(nTmp, Math.cos(sa) * (r0 + sat.r)).addScaledVector(bTmp, Math.sin(sa) * (r0 + sat.r));
+        sat.m.position.copy(tmpV);
+        sat.m.rotation.x += dt * 1.4; sat.m.rotation.y += dt * 0.9;
       }
 
       // branch nodes
@@ -458,18 +637,18 @@ function boot() {
       // gentle whole-column sway
       spine.rotation.y = Math.sin(t * 0.09) * 0.04 + mouse.x * 0.02;
 
-      // camera descends the real curve with a slow orbit
+      // camera descends the real curve with a slow orbit — close, AT-style
       const path = Math.min(0.94, scroll * 0.94);
       spineCurve.getPointAt(Math.min(1, path + 0.04), focusPt);
       const ang = scroll * Math.PI * 1.7 + t * 0.045 + mouse.x * 0.3;
-      const rad = 8.1 + Math.sin(scroll * Math.PI * 2.4) * 1.4;
+      const rad = 6.1 + Math.sin(scroll * Math.PI * 2.4) * 1.1;
       camera.position.set(
         focusPt.x + Math.cos(ang) * rad,
-        focusPt.y + 2.6 + Math.sin(t * 0.3) * 0.25 + mouse.y * 0.7,
+        focusPt.y + 2.1 + Math.sin(t * 0.3) * 0.25 + mouse.y * 0.7,
         focusPt.z + Math.sin(ang) * rad
       );
       camTarget.copy(focusPt);
-      camTarget.y -= 1.4;
+      camTarget.y -= 0.4;
       camera.lookAt(camTarget);
       rimLight.position.set(camera.position.x + 4, camera.position.y + 5, camera.position.z + 5);
 

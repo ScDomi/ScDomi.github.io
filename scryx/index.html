@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=20261002-spine-cursor-2" />
+  <link rel="stylesheet" href="assets/style.css?v=20261002-spine-screens-1" />
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -274,7 +274,7 @@ default: editable
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script type="module" src="assets/spine-scene.js?v=spine-5"></script>
+  <script type="module" src="assets/spine-scene.js?v=spine-8"></script>
   <script>
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isMobile = window.matchMedia('(max-width: 760px)').matches;
@@ -452,12 +452,18 @@ default: editable
         const hit = e.target.closest?.('a, button, .project-card, .spine-chip, [data-cursor]');
         let txt = '';
         if (hit) txt = hit.dataset.cursor || (hit.classList?.contains('spine-chip') ? 'open' : hit.classList?.contains('project-card') ? 'inspect' : hit.tagName === 'A' ? 'jump' : 'exec');
+        else if (window.__spineHoverLabel) txt = window.__spineHoverLabel;
         if (label) label.textContent = txt;
-        sys.classList.toggle('is-hover', !!hit);
+        sys.classList.toggle('is-hover', !!hit || !!window.__spineHoverLabel);
       }, { passive: true });
       window.addEventListener('pointerdown', () => sys.classList.add('is-down'));
       window.addEventListener('pointerup', () => sys.classList.remove('is-down'));
       document.documentElement.addEventListener('mouseleave', () => sys.classList.remove('on'));
+      document.addEventListener('spine-hover', () => {
+        const on = !!window.__spineHoverLabel;
+        if (label && on) label.textContent = window.__spineHoverLabel;
+        sys.classList.toggle('is-hover', on);
+      });
       (function chase(){
         rx += (x - rx) * lag; ry += (y - ry) * lag;
         ret.style.transform = `translate(${x}px, ${y}px)`;
