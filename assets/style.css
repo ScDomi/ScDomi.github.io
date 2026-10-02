@@ -266,3 +266,13 @@ body.home-scryx::after{opacity:.26!important;background:
 .artifact-field-shell{min-height:auto!important;padding:1rem!important}
 .project-grid.artifact-field .project-card,.project-grid.brain-grid .project-card{opacity:1!important;visibility:visible!important;transform:none!important;filter:none!important}
 @media(max-width:900px){.brain-hero{grid-template-columns:1fr!important;overflow:visible!important}.brain-copy h1{font-size:clamp(4rem,18vw,7rem)!important;max-width:8ch!important}.lab-head h2{font-size:clamp(3rem,14vw,5.6rem)!important}}
+
+/* scryx motion polish */
+body.home-scryx{background:radial-gradient(900px 640px at calc(62% + var(--scroll,0)*18%) 5%,rgba(132,68,255,.24),transparent 62%),radial-gradient(760px 540px at calc(8% + var(--scroll,0)*36%) 80%,rgba(216,199,255,.08),transparent 58%),linear-gradient(180deg,#030304 0%,#07050b 44%,#0d0d10 100%)}
+body.home-scryx::after{background:radial-gradient(circle at var(--mx,76vw) var(--my,18vh),rgba(185,101,255,.22),transparent 26%),radial-gradient(circle at calc(18% + var(--scroll,0)*60%) 82%,rgba(255,255,255,.06),transparent 34%)}
+.project-grid .project-card{transform-style:preserve-3d;will-change:transform,box-shadow;transition:transform .32s cubic-bezier(.16,1,.3,1),border-color .32s ease,box-shadow .32s ease,background .32s ease!important}
+.project-grid .project-card:hover{transform:translateY(-8px) scale(1.012)!important;border-color:rgba(216,199,255,.24)!important;box-shadow:0 32px 110px rgba(0,0,0,.38),0 0 60px rgba(143,77,255,.12),inset 0 1px 0 rgba(255,255,255,.08)!important}
+.project-grid .project-card:hover .card-visual,.project-grid .project-card:hover .qa-flow,.project-grid .project-card:hover .track-visual,.project-grid .project-card:hover .face-signal,.project-grid .project-card:hover .iot-map,.project-grid .project-card:hover .market-visual,.project-grid .project-card:hover .rule-visual{transform:translateY(-2px) scale(1.03);filter:saturate(1.08) brightness(1.06)}
+.brain-terminal{transition:transform .45s cubic-bezier(.16,1,.3,1),box-shadow .45s ease,border-color .45s ease}
+.brain-terminal:hover{transform:translateY(-6px);border-color:rgba(216,199,255,.28);box-shadow:0 38px 130px rgba(0,0,0,.5),0 0 80px rgba(143,77,255,.14),inset 0 1px 0 rgba(255,255,255,.08)}
+#term-scroll,#term-focus{color:#f4efff;text-shadow:0 0 14px rgba(185,101,255,.7)}

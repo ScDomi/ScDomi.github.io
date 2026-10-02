@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
   <link rel="stylesheet" href="assets/style.css?v=20260930-blackbox-1" />
-  <link rel="stylesheet" href="assets/ml-visualizer.css?v=3b1b-scryx-1" />
+  <link rel="stylesheet" href="assets/ml-visualizer.css?v=stepwise-1" />
 </head>
 <body class="home-scryx brain-interface active-lite ml-page">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
@@ -32,6 +32,7 @@
         <a href="#compare">Compare</a>
         <a href="#geometry">Geometry</a>
         <a href="#network">Network</a>
+        <a href="#digits">Digits</a>
       </nav>
     </div>
   </header>
@@ -60,9 +61,11 @@ status: training loop running</code></pre>
         <div class="controls" aria-label="visualizer controls">
           <button id="trainBtn" type="button">pause realtime</button>
           <button id="stepBtn" type="button">single step</button>
+          <button id="prevScene" type="button">prev concept</button>
+          <button id="nextScene" type="button">next concept</button>
           <button id="resetBtn" type="button">reset</button>
-          <label>speed <input id="speed" type="range" min="1" max="10" value="5" /></label>
-          <span class="live-pill"><i></i> realtime</span>
+          <label>speed <input id="speed" type="range" min="1" max="6" value="2" /></label>
+          <span class="live-pill"><i></i> slow realtime</span>
         </div>
       </div>
     </section>
@@ -83,7 +86,12 @@ status: training loop running</code></pre>
           <button class="tab" data-mode="logistic" type="button">logistic regression</button>
           <button class="tab" data-mode="mlp" type="button">MLP</button>
         </div>
-        <canvas id="compareCanvas" width="1200" height="680" aria-label="comparison of clustering, linear regression, logistic regression and multilayer perceptron"></canvas>
+        <div class="step-readout" id="stepReadout" aria-live="polite">
+          <span id="stepCount">1 / 4</span>
+          <strong id="stepTitle">Start with the points.</strong>
+          <p id="stepText">Same dots, no model yet. The game is to ask which rule is allowed to explain them.</p>
+        </div>
+        <canvas id="compareCanvas" width="1440" height="780" aria-label="comparison of clustering, linear regression, logistic regression and multilayer perceptron"></canvas>
         <div class="math-card" aria-live="polite">
           <strong id="mathTitle">k-means clustering</strong>
           <code id="mathFormula">min Σᵢ ||xᵢ - μ_{cᵢ}||²</code>
@@ -146,8 +154,32 @@ status: training loop running</code></pre>
         <svg id="networkSvg" viewBox="0 0 900 420" role="img" aria-label="animated neural network signal flow"></svg>
       </div>
     </section>
+    <section id="digits" class="wrap section ml-chapter digit-lab">
+      <div class="section-heading-row quiet-heading">
+        <div>
+          <p class="section-kicker">chapter 04 / digit recognizer</p>
+          <h2>draw a number. watch the model argue.</h2>
+        </div>
+        <p class="section-note">A tiny 8×8 sketchpad feeds a toy perceptron-style recognizer. Not production AI — but the thinking is visible.</p>
+      </div>
+      <div class="digit-grid">
+        <div class="chalk-stage digit-draw-card">
+          <aside class="chapter-rail"><b>04</b><span>input pixels</span><i></i></aside>
+          <canvas id="digitCanvas" width="320" height="320" aria-label="draw a digit here"></canvas>
+          <div class="digit-actions">
+            <button id="clearDigit" type="button">clear</button>
+            <button id="demoDigit" type="button">demo 5</button>
+          </div>
+        </div>
+        <div class="chalk-stage digit-think-card">
+          <aside class="chapter-rail"><b>05</b><span>model thoughts</span><i></i></aside>
+          <div class="digit-result"><span>prediction</span><strong id="digitPrediction">—</strong></div>
+          <canvas id="digitThinkCanvas" width="760" height="520" aria-label="digit recognizer thinking visualization"></canvas>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <script src="assets/ml-visualizer.js?v=3b1b-scryx-1"></script>
+  <script src="assets/ml-visualizer.js?v=stepwise-1"></script>
 </body>
 </html>
