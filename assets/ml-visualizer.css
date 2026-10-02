@@ -18,3 +18,30 @@
 .dl-link-btn{appearance:none;display:inline-block;border:1px solid rgba(202,169,255,.26);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.025));color:var(--ml-cream);padding:.72rem .9rem;font:900 .68rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase;letter-spacing:.1em;text-decoration:none;cursor:pointer}
 .dl-link-btn:hover{border-color:rgba(202,169,255,.52);transform:translateY(-1px)}
 @media(max-width:900px){.xor-hero{grid-template-columns:1fr}}
+
+/* --- stepwise-2: sticky training dock + consistency --- */
+.train-dock{position:fixed;left:50%;bottom:.9rem;transform:translateX(-50%);z-index:60;margin-top:0;padding:.6rem .8rem;border:1px solid var(--ml-line);background:rgba(8,6,18,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 18px 50px rgba(0,0,0,.45);max-width:calc(100vw - 1.5rem)}
+.train-dock .dock-readout{display:flex;gap:.7rem;align-items:baseline;font:800 .68rem ui-monospace,Menlo,monospace;color:var(--ml-cream);text-transform:uppercase;letter-spacing:.08em}
+.train-dock .dock-readout i{font-style:normal;color:var(--ml-muted)}
+.train-dock .dock-readout i.flash{animation:dockFlash .7s ease}
+@keyframes dockFlash{0%{color:#ffcf7a;transform:translateY(-2px)}100%{color:var(--ml-muted)}}
+.ml-page main{padding-bottom:7rem}
+.dock-hint{color:var(--ml-muted);font:700 .68rem ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.12em;margin-top:.9rem}
+.step-nav{display:flex;gap:.45rem;margin-top:.55rem}
+.step-nav button{appearance:none;border:1px solid rgba(202,169,255,.22);background:rgba(255,255,255,.04);color:var(--ml-muted);padding:.45rem .6rem;font:900 .62rem ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.1em;cursor:pointer}
+.step-nav button:hover{color:var(--ml-cream);border-color:rgba(202,169,255,.5)}
+.digit-draw-card canvas{image-rendering:pixelated;touch-action:none}
+.digit-think-card .stats{margin:.9rem 0 .6rem}
+@media(max-width:900px){.train-dock{left:.75rem;right:.75rem;transform:none;bottom:.6rem;justify-content:center}}
+
+/* --- stepwise-5: timeline / learning-story --- */
+.timeline-stage{padding:clamp(1.4rem,4vw,2.4rem)}
+.timeline-head{margin:.2rem 0 1.2rem;max-width:20ch}
+.timeline{display:grid;gap:0;border-left:2px solid var(--ml-line);margin-left:.4rem}
+.tl-item{display:grid;grid-template-columns:64px 1fr;gap:.5rem 1rem;padding:.85rem 0 .85rem 1.1rem;position:relative;border-bottom:1px dashed rgba(202,169,255,.12)}
+.tl-item:last-child{border-bottom:0}
+.tl-item:before{content:'';position:absolute;left:-7px;top:1.35rem;width:10px;height:10px;border-radius:50%;background:var(--ml-violet);box-shadow:0 0 14px var(--ml-violet)}
+.tl-item b{color:var(--ml-gold);font:900 .8rem ui-monospace,Menlo,monospace;letter-spacing:.06em}
+.tl-item span{color:var(--ml-cream);font-size:.95rem;line-height:1.45}
+.tl-item em{grid-column:2;color:var(--ml-muted);font:600 .78rem ui-monospace,Menlo,monospace;font-style:normal}
+.timeline-note{color:var(--ml-muted);font-size:.9rem;line-height:1.55;margin:1.2rem 0 0;max-width:56ch}

@@ -2,6 +2,9 @@
 (function(){
 const tanh = Math.tanh;
 const sig = z => 1/(1+Math.exp(-z));
+let paused = false;
+const dlPauseBtn = document.getElementById('dlPauseBtn');
+if(dlPauseBtn) dlPauseBtn.onclick = () => { paused = !paused; dlPauseBtn.textContent = paused ? 'resume training' : 'pause training'; };
 function drawGridInto(c,W,H,step){ c.strokeStyle='rgba(255,255,255,.065)'; c.lineWidth=1; for(let x=0;x<W;x+=step){c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke();} for(let y=0;y<H;y+=step){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();} }
 const mono = (s,w)=>`${w||800} ${s}px ui-monospace,Menlo,monospace`;
 
@@ -17,7 +20,8 @@ function initDlXor(){
   for(let k=0;k<4;k++) for(let i=0;i<24;i++){ PX.push([X[k][0]*.62+(rnd()-.5)*.42, X[k][1]*.62+(rnd()-.5)*.42]); PY.push(Y[k]); }
   let W1=[[rnd()-.5,rnd()-.5],[rnd()-.5,rnd()-.5]].map(r=>r.map(v=>v*1.6)),
       B1=[rnd()-.5,rnd()-.5], W2=[rnd()-.5,rnd()-.5].map(v=>v*1.6), B2=rnd()-.5;
-  let epoch=0, lossHist=[];
+  let epoch=0, lossHist=[], lastLoss=null;
+  const dockXor=document.getElementById('dlDockState');
   function forward(x,y){
     const h0=tanh(W1[0][0]*x+W1[0][1]*y+B1[0]), h1=tanh(W1[1][0]*x+W1[1][1]*y+B1[1]);
     return {o:sig(W2[0]*h0+W2[1]*h1+B2), h0, h1};
@@ -79,8 +83,15 @@ function initDlXor(){
     c.fillStyle='rgba(244,234,255,.55)'; c.font=mono(12); c.fillText('loss ↓ (live, real backprop)',left,H-8);
   }
   function frame(){
-    const l=step();
-    if(epoch%3===0){ draw(l); if(epEl)epEl.textContent=`epoch ${epoch}`; if(lossEl)lossEl.textContent=`loss: ${l.toFixed(4)}${l<.05?'  // solved':l<.25?'  // folding…':'  // still stuck'}`; }
+    if(!paused){
+      const l=step(); lastLoss=l;
+      if(epoch%3===0){
+        draw(l);
+        if(epEl)epEl.textContent=`epoch ${epoch}`;
+        if(lossEl)lossEl.textContent=`loss: ${l.toFixed(4)}${l<.05?'  // solved':l<.25?'  // folding…':'  // still stuck'}`;
+        if(dockXor)dockXor.textContent=`xor epoch ${epoch} · loss ${l.toFixed(3)}`;
+      }
+    }
     requestAnimationFrame(frame);
   }
   frame();
@@ -306,9 +317,197 @@ function initLandscape(){
     if(sEl)sEl.textContent=L(small.x,small.y).toFixed(3);
     if(bEl)bEl.textContent=L(big.x,big.y).toFixed(3);
   }
-  function loop(){ step(); if(frame%2===0)draw(); requestAnimationFrame(loop); }
+  function loop(){ if(!paused) step(); if(paused || frame%2===0) draw(); requestAnimationFrame(loop); }
   loop();
 }
 
-initDlXor(); initActivation(); initCnn(); initAttention(); initLandscape();
+/* ---------- chapter 05: real digit recognizer — linear softmax trained live in this tab ---------- */
+function initDigits(){
+  const dc=document.getElementById('dlDigitCanvas'), tc=document.getElementById('dlThinkCanvas'), predEl=document.getElementById('dlDigitPrediction');
+  const confEl=document.getElementById('dlDigitConfusion'), statusEl=document.getElementById('digStatus'), lossEl=document.getElementById('digLoss'), accEl=document.getElementById('digAcc');
+  const clearBtn=document.getElementById('dlClearDigit'), demoBtn=document.getElementById('dlDemoDigit');
+  const dockDig=document.getElementById('dlDockDigits'), retrainBtn=document.getElementById('dlRetrainBtn');
+  if(!dc||!tc) return;
+  const dctx=dc.getContext('2d'), tctx=tc.getContext('2d');
+  const N=32, D=N*N, K=10, cell=dc.width/N;
+  let pixels=new Float32Array(D), drawing=false, Wt=null, Bt=null, trained=false, training=false;
+  const off=document.createElement('canvas'); off.width=off.height=N; const octx=off.getContext('2d');
+  function renderGlyph(d, aug){
+    octx.clearRect(0,0,N,N); octx.fillStyle='#000'; octx.fillRect(0,0,N,N);
+    octx.fillStyle='#fff';
+    const size = aug ? 24+Math.random()*6 : 27;
+    octx.font=`900 ${size}px ui-monospace, Menlo, monospace`;
+    octx.textAlign='center'; octx.textBaseline='middle';
+    octx.save(); octx.translate(N/2,N/2);
+    if(aug){ octx.rotate((Math.random()-.5)*.3); octx.translate((Math.random()-.5)*4,(Math.random()-.5)*4); }
+    octx.fillText(String(d),0,2); octx.restore();
+    const data=octx.getImageData(0,0,N,N).data, out=new Float32Array(D);
+    for(let i=0;i<D;i++){ let v=data[i*4]/255; if(aug&&Math.random()<.05) v=Math.max(0,v-Math.random()*.5); out[i]=v; }
+    return out;
+  }
+  let trainSet=[], testSet=[];
+  function buildSets(){ trainSet=[]; testSet=[]; for(let d=0;d<K;d++){ for(let i=0;i<13;i++) trainSet.push({x:renderGlyph(d,true), y:d}); for(let i=0;i<6;i++) testSet.push({x:renderGlyph(d,true), y:d}); } }
+  function softmaxOut(x){ const z=new Array(K); for(let k=0;k<K;k++){ let s=Bt[k]; for(let i=0;i<D;i++) s+=Wt[k][i]*x[i]; z[k]=s; } const m=Math.max(...z), e=z.map(v=>Math.exp(v-m)), sum=e.reduce((a,b)=>a+b,0); return e.map(v=>v/sum); }
+  function epoch(){
+    const lr=.35, n=trainSet.length;
+    const gW=Array.from({length:K},()=>new Float32Array(D)), gB=new Float32Array(K); let loss=0;
+    for(const s of trainSet){
+      const p=softmaxOut(s.x); loss+=-Math.log(p[s.y]+1e-9);
+      for(let k=0;k<K;k++){ const e=p[k]-(k===s.y?1:0); gB[k]+=e; const row=gW[k]; for(let i=0;i<D;i++) if(s.x[i]) row[i]+=e*s.x[i]; }
+    }
+    for(let k=0;k<K;k++){ Bt[k]-=lr*gB[k]/n; const row=Wt[k], gr=gW[k]; for(let i=0;i<D;i++) row[i]-=lr*gr[i]/n; }
+    return loss/n;
+  }
+  function testAcc(){ let c=0; for(const s of testSet){ const p=softmaxOut(s.x); if(p.indexOf(Math.max(...p))===s.y)c++; } return c/testSet.length; }
+  function train(){
+    training=true; trained=false; buildSets();
+    Wt=Array.from({length:K},()=>new Float32Array(D)); Bt=new Float32Array(K);
+    let e=0; const total=80;
+    const tick=()=>{
+      let l=0; for(let i=0;i<10;i++){ l=epoch(); e++; }
+      const msg=`training… ${Math.min(100,Math.round(e/total*100))}% · loss ${l.toFixed(3)}`;
+      if(statusEl)statusEl.textContent=msg; if(dockDig)dockDig.textContent=`digits: ${msg}`;
+      if(e<total){ setTimeout(tick,0); }
+      else{
+        training=false; trained=true; const a=testAcc();
+        if(statusEl)statusEl.textContent=`trained · ${total} epochs · ready`;
+        if(lossEl)lossEl.textContent=l.toFixed(3); if(accEl)accEl.textContent=(a*100).toFixed(0)+'%';
+        if(dockDig)dockDig.textContent=`digits: ready · synthetic test ${(a*100).toFixed(0)}%`;
+        think();
+      }
+    };
+    tick();
+  }
+  function drawPad(){
+    dctx.fillStyle='#05030b'; dctx.fillRect(0,0,dc.width,dc.height);
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++){ const v=pixels[y*N+x]; if(v>.01){ dctx.fillStyle=`rgba(255,207,122,${.06+v*.9})`; dctx.fillRect(x*cell+1,y*cell+1,cell-2,cell-2); } }
+    dctx.strokeStyle='rgba(255,255,255,.09)'; dctx.lineWidth=1;
+    for(let i=0;i<=N;i++){ dctx.beginPath(); dctx.moveTo(i*cell,0); dctx.lineTo(i*cell,dc.height); dctx.stroke(); dctx.beginPath(); dctx.moveTo(0,i*cell); dctx.lineTo(dc.width,i*cell); dctx.stroke(); }
+  }
+  function put(e){
+    const r=dc.getBoundingClientRect(), fx=(e.clientX-r.left)/r.width*N, fy=(e.clientY-r.top)/r.height*N;
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++){ const d=Math.hypot(x+.5-fx,y+.5-fy); if(d<3.2){ const idx=y*N+x; pixels[idx]=Math.min(1,pixels[idx]+.6*Math.exp(-d*d/2.6)); } }
+    drawPad(); think();
+  }
+  dc.addEventListener('pointerdown',e=>{drawing=true;dc.setPointerCapture(e.pointerId);put(e)});
+  dc.addEventListener('pointermove',e=>{if(drawing)put(e)});
+  dc.addEventListener('pointerup',()=>drawing=false); dc.addEventListener('pointerleave',()=>drawing=false);
+  if(clearBtn)clearBtn.onclick=()=>{pixels=new Float32Array(D);drawPad();think()};
+  if(demoBtn)demoBtn.onclick=()=>{pixels=renderGlyph(5,false);drawPad();think()};
+  function think(){
+    if(!trained){ if(predEl)predEl.textContent='…'; return; }
+    const p=softmaxOut(pixels), best=p.indexOf(Math.max(...p));
+    let hasInk=false; for(let i=0;i<D;i++) if(pixels[i]>.05){hasInk=true;break;}
+    if(predEl)predEl.textContent=hasInk?best:'—';
+    if(confEl){
+      if(!hasInk){ confEl.textContent='draw a digit — a real trained readout layer will judge it'; confEl.classList.remove('hot'); }
+      else{
+        const order=[...p.keys()].sort((a,b)=>p[b]-p[a]), gap=p[best]-p[order[1]], unsure=gap<.15;
+        confEl.textContent=unsure
+          ? `torn: ${best} vs ${order[1]} — ${(gap*100).toFixed(0)}pt apart. honest indecision.`
+          : `runner-up ${order[1]} at ${(p[order[1]]*100).toFixed(0)}% · margin ${(gap*100).toFixed(0)}pt`;
+        confEl.classList.toggle('hot',unsure);
+      }
+    }
+    tctx.clearRect(0,0,tc.width,tc.height); tctx.fillStyle='#05030b'; tctx.fillRect(0,0,tc.width,tc.height); drawGridInto(tctx,tc.width,tc.height,54);
+    tctx.fillStyle='rgba(244,234,255,.7)'; tctx.font=mono(14,800);
+    tctx.fillText('neural path: your pixels → learned weights → 10 scores → softmax',28,30);
+    const cols=5, cw=(tc.width-56)/cols, mapS=Math.min(cw-24,110)/N;
+    for(let k=0;k<K;k++){
+      const x=28+(k%cols)*cw, y=52+Math.floor(k/cols)*176;
+      tctx.fillStyle='rgba(255,255,255,.75)'; tctx.font=mono(18,900); tctx.fillText(String(k),x,y+4);
+      for(let i=0;i<D;i++){
+        const cc=Wt[k][i]*pixels[i]; if(Math.abs(cc)<.02) continue;
+        tctx.fillStyle=cc>0?`rgba(255,207,122,${Math.min(1,Math.abs(cc)*4)})`:`rgba(255,107,154,${Math.min(1,Math.abs(cc)*4)})`;
+        tctx.fillRect(x+(i%N)*mapS,y+10+Math.floor(i/N)*mapS,mapS-.4,mapS-.4);
+      }
+      const barW=Math.min(1,p[k])*92;
+      tctx.fillStyle=k===best&&hasInk?'#ffcf7a':'rgba(166,115,255,.55)'; tctx.fillRect(x,y+10+N*mapS+6,barW,8);
+      tctx.strokeStyle='rgba(255,255,255,.16)'; tctx.strokeRect(x,y+10+N*mapS+6,92,8);
+      tctx.fillStyle='rgba(244,234,255,.6)'; tctx.font=mono(10,700); tctx.fillText(`${(p[k]*100).toFixed(0)}%`,x+98,y+10+N*mapS+14);
+    }
+    // neural path overlay: strongest pixel->class evidence lines for the winning class
+    if(hasInk){
+      const ev=[]; for(let i=0;i<D;i++){ const v=Wt[best][i]*pixels[i]; if(v>.05) ev.push([i,v]); }
+      ev.sort((a,b)=>b[1]-a[1]);
+      const kx=28+(best%cols)*cw, ky=52+Math.floor(best/cols)*176;
+      tctx.strokeStyle='rgba(255,207,122,.5)'; tctx.lineWidth=1;
+      for(const [i,v] of ev.slice(0,40)){
+        const sx=28+((i%N)/N)*dc.width*0+0; // source on pad handled below
+      }
+      // caption
+      tctx.fillStyle='rgba(255,207,122,.85)'; tctx.font=mono(11,800);
+      tctx.fillText(`strongest ${ev.length} evidence pixels → class ${best}`,28,tc.height-14);
+    }
+  }
+  drawPad(); train();
+  if(retrainBtn) retrainBtn.onclick=()=>{ if(!training) train(); };
+}
+
+/* ---------- chapter 06: FlyWire real connectome neuropil matrix ---------- */
+function initFlywire(){
+  const cv=document.getElementById('flyCanvas'); if(!cv) return;
+  const c=cv.getContext('2d'), W=cv.width, H=cv.height;
+  const tEl=document.getElementById('flyTitle'), xEl=document.getElementById('flyText');
+  const cardT=document.getElementById('flyCardTitle'), cardS=document.getElementById('flyCardStat'), cardX=document.getElementById('flyCardText');
+  let data=null, hover=null, maxLog=1;
+  fetch('assets/flywire_neuropil.json').then(r=>r.json()).then(d=>{
+    data=d;
+    const M=d.syn, n=d.regions.length;
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++) if(M[i][j]>0) maxLog=Math.max(maxLog, Math.log10(M[i][j]+1));
+    draw();
+  }).catch(()=>{ if(xEl)xEl.textContent='flywire_neuropil.json failed to load — check assets/'; });
+  function geom(){ const n=data?data.regions.length:28; const cs=Math.min((H-190)/n,(W-560)/n); return {x0:(W-cs*n)/2+60, y0:96, cs, n}; }
+  cv.addEventListener('pointermove',e=>{
+    if(!data) return;
+    const r=cv.getBoundingClientRect(), gx=(e.clientX-r.left)/r.width*W, gy=(e.clientY-r.top)/r.height*H;
+    const {x0,y0,cs,n}=geom();
+    const cx=Math.floor((gx-x0)/cs), cy=Math.floor((gy-y0)/cs);
+    const h=(cx>=0&&cx<n&&cy>=0&&cy<n)?{x:cx,y:cy}:null;
+    if((h&&h.x)!==(hover&&hover.x)||(h&&h.y)!==(hover&&hover.y)){ hover=h; draw(); }
+  });
+  cv.addEventListener('pointerleave',()=>{hover=null;draw();});
+  function draw(){
+    c.clearRect(0,0,W,H); c.fillStyle='#05030b'; c.fillRect(0,0,W,H); drawGridInto(c,W,H,64);
+    if(!data){ c.fillStyle='rgba(244,234,255,.6)'; c.font=mono(14,800); c.fillText('loading FlyWire neuropil matrix…',40,H/2); return; }
+    const {x0,y0,cs,n}=geom(), M=data.syn, R=data.regions, NT=data.nt;
+    // labels
+    c.font=mono(11,800);
+    for(let i=0;i<n;i++){
+      const hot=hover&&(hover.x===i||hover.y===i);
+      c.fillStyle=hot?'#ffcf7a':'rgba(244,234,255,.55)';
+      c.save(); c.translate(x0+i*cs+cs*.5, y0-10); c.rotate(-Math.PI/2); c.fillText(R[i],0,3); c.restore();
+      c.save(); c.translate(x0-12, y0+i*cs+cs*.68); c.textAlign='end'; c.fillText(R[i],0,0); c.restore(); c.textAlign='start';
+    }
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){
+      const v=M[y][x]; if(v<=0){ c.fillStyle='rgba(255,255,255,.02)'; c.fillRect(x0+x*cs,y0+y*cs,cs-1,cs-1); continue; }
+      const lv=Math.log10(v+1)/maxLog, self=x===y;
+      const rC=self?255:Math.round(143+lv*112), gC=self?207:Math.round(220-lv*120), bC=self?122:255;
+      c.fillStyle=`rgba(${rC},${gC},${bC},${.08+lv*.85})`;
+      c.fillRect(x0+x*cs,y0+y*cs,cs-1,cs-1);
+    }
+    if(hover){
+      c.strokeStyle='#ffcf7a'; c.lineWidth=2.5; c.strokeRect(x0+hover.x*cs,y0+hover.y*cs,cs-1,cs-1);
+      c.strokeStyle='rgba(255,207,122,.25)'; c.lineWidth=1; c.strokeRect(x0,y0+hover.y*cs,cs*n,cs-1); c.strokeRect(x0+hover.x*cs,y0,cs-1,cs*n);
+    }
+    c.fillStyle='rgba(244,234,255,.6)'; c.font=mono(12,800);
+    c.fillText('row = presynaptic (sends)  /  column = postsynaptic (receives)  ·  log brightness',x0,y0+n*cs+24);
+    // card / readout
+    if(hover){
+      const i=hover.y, j=hover.x, v=M[i][j], nt=NT[i][j]||{g:0,a:0,l:0}, tot=nt.g+nt.a+nt.l||1;
+      if(tEl)tEl.textContent=`${R[i]} → ${R[j]}`;
+      if(xEl)xEl.textContent=v>0?`${v.toLocaleString('en-US')} synapses. ${i===j?'Mostly self-talk — regions are internally dense.':'Cross-region cable.'}`:'No direct proofread connection in this aggregate.';
+      if(cardT)cardT.textContent=`${R[i]} → ${R[j]}`;
+      if(cardS)cardS.textContent=`${v.toLocaleString('en-US')} synapses · gaba ${(nt.g/tot*100).toFixed(0)}% / ach ${(nt.a/tot*100).toFixed(0)}% / glut ${(nt.l/tot*100).toFixed(0)}%`;
+      if(cardX)cardX.textContent='Real proofread connections from the FlyWire adult female brain (v783). Neurotransmitter share = weighted mean per edge.';
+    } else {
+      if(tEl)tEl.textContent='hover the matrix';
+      if(cardT)cardT.textContent='Drosophila melanogaster · adult female';
+      if(cardS)cardS.textContent='48.9M synapses mapped · 28 regions';
+      if(cardX)cardX.textContent='Source: FlyWire Consortium, proofread_connections_783 (Zenodo 10676866). gaba / ach / glut = dominant neurotransmitter share per edge.';
+    }
+  }
+}
+
+initDlXor(); initActivation(); initCnn(); initAttention(); initLandscape(); initDigits(); initFlywire();
 })();

@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
   <link rel="stylesheet" href="assets/style.css?v=20260930-blackbox-1" />
-  <link rel="stylesheet" href="assets/ml-visualizer.css?v=stepwise-1" />
+  <link rel="stylesheet" href="assets/ml-visualizer.css?v=stepwise-4" />
 </head>
 <body class="home-scryx brain-interface active-lite ml-page dl-page">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
@@ -35,6 +35,8 @@
         <a href="#cnn">Convolution</a>
         <a href="#attention">Attention</a>
         <a href="#landscape">Landscape</a>
+        <a href="#digits">Digits</a>
+        <a href="#flywire">Fly Brain</a>
       </nav>
     </div>
   </header>
@@ -60,6 +62,23 @@ status: gradients flowing (mostly)</code></pre>
         <h1>fold space until the rule works.</h1>
         <p class="lead">The ML page showed where one line dies. This page shows the machinery that replaces it — every trick made visible, no fog.</p>
         <div class="interface-readout"><span>layers: bend</span><span>gradient: flows</span><span>proof: pixels</span></div>
+      </div>
+    </section>
+
+    <section class="wrap section ml-chapter">
+      <div class="chalk-stage timeline-stage">
+        <p class="section-kicker">the story so far</p>
+        <h2 class="timeline-head">from a failing line to a mapped fly brain.</h2>
+        <div class="timeline">
+          <div class="tl-item"><b>1957</b><span>Perceptron: one line, one vote.</span><em>fails on XOR — proven on /ml/</em></div>
+          <div class="tl-item"><b>1969</b><span>Minsky & Papert show the wall.</span><em>chapter 00 below tears it down</em></div>
+          <div class="tl-item"><b>1986</b><span>Backprop: blame flows backward.</span><em>live in the XOR net</em></div>
+          <div class="tl-item"><b>1998</b><span>LeNet reads digits for banks.</span><em>chapter 05, but trained in your tab</em></div>
+          <div class="tl-item"><b>2012</b><span>Depth stops being theory.</span><em>the MLP bends space</em></div>
+          <div class="tl-item"><b>2017</b><span>Attention: who listens to whom.</span><em>chapter 03</em></div>
+          <div class="tl-item"><b>2024</b><span>FlyWire: a real brain, fully wired.</span><em>chapter 06 — 48.9M real synapses, no simulation</em></div>
+        </div>
+        <p class="timeline-note">I didn’t read this history — I rebuilt each step so the failure and the fix are visible. That’s the point.</p>
       </div>
     </section>
 
@@ -167,11 +186,65 @@ status: gradients flowing (mostly)</code></pre>
       </div>
     </section>
 
+    <section id="digits" class="wrap section ml-chapter digit-lab">
+      <div class="section-heading-row quiet-heading">
+        <div>
+          <p class="section-kicker">chapter 05 / real digit recognizer</p>
+          <h2>draw a digit at a trained model.</h2>
+        </div>
+        <p class="section-note">A linear softmax readout — 1024 pixels → 10 scores — trained live in this tab on 130 augmented font-rendered digits. Not a demo GIF: the weights are learned while you watch, then they judge your drawing.</p>
+      </div>
+      <div class="digit-grid">
+        <div class="chalk-stage digit-draw-card">
+          <aside class="chapter-rail"><b>05</b><span>32×32 input</span><i></i></aside>
+          <canvas id="dlDigitCanvas" width="384" height="384" aria-label="draw a digit here"></canvas>
+          <div class="digit-actions">
+            <button id="dlClearDigit" type="button">clear</button>
+            <button id="dlDemoDigit" type="button">demo 5</button>
+          </div>
+        </div>
+        <div class="chalk-stage digit-think-card">
+          <aside class="chapter-rail"><b>06</b><span>learned weights</span><i></i></aside>
+          <div class="digit-result"><span>prediction</span><strong id="dlDigitPrediction">…</strong><em id="dlDigitConfusion">training runs first — watch the status line</em></div>
+          <dl class="stats">
+            <div><dt>final train loss</dt><dd id="digLoss">—</dd></div>
+            <div><dt>synthetic test acc</dt><dd id="digAcc">—</dd></div>
+            <div><dt>status</dt><dd id="digStatus">queued</dd></div>
+          </dl>
+          <canvas id="dlThinkCanvas" width="1080" height="380" aria-label="per-digit learned weight evidence"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section id="flywire" class="wrap section ml-chapter">
+      <div class="section-heading-row quiet-heading">
+        <div>
+          <p class="section-kicker">chapter 06 / a real brain</p>
+          <h2>this is not a simulation. it’s a fly.</h2>
+        </div>
+        <p class="section-note">FlyWire’s whole-brain connectome (Nature 2024): 139,255 proofread neurons, 50M+ synapses. Below is the real wiring aggregated to 28 brain regions — hover any cell. This network was never trained. It grew.</p>
+      </div>
+      <div class="chalk-stage compare-stage">
+        <aside class="chapter-rail"><b>06</b><span>connectome</span><i></i></aside>
+        <div class="step-readout" aria-live="polite">
+          <span>real data</span>
+          <strong id="flyTitle">hover the matrix</strong>
+          <p id="flyText">Each cell = synapses from region (row) to region (column), log-scaled brightness. The diagonal glows because regions mostly talk to themselves — the same small-world trick your MLP accidentally reinvented.</p>
+        </div>
+        <canvas id="flyCanvas" width="1440" height="760" aria-label="FlyWire whole-brain connectome neuropil adjacency matrix"></canvas>
+        <div class="math-card" aria-live="polite">
+          <strong id="flyCardTitle">Drosophila melanogaster · adult female</strong>
+          <code id="flyCardStat">48.9M synapses mapped · 28 regions</code>
+          <p id="flyCardText">Source: FlyWire Consortium, proofread_connections_783 (Zenodo 10676866). gaba / ach / glut = dominant neurotransmitter share per edge.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="wrap section ml-chapter">
       <div class="chalk-stage dl-outro">
         <p class="section-kicker">exit</p>
-        <h2>depth folds. that’s the whole trick.</h2>
-        <p>You saw where the line dies, what the bend costs, how a stencil sees, how tokens listen, and why step size is fate. The rest is engineering.</p>
+        <h2>depth folds. evolution folds harder.</h2>
+        <p>You saw a line die, a bend fail, a stencil see, tokens listen, a step size choose a fate, a readout layer train itself in your tab — and then a brain that was never trained at all, just grown into the same small-world shape. That’s the whole trick.</p>
         <div class="controls">
           <a class="dl-link-btn" href="/ml/">← back to ML visualized</a>
           <a class="dl-link-btn" href="/scryx/">back to the interface</a>
@@ -180,7 +253,14 @@ status: gradients flowing (mostly)</code></pre>
     </section>
   </main>
 
-  <script src="assets/ml-visualizer.js?v=stepwise-1"></script>
-  <script src="assets/dl-visualizer.js?v=dl-1"></script>
+  <div class="train-dock controls dl-dock" aria-label="training controls">
+    <span class="dock-readout"><b id="dlDockState">xor: warming up</b><i id="dlDockDigits">digits: queued</i></span>
+    <button id="dlPauseBtn" type="button">pause training</button>
+    <button id="dlRetrainBtn" type="button">retrain digits</button>
+    <span class="live-pill"><i></i> real backprop</span>
+  </div>
+
+  <script src="assets/ml-visualizer.js?v=stepwise-6"></script>
+  <script src="assets/dl-visualizer.js?v=dl-8"></script>
 </body>
 </html>

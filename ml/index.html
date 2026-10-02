@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
   <link rel="stylesheet" href="assets/style.css?v=20260930-blackbox-1" />
-  <link rel="stylesheet" href="assets/ml-visualizer.css?v=stepwise-1" />
+  <link rel="stylesheet" href="assets/ml-visualizer.css?v=stepwise-4" />
 </head>
 <body class="home-scryx brain-interface active-lite ml-page">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
@@ -33,7 +33,6 @@
         <a href="#compare">Compare</a>
         <a href="#geometry">Geometry</a>
         <a href="#network">Network</a>
-        <a href="#digits">Digits</a>
       </nav>
     </div>
   </header>
@@ -52,7 +51,7 @@ mlp                  <span class="dim">→</span> bend the boundary
 math first. animation second. no fog.
 
 <span class="dim">$</span> live
-status: training loop running</code></pre>
+status: 4 models really training · controls docked below</code></pre>
       </div>
       <div class="brain-copy">
         <p class="eyebrow">ML / visual intuition</p>
@@ -68,15 +67,24 @@ status: training loop running</code></pre>
             <a href="/dl/">see the fix → deep learning</a>
           </div>
         </div>
-        <div class="controls" aria-label="visualizer controls">
-          <button id="trainBtn" type="button">pause realtime</button>
-          <button id="stepBtn" type="button">single step</button>
-          <button id="prevScene" type="button">prev concept</button>
-          <button id="nextScene" type="button">next concept</button>
-          <button id="resetBtn" type="button">reset</button>
-          <label>speed <input id="speed" type="range" min="1" max="6" value="2" /></label>
-          <span class="live-pill"><i></i> slow realtime</span>
+        <p class="dock-hint">training controls live in the dock ↓ they stay pinned while you scroll</p>
+      </div>
+    </section>
+
+    <section class="wrap section ml-chapter">
+      <div class="chalk-stage timeline-stage">
+        <p class="section-kicker">the story so far</p>
+        <h2 class="timeline-head">how we got here — and why I see it differently.</h2>
+        <div class="timeline">
+          <div class="tl-item"><b>1957</b><span>Rosenblatt’s Perceptron: one line, one vote.</span><em>you just watched its descendant fail on crescents</em></div>
+          <div class="tl-item"><b>1969</b><span>Minsky & Papert prove: a single layer cannot solve XOR.</span><em>chapter −1 above is that proof, animated</em></div>
+          <div class="tl-item"><b>1986</b><span>Backprop goes mainstream — blame can flow backward.</span><em>the arrows in chapter 03</em></div>
+          <div class="tl-item"><b>1998</b><span>LeNet reads handwritten digits for banks.</span><em>that idea trains live on /dl/ right now</em></div>
+          <div class="tl-item"><b>2012</b><span>AlexNet on GPUs: depth stops being theory.</span><em>ML becomes DL</em></div>
+          <div class="tl-item"><b>2017</b><span>Attention: tokens learn who to listen to.</span><em>hover the matrix on /dl/</em></div>
+          <div class="tl-item"><b>2024</b><span>FlyWire maps a whole fly brain: 140k neurons, 50M synapses.</span><em>we visualized the real wiring below</em></div>
         </div>
+        <p class="timeline-note">Most people memorize the milestones. I rebuilt them so the failure modes are visible — that’s the scryx move.</p>
       </div>
     </section>
 
@@ -86,7 +94,7 @@ status: training loop running</code></pre>
           <p class="section-kicker">chapter 00 / model zoo</p>
           <h2>the assumption is the shape.</h2>
         </div>
-        <p class="section-note">Inspired by 3Blue1Brown’s trick: make the equation become geometry before asking anyone to memorize it.</p>
+        <p class="section-note">Inspired by 3Blue1Brown’s trick: make the equation become geometry before asking anyone to memorize it. All four models below train live on the same crescents.</p>
       </div>
       <div class="chalk-stage compare-stage">
         <aside class="chapter-rail"><b>00</b><span>choose model</span><i></i></aside>
@@ -100,6 +108,10 @@ status: training loop running</code></pre>
           <span id="stepCount">1 / 4</span>
           <strong id="stepTitle">Start with the points.</strong>
           <p id="stepText">Same dots, no model yet. The game is to ask which rule is allowed to explain them.</p>
+          <div class="step-nav">
+            <button id="prevScene" type="button">‹ concept</button>
+            <button id="nextScene" type="button">concept ›</button>
+          </div>
         </div>
         <canvas id="compareCanvas" width="1440" height="780" aria-label="comparison of clustering, linear regression, logistic regression and multilayer perceptron"></canvas>
         <div class="math-card" aria-live="polite">
@@ -114,7 +126,7 @@ status: training loop running</code></pre>
       <div class="panel copy">
         <p class="section-kicker">chapter 01 / boundary</p>
         <h2>a classifier is geometry pretending to be judgment.</h2>
-        <p>Logistic regression computes a score, squeezes it through σ, then draws the 50% contour. The line is where the model is exactly unsure.</p>
+        <p>Logistic regression computes a score, squeezes it through σ, then draws the 50% contour. The line is where the model is exactly unsure. On these crescents it keeps a pink-ringed minority it can never reach — fixing that is chapter 03’s job.</p>
         <div class="formula-stack">
           <code>z = w₁x + w₂y + b</code>
           <code>p = σ(z) = 1 / (1 + e⁻ᶻ)</code>
@@ -152,9 +164,9 @@ status: training loop running</code></pre>
       <div class="panel copy">
         <p class="section-kicker">chapter 03 / multilayer perceptron</p>
         <h2>one line fails. hidden layers fold space.</h2>
-        <p>An MLP doesn’t magically “think”. It remaps the plane through hidden neurons until a messy boundary becomes drawable.</p>
+        <p>An MLP doesn’t magically “think”. It remaps the plane through hidden neurons until a messy boundary becomes drawable. The diagram below is the exact network training in chapter 00 — edge width and color are its real, current weights.</p>
         <div class="formula-stack">
-          <code>h = σ(W₁x + b₁)</code>
+          <code>h = tanh(W₁x + b₁)  // 6 bends</code>
           <code>ŷ = σ(W₂h + b₂)</code>
           <code>backprop: blame flows backward through the graph</code>
         </div>
@@ -164,32 +176,17 @@ status: training loop running</code></pre>
         <svg id="networkSvg" viewBox="0 0 900 420" role="img" aria-label="animated neural network signal flow"></svg>
       </div>
     </section>
-    <section id="digits" class="wrap section ml-chapter digit-lab">
-      <div class="section-heading-row quiet-heading">
-        <div>
-          <p class="section-kicker">chapter 04 / digit recognizer</p>
-          <h2>draw a number. watch the model argue.</h2>
-        </div>
-        <p class="section-note">A tiny 8×8 sketchpad feeds a toy perceptron-style recognizer. Not production AI — but the thinking is visible.</p>
-      </div>
-      <div class="digit-grid">
-        <div class="chalk-stage digit-draw-card">
-          <aside class="chapter-rail"><b>04</b><span>input pixels</span><i></i></aside>
-          <canvas id="digitCanvas" width="320" height="320" aria-label="draw a digit here"></canvas>
-          <div class="digit-actions">
-            <button id="clearDigit" type="button">clear</button>
-            <button id="demoDigit" type="button">demo 5</button>
-          </div>
-        </div>
-        <div class="chalk-stage digit-think-card">
-          <aside class="chapter-rail"><b>05</b><span>model thoughts</span><i></i></aside>
-          <div class="digit-result"><span>prediction</span><strong id="digitPrediction">—</strong><em id="digitConfusion">draw something — the model will argue with itself here</em></div>
-          <canvas id="digitThinkCanvas" width="760" height="520" aria-label="digit recognizer thinking visualization"></canvas>
-        </div>
-      </div>
-    </section>
   </main>
 
-  <script src="assets/ml-visualizer.js?v=stepwise-1"></script>
+  <div class="train-dock controls" aria-label="training controls">
+    <span class="dock-readout"><b id="dockEpoch">epoch 0</b><i id="dockLoss">loss —</i><i id="dockAcc">line — · mlp —</i></span>
+    <button id="trainBtn" type="button">pause realtime</button>
+    <button id="stepBtn" type="button">train 1 epoch</button>
+    <button id="resetBtn" type="button">reset all 4 models</button>
+    <label>speed <input id="speed" type="range" min="1" max="6" value="2" /></label>
+    <span class="live-pill"><i></i> live training</span>
+  </div>
+
+  <script src="assets/ml-visualizer.js?v=stepwise-6"></script>
 </body>
 </html>
