@@ -125,12 +125,12 @@ status: training loop running</code></pre>
     <section class="wrap section ml-chapter split-chapter reverse">
       <div class="chalk-stage canvas-card landscape">
         <aside class="chapter-rail"><b>02</b><span>loss surface</span><i></i></aside>
-        <canvas id="lossCanvas" width="1080" height="600" aria-label="loss landscape and gradient descent path"></canvas>
+        <canvas id="lossCanvas" width="1080" height="600" aria-label="clear loss curve and gradient descent steps"></canvas>
       </div>
       <div class="panel copy">
         <p class="section-kicker">chapter 02 / gradient descent</p>
-        <h2>learning is a marble finding lower ground.</h2>
-        <p>Every pixel is a possible pair of weights. Bright path = the current model walking downhill by following negative gradient.</p>
+        <h2>loss should be a visible argument.</h2>
+        <p>The old heat-map was too foggy. This view shows the training path as a simple loss curve: each dot is one update, lower is better, the gold marker is now.</p>
         <div class="formula-stack">
           <code>L(w,b)=−Σ[y log(p)+(1−y)log(1−p)]</code>
           <code>w ← w − η · ∇L(w)</code>

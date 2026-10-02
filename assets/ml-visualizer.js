@@ -82,13 +82,25 @@ function drawPlane(){
 }
 function lossAt(wx,wy){ let sum=0; for(const p of points){const y=sigmoid(wx*p.x+wy*p.y+b); sum += -(p.label*Math.log(y+1e-8)+(1-p.label)*Math.log(1-y+1e-8));} return sum/points.length; }
 function drawLoss(){
-  lctx.clearRect(0,0,lossCanvas.width,lossCanvas.height); lctx.fillStyle='#05030b'; lctx.fillRect(0,0,lossCanvas.width,lossCanvas.height);
-  for(let x=0;x<lossCanvas.width;x+=14){for(let y=0;y<lossCanvas.height;y+=14){ const wx=(x/lossCanvas.width-.5)*4, wy=(.5-y/lossCanvas.height)*3, L=Math.min(1.8,lossAt(wx,wy)), heat=Math.max(0,1-L/1.8); lctx.fillStyle=`rgba(${80+Math.floor(125*heat)},${48+Math.floor(84*heat)},${150+Math.floor(85*heat)},${.05+heat*.3})`; lctx.fillRect(x,y,14,14); }}
-  drawGrid(lctx, lossCanvas.width, lossCanvas.height, 72);
-  const px = wx => lossCanvas.width*(.5+wx/4), py = wy => lossCanvas.height*(.5-wy/3);
-  lctx.strokeStyle='rgba(255,207,122,.9)'; lctx.lineWidth=3; lctx.shadowColor='rgba(255,207,122,.55)'; lctx.shadowBlur=14; lctx.beginPath(); path.forEach((p,i)=>{const x=px(p.x),y=py(p.y); if(i)lctx.lineTo(x,y); else lctx.moveTo(x,y);}); lctx.stroke(); lctx.shadowBlur=0;
-  const cur=path[path.length-1]||{x:w.x,y:w.y}; lctx.strokeStyle=`rgba(255,207,122,${.2+.18*Math.sin(frame*.045)})`; lctx.lineWidth=2; lctx.beginPath(); lctx.arc(px(cur.x),py(cur.y),18+Math.sin(frame*.045)*4,0,Math.PI*2); lctx.stroke(); lctx.fillStyle='#ffcf7a'; lctx.beginPath(); lctx.arc(px(cur.x),py(cur.y),9,0,Math.PI*2); lctx.fill();
-  lctx.fillStyle='rgba(243,236,255,.7)'; lctx.font='800 15px ui-monospace,Menlo,monospace'; lctx.fillText('loss landscape: every pixel is a possible model',24,36);
+  const W=lossCanvas.width,H=lossCanvas.height;
+  lctx.clearRect(0,0,W,H); lctx.fillStyle='#05030b'; lctx.fillRect(0,0,W,H);
+  drawGrid(lctx,W,H,60);
+  const m=metrics();
+  const history=path.length?path.map(p=>p.loss):[m.loss];
+  const maxL=Math.max(.9,...history)*1.12, minL=Math.max(0,Math.min(...history)*.82);
+  const left=90,right=W-54,top=70,bottom=H-90;
+  lctx.fillStyle='rgba(244,234,255,.72)'; lctx.font='900 17px ui-monospace,Menlo,monospace'; lctx.fillText('loss curve: every dot is one training step',left,38);
+  lctx.fillStyle='rgba(255,207,122,.95)'; lctx.font='900 46px ui-monospace,Menlo,monospace'; lctx.fillText(m.loss.toFixed(3),W-250,58);
+  lctx.fillStyle='rgba(244,234,255,.42)'; lctx.font='800 12px ui-monospace,Menlo,monospace'; lctx.fillText('current L',W-250,82);
+  const xAt=i=>left+(right-left)*(history.length<=1?0:i/(history.length-1));
+  const yAt=v=>bottom-(bottom-top)*((v-minL)/(maxL-minL||1));
+  lctx.strokeStyle='rgba(244,234,255,.22)'; lctx.lineWidth=2; lctx.beginPath(); lctx.moveTo(left,top); lctx.lineTo(left,bottom); lctx.lineTo(right,bottom); lctx.stroke();
+  for(let i=0;i<=4;i++){const y=top+(bottom-top)*i/4, val=maxL-(maxL-minL)*i/4; lctx.strokeStyle='rgba(255,255,255,.07)';lctx.beginPath();lctx.moveTo(left,y);lctx.lineTo(right,y);lctx.stroke(); lctx.fillStyle='rgba(244,234,255,.45)';lctx.font='700 12px ui-monospace,Menlo,monospace';lctx.fillText(val.toFixed(2),22,y+4);}
+  const grad=lctx.createLinearGradient(left,0,right,0); grad.addColorStop(0,'rgba(143,220,255,.88)'); grad.addColorStop(1,'rgba(255,207,122,.96)');
+  lctx.strokeStyle=grad; lctx.lineWidth=5; lctx.shadowColor='rgba(255,207,122,.35)'; lctx.shadowBlur=16; lctx.beginPath(); history.forEach((v,i)=>{const x=xAt(i),y=yAt(v); if(i)lctx.lineTo(x,y); else lctx.moveTo(x,y);}); lctx.stroke(); lctx.shadowBlur=0;
+  history.filter((_,i)=>i%Math.max(1,Math.floor(history.length/24))===0).forEach((v,ii)=>{const i=ii*Math.max(1,Math.floor(history.length/24)); lctx.fillStyle='rgba(166,115,255,.72)'; lctx.beginPath(); lctx.arc(xAt(i),yAt(history[i]),4,0,Math.PI*2); lctx.fill();});
+  const curX=xAt(history.length-1), curY=yAt(history[history.length-1]); lctx.fillStyle='#ffcf7a'; lctx.strokeStyle='rgba(255,207,122,.35)'; lctx.lineWidth=18+Math.sin(frame*.06)*3; lctx.beginPath(); lctx.arc(curX,curY,12,0,Math.PI*2); lctx.stroke(); lctx.beginPath(); lctx.arc(curX,curY,10,0,Math.PI*2); lctx.fill();
+  lctx.fillStyle='rgba(244,234,255,.68)'; lctx.font='800 14px ui-monospace,Menlo,monospace'; lctx.fillText('updates →',right-110,bottom+42); lctx.save(); lctx.translate(left-56,top+120); lctx.rotate(-Math.PI/2); lctx.fillText('mistake / loss',0,0); lctx.restore();
 }
 function drawNetwork(){
   const svg=document.getElementById('networkSvg'); svg.innerHTML='';
