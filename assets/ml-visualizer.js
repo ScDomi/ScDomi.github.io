@@ -141,22 +141,25 @@ function drawLoss(){
 function drawNetwork(){
   const svg=document.getElementById('networkSvg');
   svg.innerHTML='';
-  const layers=[[90,160,230],[420,105,160,215,270],[760,145,210,275]];
+  const layers=[[130,145,210,275],[450,90,150,210,270,330],[760,150,210,270]];
   const nodes=[];
-  layers.forEach((arr,li)=>{
-    const x= li===0?130:li===1?450:760;
-    arr.slice(1).forEach((y,ni)=>nodes.push({li,ni,x,y}));
-  });
+  layers.forEach((arr,li)=>arr.slice(1).forEach((y,ni)=>nodes.push({li,ni,x:arr[0],y})));
   const byLayer=li=>nodes.filter(n=>n.li===li);
   for(const a of byLayer(0)) for(const c of byLayer(1)) edge(svg,a,c);
   for(const a of byLayer(1)) for(const c of byLayer(2)) edge(svg,a,c);
   nodes.forEach((n,i)=>node(svg,n,(i+epoch)%5===0));
-  const t=((epoch+frame*.35)%80)/80;
-  const x=130 + t*(760-130), y=160 + Math.sin(t*Math.PI*2+epoch*.04)*52;
-  const pulse=document.createElementNS('http://www.w3.org/2000/svg','circle'); pulse.setAttribute('class','pulse'); pulse.setAttribute('cx',x); pulse.setAttribute('cy',y); pulse.setAttribute('r',7); svg.appendChild(pulse);
+
+  const forward=((epoch+frame*.35)%100)/100;
+  const backward=1-forward;
+  const fx=130 + forward*(760-130), fy=210 + Math.sin(forward*Math.PI*2+epoch*.04)*64;
+  const bx=130 + backward*(760-130), by=246 + Math.cos(backward*Math.PI*2+epoch*.06)*48;
+  const pulse=document.createElementNS('http://www.w3.org/2000/svg','circle'); pulse.setAttribute('class','pulse'); pulse.setAttribute('cx',fx); pulse.setAttribute('cy',fy); pulse.setAttribute('r',7); svg.appendChild(pulse);
+  const back=document.createElementNS('http://www.w3.org/2000/svg','circle'); back.setAttribute('class','backpulse'); back.setAttribute('cx',bx); back.setAttribute('cy',by); back.setAttribute('r',6); svg.appendChild(back);
+  label(svg,110,55,'input'); label(svg,425,55,'hidden layer folds space'); label(svg,735,55,'output');
 }
 function edge(svg,a,b){const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('class',((a.ni+b.ni+epoch)%7===0)?'edge hot':'edge');l.setAttribute('x1',a.x);l.setAttribute('y1',a.y);l.setAttribute('x2',b.x);l.setAttribute('y2',b.y);svg.appendChild(l)}
 function node(svg,n,hot){const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('class',hot?'node hot':'node');c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);c.setAttribute('r',28);svg.appendChild(c)}
+function label(svg,x,y,text){const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('fill','rgba(244,234,255,.62)');t.setAttribute('font-size','14');t.setAttribute('font-family','ui-monospace, Menlo, monospace');t.setAttribute('font-weight','800');t.textContent=text;svg.appendChild(t)}
 const compareInfo = {
   cluster:['k-means clustering','min Σᵢ ||xᵢ - μ_{cᵢ}||²','No labels. It moves centroids until nearby points agree on a cluster.'],
   linear:['linear regression','ŷ = w·x + b  //  min Σ(ŷ - y)²','Predicts a number. Best fit is the line that makes squared error small.'],
@@ -200,4 +203,40 @@ trainBtn.onclick=()=>{running=!running;trainBtn.textContent=running?'pause realt
 stepBtn.onclick=()=>trainStep();
 resetBtn.onclick=()=>reset();
 tabs.forEach(tab=>tab.onclick=()=>{compareMode=tab.dataset.mode;tabs.forEach(t=>t.classList.toggle('active',t===tab));drawCompare();});
+
+function initScryxShell(){
+  const orb=document.getElementById('cursor-orb');
+  const pct=document.getElementById('scroll-percent');
+  window.addEventListener('pointermove',e=>{
+    if(!orb) return;
+    document.documentElement.style.setProperty('--mx',`${e.clientX}px`);
+    document.documentElement.style.setProperty('--my',`${e.clientY}px`);
+    orb.style.transform=`translate(${e.clientX}px,${e.clientY}px)`;
+  },{passive:true});
+  const updateScroll=()=>{const max=Math.max(1,document.documentElement.scrollHeight-innerHeight); if(pct)pct.textContent=String(Math.round(scrollY/max*100)).padStart(2,'0')};
+  window.addEventListener('scroll',updateScroll,{passive:true}); updateScroll();
+
+  const field=document.getElementById('field-canvas');
+  const spark=document.getElementById('spark-canvas');
+  const fctx=field?.getContext('2d');
+  const sctx=spark?.getContext('2d');
+  if(!fctx || !sctx) return;
+  let W=0,H=0,dpr=1,t=0;
+  const nodes=Array.from({length:54},(_,i)=>({x:(i*97)%1000/1000,y:(i*193)%1000/1000,r:.8+((i*37)%100)/100*1.8,p:i*.7}));
+  const resize=()=>{dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;[field,spark].forEach(c=>{c.width=W*dpr;c.height=H*dpr;c.style.width=W+'px';c.style.height=H+'px'});fctx.setTransform(dpr,0,0,dpr,0,0);sctx.setTransform(dpr,0,0,dpr,0,0)};
+  window.addEventListener('resize',resize);resize();
+  const render=()=>{
+    t+=.006;fctx.clearRect(0,0,W,H);sctx.clearRect(0,0,W,H);
+    const g=fctx.createRadialGradient(W*.68,H*.18,20,W*.68,H*.18,Math.max(W,H)*.78);g.addColorStop(0,'rgba(166,115,255,.18)');g.addColorStop(.45,'rgba(45,30,80,.12)');g.addColorStop(1,'rgba(0,0,0,0)');fctx.fillStyle=g;fctx.fillRect(0,0,W,H);
+    for(let i=0;i<nodes.length;i++){
+      const n=nodes[i],x=n.x*W+Math.sin(t*2+n.p)*28,y=n.y*H+Math.cos(t*1.7+n.p)*22;
+      sctx.fillStyle=i%7===0?'rgba(255,207,122,.65)':'rgba(202,169,255,.42)';sctx.beginPath();sctx.arc(x,y,n.r,0,Math.PI*2);sctx.fill();
+      for(let j=i+1;j<nodes.length;j+=9){const m=nodes[j],x2=m.x*W+Math.sin(t*2+m.p)*28,y2=m.y*H+Math.cos(t*1.7+m.p)*22,dist=Math.hypot(x-x2,y-y2);if(dist<170){sctx.strokeStyle=`rgba(202,169,255,${(1-dist/170)*.16})`;sctx.lineWidth=1;sctx.beginPath();sctx.moveTo(x,y);sctx.lineTo(x2,y2);sctx.stroke();}}
+    }
+    requestAnimationFrame(render);
+  };
+  render();
+}
+
+initScryxShell();
 reset(); loop();

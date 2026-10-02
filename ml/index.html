@@ -3,51 +3,87 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <base href="../" />
   <title>ML Visualized / scryx</title>
-  <meta name="description" content="Interactive 3Blue1Brown-inspired machine learning visualizer: decision boundaries, gradients, loss landscape, and neural network flow." />
+  <meta name="description" content="Interactive 3Blue1Brown-inspired machine learning visualizer comparing clustering, linear regression, logistic regression, and multilayer perceptrons." />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
-  <link rel="stylesheet" href="/assets/ml-visualizer.css" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
+  <link rel="stylesheet" href="assets/style.css?v=20260930-blackbox-1" />
+  <link rel="stylesheet" href="assets/ml-visualizer.css?v=3b1b-scryx-1" />
 </head>
-<body>
-  <header class="topbar">
-    <a class="brand" href="/scryx/" aria-label="back to scryx"><span class="mark">×</span><span>scryx</span></a>
-    <nav>
-      <a href="#compare">compare</a>
-      <a href="#boundary">boundary</a>
-      <a href="#gradient">gradient</a>
-      <a href="#network">network</a>
-    </nav>
+<body class="home-scryx brain-interface active-lite ml-page">
+  <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
+  <canvas class="spark-canvas" id="spark-canvas" aria-hidden="true"></canvas>
+  <canvas class="matrix-canvas" aria-hidden="true"></canvas>
+  <canvas class="webgl-core-canvas" aria-hidden="true"></canvas>
+  <div class="cursor-orb" id="cursor-orb" aria-hidden="true"></div>
+  <div class="scanline-layer" aria-hidden="true"></div>
+  <div class="hack-hud" aria-hidden="true"><span>ml@scryx</span><b id="hud-state">loss:falling</b><i>pictures first</i></div>
+  <div class="detail-mesh" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="scroll-system" aria-hidden="true"><span></span><b id="scroll-percent">00</b></div>
+
+  <header class="site-header glass-header">
+    <div class="wrap nav-row">
+      <a class="brand brand-mark" href="scryx/"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>scryx</span></a>
+      <nav class="nav">
+        <a href="/scryx/">Interface</a>
+        <a href="#compare">Compare</a>
+        <a href="#geometry">Geometry</a>
+        <a href="#network">Network</a>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <section class="hero wrap">
-      <p class="kicker">ML / VISUAL PROOF</p>
-      <h1>machine learning without the fog.</h1>
-      <p class="lead">A small interactive page for seeing the thing: points, a model, a loss, a gradient, and the moment the boundary starts making sense.</p>
-      <div class="controls" aria-label="visualizer controls">
-        <button id="trainBtn">pause realtime</button>
-        <button id="stepBtn">single step</button>
-        <button id="resetBtn">reset</button>
-        <label>speed <input id="speed" type="range" min="1" max="10" value="5" /></label>
-        <span class="live-pill"><i></i> realtime training</span>
+    <section class="wrap brain-hero ml-hero" id="interface">
+      <div class="terminal-panel brain-terminal ml-terminal" aria-label="ml terminal">
+        <div class="term-top"><i></i><i></i><i></i><span>~/scryx/ml_visualized</span></div>
+        <pre><code><span class="dim">$</span> compare models --same-data
+clustering           <span class="dim">→</span> find shape without labels
+linear regression    <span class="dim">→</span> fit a value
+logistic regression  <span class="dim">→</span> turn line into probability
+mlp                  <span class="dim">→</span> bend the boundary
+
+<span class="dim">$</span> rule
+math first. animation second. no fog.
+
+<span class="dim">$</span> live
+status: training loop running</code></pre>
+      </div>
+      <div class="brain-copy">
+        <p class="eyebrow">ML / visual intuition</p>
+        <h1>same data. different rules.</h1>
+        <p class="lead">Not a course slide. A moving blackboard: watch how each model draws its assumption on the same points.</p>
+        <div class="interface-readout"><span>points: fixed</span><span>rule: changes</span><span>truth: visual</span></div>
+        <div class="controls" aria-label="visualizer controls">
+          <button id="trainBtn" type="button">pause realtime</button>
+          <button id="stepBtn" type="button">single step</button>
+          <button id="resetBtn" type="button">reset</button>
+          <label>speed <input id="speed" type="range" min="1" max="10" value="5" /></label>
+          <span class="live-pill"><i></i> realtime</span>
+        </div>
       </div>
     </section>
 
-    <section id="compare" class="compare wrap">
-      <div class="panel copy">
-        <p class="kicker">00 / MODEL ZOO</p>
-        <h2>same points. different assumptions.</h2>
-        <p>Clustering asks “what naturally groups?”. Regression asks “what value?”. Logistic regression asks “which side?”. A multilayer perceptron asks “what shape do I need if the simple line fails?”.</p>
-      </div>
-      <div class="compare-board">
-        <div class="tabs" role="tablist" aria-label="model comparison">
-          <button class="tab active" data-mode="cluster">clustering</button>
-          <button class="tab" data-mode="linear">linear regression</button>
-          <button class="tab" data-mode="logistic">logistic regression</button>
-          <button class="tab" data-mode="mlp">MLP</button>
+    <section id="compare" class="wrap section ml-chapter">
+      <div class="section-heading-row quiet-heading">
+        <div>
+          <p class="section-kicker">chapter 00 / model zoo</p>
+          <h2>the assumption is the shape.</h2>
         </div>
-        <canvas id="compareCanvas" width="1080" height="560" aria-label="comparison of clustering, linear regression, logistic regression and multilayer perceptron"></canvas>
+        <p class="section-note">Inspired by 3Blue1Brown’s trick: make the equation become geometry before asking anyone to memorize it.</p>
+      </div>
+      <div class="chalk-stage compare-stage">
+        <aside class="chapter-rail"><b>00</b><span>choose model</span><i></i></aside>
+        <div class="tabs" role="tablist" aria-label="model comparison">
+          <button class="tab active" data-mode="cluster" type="button">clustering</button>
+          <button class="tab" data-mode="linear" type="button">linear regression</button>
+          <button class="tab" data-mode="logistic" type="button">logistic regression</button>
+          <button class="tab" data-mode="mlp" type="button">MLP</button>
+        </div>
+        <canvas id="compareCanvas" width="1200" height="680" aria-label="comparison of clustering, linear regression, logistic regression and multilayer perceptron"></canvas>
         <div class="math-card" aria-live="polite">
           <strong id="mathTitle">k-means clustering</strong>
           <code id="mathFormula">min Σᵢ ||xᵢ - μ_{cᵢ}||²</code>
@@ -56,45 +92,62 @@
       </div>
     </section>
 
-    <section id="boundary" class="stage wrap">
+    <section id="geometry" class="wrap section ml-chapter split-chapter">
       <div class="panel copy">
-        <p class="kicker">01 / DECISION BOUNDARY</p>
-        <h2>the model is just a line with an opinion.</h2>
-        <p>Blue and violet points are examples. The bright line is the current guess. Training nudges it until the wrong side gets smaller.</p>
+        <p class="section-kicker">chapter 01 / boundary</p>
+        <h2>a classifier is geometry pretending to be judgment.</h2>
+        <p>Logistic regression computes a score, squeezes it through σ, then draws the 50% contour. The line is where the model is exactly unsure.</p>
+        <div class="formula-stack">
+          <code>z = w₁x + w₂y + b</code>
+          <code>p = σ(z) = 1 / (1 + e⁻ᶻ)</code>
+          <code>boundary: p = 0.5 ⇒ z = 0</code>
+        </div>
         <dl class="stats">
           <div><dt>loss</dt><dd id="lossValue">—</dd></div>
           <div><dt>accuracy</dt><dd id="accValue">—</dd></div>
           <div><dt>epoch</dt><dd id="epochValue">0</dd></div>
         </dl>
       </div>
-      <div class="canvas-card">
-        <canvas id="plane" width="900" height="620" aria-label="interactive decision boundary visualization"></canvas>
+      <div class="chalk-stage canvas-card">
+        <aside class="chapter-rail"><b>01</b><span>probability field</span><i></i></aside>
+        <canvas id="plane" width="980" height="680" aria-label="interactive decision boundary visualization"></canvas>
       </div>
     </section>
 
-    <section id="gradient" class="split wrap">
-      <div class="canvas-card landscape">
-        <canvas id="lossCanvas" width="980" height="520" aria-label="loss landscape and gradient descent path"></canvas>
+    <section class="wrap section ml-chapter split-chapter reverse">
+      <div class="chalk-stage canvas-card landscape">
+        <aside class="chapter-rail"><b>02</b><span>loss surface</span><i></i></aside>
+        <canvas id="lossCanvas" width="1080" height="600" aria-label="loss landscape and gradient descent path"></canvas>
       </div>
       <div class="panel copy">
-        <p class="kicker">02 / GRADIENT</p>
-        <h2>learning is downhill, but not magic.</h2>
-        <p>The dot walks over the loss surface. The arrow is the gradient: not intelligence, just direction. Step after step, the model becomes less wrong.</p>
+        <p class="section-kicker">chapter 02 / gradient descent</p>
+        <h2>learning is a marble finding lower ground.</h2>
+        <p>Every pixel is a possible pair of weights. Bright path = the current model walking downhill by following negative gradient.</p>
+        <div class="formula-stack">
+          <code>L(w,b)=−Σ[y log(p)+(1−y)log(1−p)]</code>
+          <code>w ← w − η · ∇L(w)</code>
+        </div>
       </div>
     </section>
 
-    <section id="network" class="network wrap">
+    <section id="network" class="wrap section ml-chapter split-chapter">
       <div class="panel copy">
-        <p class="kicker">03 / NETWORK FLOW</p>
-        <h2>signals move forward. blame moves backward.</h2>
-        <p>Inputs activate hidden neurons, outputs make a prediction, loss sends correction back. That loop is the whole trick.</p>
+        <p class="section-kicker">chapter 03 / multilayer perceptron</p>
+        <h2>one line fails. hidden layers fold space.</h2>
+        <p>An MLP doesn’t magically “think”. It remaps the plane through hidden neurons until a messy boundary becomes drawable.</p>
+        <div class="formula-stack">
+          <code>h = σ(W₁x + b₁)</code>
+          <code>ŷ = σ(W₂h + b₂)</code>
+          <code>backprop: blame flows backward through the graph</code>
+        </div>
       </div>
-      <div class="network-card" aria-hidden="true">
+      <div class="chalk-stage network-card" aria-hidden="true">
+        <aside class="chapter-rail"><b>03</b><span>forward / backward</span><i></i></aside>
         <svg id="networkSvg" viewBox="0 0 900 420" role="img" aria-label="animated neural network signal flow"></svg>
       </div>
     </section>
   </main>
 
-  <script src="/assets/ml-visualizer.js"></script>
+  <script src="assets/ml-visualizer.js?v=3b1b-scryx-1"></script>
 </body>
 </html>
