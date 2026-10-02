@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ML Visualized / scryx</title>
+  <meta name="description" content="Interactive 3Blue1Brown-inspired machine learning visualizer: decision boundaries, gradients, loss landscape, and neural network flow." />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
+  <link rel="stylesheet" href="/assets/ml-visualizer.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/scryx/" aria-label="back to scryx"><span class="mark">×</span><span>scryx</span></a>
+    <nav>
+      <a href="#boundary">boundary</a>
+      <a href="#gradient">gradient</a>
+      <a href="#network">network</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <p class="kicker">ML / VISUAL PROOF</p>
+      <h1>machine learning without the fog.</h1>
+      <p class="lead">A small interactive page for seeing the thing: points, a model, a loss, a gradient, and the moment the boundary starts making sense.</p>
+      <div class="controls" aria-label="visualizer controls">
+        <button id="trainBtn">run training</button>
+        <button id="stepBtn">single step</button>
+        <button id="resetBtn">reset</button>
+        <label>speed <input id="speed" type="range" min="1" max="10" value="5" /></label>
+      </div>
+    </section>
+
+    <section id="boundary" class="stage wrap">
+      <div class="panel copy">
+        <p class="kicker">01 / DECISION BOUNDARY</p>
+        <h2>the model is just a line with an opinion.</h2>
+        <p>Blue and violet points are examples. The bright line is the current guess. Training nudges it until the wrong side gets smaller.</p>
+        <dl class="stats">
+          <div><dt>loss</dt><dd id="lossValue">—</dd></div>
+          <div><dt>accuracy</dt><dd id="accValue">—</dd></div>
+          <div><dt>epoch</dt><dd id="epochValue">0</dd></div>
+        </dl>
+      </div>
+      <div class="canvas-card">
+        <canvas id="plane" width="900" height="620" aria-label="interactive decision boundary visualization"></canvas>
+      </div>
+    </section>
+
+    <section id="gradient" class="split wrap">
+      <div class="canvas-card landscape">
+        <canvas id="lossCanvas" width="980" height="520" aria-label="loss landscape and gradient descent path"></canvas>
+      </div>
+      <div class="panel copy">
+        <p class="kicker">02 / GRADIENT</p>
+        <h2>learning is downhill, but not magic.</h2>
+        <p>The dot walks over the loss surface. The arrow is the gradient: not intelligence, just direction. Step after step, the model becomes less wrong.</p>
+      </div>
+    </section>
+
+    <section id="network" class="network wrap">
+      <div class="panel copy">
+        <p class="kicker">03 / NETWORK FLOW</p>
+        <h2>signals move forward. blame moves backward.</h2>
+        <p>Inputs activate hidden neurons, outputs make a prediction, loss sends correction back. That loop is the whole trick.</p>
+      </div>
+      <div class="network-card" aria-hidden="true">
+        <svg id="networkSvg" viewBox="0 0 900 420" role="img" aria-label="animated neural network signal flow"></svg>
+      </div>
+    </section>
+  </main>
+
+  <script src="/assets/ml-visualizer.js"></script>
+</body>
+</html>
