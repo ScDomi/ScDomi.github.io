@@ -145,7 +145,7 @@ default: editable
           <path d="M28 18 C24 42 40 50 52 56 S70 68 74 88" />
         </svg>
         <div class="work-grid brain-grid project-grid artifact-field">
-        <button class="work-card project-card large purple" data-project="gesture" onclick="openProject('gesture')">
+        <button class="work-card project-card large purple" data-project="gesture" onclick="openProject('gesture')" data-secret="label entropy: the dataset cleanup matters more than the model flex.">
           <span class="work-tag">CV / YOLO</span>
           <h3>gesture vision</h3>
           <p>Hand signs into boxes and classes — messy labels turned into visible detection.</p>
@@ -153,7 +153,7 @@ default: editable
           <div class="card-visual detection-sigil"><i></i><i></i><i></i><b></b></div>
         </button>
 
-        <button class="work-card project-card bright" data-project="squad" onclick="openProject('squad')">
+        <button class="work-card project-card bright" data-project="squad" onclick="openProject('squad')" data-secret="reading test: confidence is fake until the answer span survives inspection.">
           <span class="work-tag">NLP / QA</span>
           <h3>SQuAD QA Benchmark</h3>
           <p>A paragraph, a question, one answer. Small task, brutal honesty test.</p>
@@ -161,7 +161,7 @@ default: editable
           <div class="qa-flow"><span>context</span><i></i><span>question</span><i></i><strong>answer</strong></div>
         </button>
 
-        <button class="work-card project-card dark" data-project="rl" onclick="openProject('rl')">
+        <button class="work-card project-card dark" data-project="rl" onclick="openProject('rl')" data-secret="reward trace: steering is just a policy learning where not to die.">
           <span class="work-tag">RL / Vision</span>
           <h3>DQN Racing Agent</h3>
           <p>Pixels in, steering out — behavior learned through reward instead of instructions.</p>
@@ -169,7 +169,7 @@ default: editable
           <div class="track-visual"><i></i><b></b><span></span></div>
         </button>
 
-        <button class="work-card project-card signal" data-project="emotion" onclick="openProject('emotion')">
+        <button class="work-card project-card signal" data-project="emotion" onclick="openProject('emotion')" data-secret="archive ghost: this card is a promise to recover the old live loop.">
           <span class="work-tag">Realtime CV</span>
           <h3>emotion stream</h3>
           <p>The lost webcam experiment: face signal, live loop, probably hiding on the MacBook.</p>
@@ -177,7 +177,7 @@ default: editable
           <div class="face-signal"><i></i><i></i><b></b><span></span></div>
         </button>
 
-        <button class="work-card project-card purple" data-project="ubique" onclick="openProject('ubique')">
+        <button class="work-card project-card purple" data-project="ubique" onclick="openProject('ubique')" data-secret="hardware rule: real sensors punish pretty diagrams instantly.">
           <span class="work-tag">IoT / Systems</span>
           <h3>UbiquePulse</h3>
           <p>Sensors, flows and app pieces — the kind of project that proves code can touch reality.</p>
@@ -185,7 +185,7 @@ default: editable
           <div class="iot-map"><i></i><i></i><i></i><b></b></div>
         </button>
 
-        <button class="work-card project-card bright" data-project="alpaca" onclick="openProject('alpaca')">
+        <button class="work-card project-card bright" data-project="alpaca" onclick="openProject('alpaca')" data-secret="market rule: paper first, ego never.">
           <span class="work-tag">Markets / Agent</span>
           <h3>Alpaca Markets</h3>
           <p>Market automation without cosplay: data, risk, execution, then maybe confidence.</p>
@@ -193,7 +193,7 @@ default: editable
           <div class="market-visual"><i></i><i></i><i></i><i></i><b></b></div>
         </button>
 
-        <button class="work-card project-card signal" data-project="foundations" onclick="openProject('foundations')">
+        <button class="work-card project-card signal" data-project="foundations" onclick="openProject('foundations')" data-secret="tiny-rule engine: small automata, suspiciously big behavior.">
           <span class="work-tag">Foundations</span>
           <h3>Math & CS Foundations</h3>
           <p>Small rules making weird worlds — the non-flashy layer that explains the flashy one.</p>
@@ -257,8 +257,25 @@ default: editable
       <button data-jump="#project-scroll"><b>inspect evidence</b><span>project stream as proof sequence</span></button>
       <button data-jump="#map"><b>open logic</b><span>surface → pattern → fork → evidence</span></button>
       <button data-jump="#interface"><b>return boot</b><span>back to surface entry</span></button>
+      <button data-secret-open><b>unlock hidden layer</b><span>only visible if you look too hard</span></button>
     </div>
   </dialog>
+
+  <div class="secret-vault" id="secret-vault" aria-hidden="true">
+    <div class="vault-noise" aria-hidden="true"></div>
+    <div class="vault-card">
+      <button class="vault-close" id="vault-close" type="button" aria-label="close hidden layer">×</button>
+      <p class="vault-kicker">hidden layer / overbuilt for no reason</p>
+      <h2>you found the part nobody asked for.</h2>
+      <p class="vault-copy">The interface keeps a second map under the surface: tiny rules, proof crumbs, and an unnecessary amount of polish because boring defaults lost the vote.</p>
+      <div class="vault-grid" aria-label="hidden system facts">
+        <span><b>07</b><em>artifact nodes</em></span>
+        <span><b>12</b><em>real vertebrae</em></span>
+        <span><b>∞</b><em>default suspicion</em></span>
+      </div>
+      <code class="vault-code">scryx://surface/pattern/fork/evidence</code>
+    </div>
+  </div>
 
   <footer class="site-footer"><div class="wrap footer-row"><small>© 2026 Domi</small><small>scryx</small><small class="mesh-credit">vertebra meshes: BodyParts3D © DBCLS, CC BY-SA 2.1</small></div></footer>
 
@@ -273,7 +290,7 @@ default: editable
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script type="module" src="assets/spine-scene.js?v=spine-17"></script>
+  <script type="module" src="assets/spine-scene.js?v=spine-18"></script>
   <script>
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isMobile = window.matchMedia('(max-width: 760px)').matches;
@@ -663,6 +680,55 @@ default: editable
       window.addEventListener('resize', updateMobileStage);
       updateMobileStage();
     }
+
+
+    // hidden delight layer: logo taps, typed code, long-card hover, terminal whisper
+    (function hiddenLayer(){
+      const vault = document.getElementById('secret-vault');
+      const logo = document.querySelector('.brand-mark');
+      const terminal = document.getElementById('live-terminal');
+      const cards = [...document.querySelectorAll('.project-card[data-secret]')];
+      let logoTaps = 0, typed = '', whisperDone = false;
+      window.revealSecretVault = function revealSecretVault(){
+        if (!vault) return;
+        vault.classList.add('on');
+        vault.setAttribute('aria-hidden','false');
+        document.documentElement.classList.add('secret-unlocked');
+      };
+      function closeVault(){ vault?.classList.remove('on'); vault?.setAttribute('aria-hidden','true'); }
+      document.getElementById('vault-close')?.addEventListener('click', closeVault);
+      vault?.addEventListener('click', e => { if (e.target === vault) closeVault(); });
+      document.querySelector('[data-secret-open]')?.addEventListener('click', () => { document.getElementById('command-dialog')?.close(); revealSecretVault(); });
+      logo?.addEventListener('click', e => {
+        logoTaps = (logoTaps + 1) % 5;
+        logo.classList.toggle('armed', logoTaps > 0);
+        if (logoTaps === 4) { e.preventDefault(); revealSecretVault(); logoTaps = 0; }
+      });
+      addEventListener('keydown', e => {
+        typed = (typed + e.key.toLowerCase()).slice(-12);
+        if (typed.endsWith('scryx') || typed.endsWith('domi')) revealSecretVault();
+        if (e.key === 'Escape') closeVault();
+      });
+      cards.forEach(card => {
+        let timer;
+        const show = () => {
+          card.classList.add('secret-peek');
+          card.style.setProperty('--secret-text', JSON.stringify(card.dataset.secret || 'hidden detail unlocked'));
+        };
+        const arm = () => { timer = setTimeout(show, 650); };
+        const disarm = () => { clearTimeout(timer); card.classList.remove('secret-peek'); };
+        card.addEventListener('pointerenter', arm);
+        card.addEventListener('pointerleave', disarm);
+        card.addEventListener('touchstart', arm, { passive:true });
+        card.addEventListener('touchend', disarm);
+      });
+      terminal?.addEventListener('click', () => {
+        if (whisperDone) return; whisperDone = true;
+        terminal.insertAdjacentHTML('beforeend', '\n\n<span class="dim">$</span> reveal --quiet\nsecret layer: armed\nlogo taps: 4\ntyped key: scryx\n<span class="dim">↳</span> if you saw this, you looked properly.');
+      });
+      console.log('%cscryx hidden layer', 'color:#b98cff;font-weight:900;font-size:16px');
+      console.log('try: type "scryx", tap the logo 4x, or hover a project card too long.');
+    })();
 
     // cookie consent: opt-in local memory only, no tracking without a yes
     (function cookieConsent(){
