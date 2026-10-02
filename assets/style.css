@@ -248,3 +248,21 @@ body.home-scryx::after{opacity:.26!important;background:
 .principle-strip p{max-width:980px;margin:0 auto;padding:clamp(1.1rem,2.6vw,1.8rem) 0;border-top:1px solid rgba(158,88,255,.32);border-bottom:1px solid rgba(158,88,255,.18);font-size:clamp(1.05rem,2.3vw,2rem);line-height:1.25;letter-spacing:-.035em;color:rgba(245,240,255,.88)}
 .principle-strip p::before{content:'scryx principle';display:block;margin-bottom:.65rem;font-family:var(--mono);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(171,113,255,.68)}
 .signal-deck{display:none!important}
+/* repair after removing module cards: no replacement strip, clean hero-to-lab spacing */
+.principle-strip{display:none!important}
+.brain-hero{min-height:min(78svh,780px)!important;padding-bottom:clamp(2rem,5vh,4rem)!important}
+.exploit-lab{margin-top:0!important;padding-top:clamp(2rem,5vw,4.5rem)!important}
+@media(max-width:760px){.brain-hero{min-height:auto!important;padding-bottom:2rem!important}.exploit-lab{padding-top:2rem!important}}
+/* hard formatting repair: remove overflow/giant gaps introduced by iterative overrides */
+.brain-hero{grid-template-columns:minmax(280px,.86fr) minmax(0,1fr)!important;align-items:center!important;overflow:hidden!important}
+.brain-copy h1{font-size:clamp(4.2rem,10.5vw,9.6rem)!important;line-height:.78!important;max-width:8.6ch!important;overflow-wrap:normal!important}
+.brain-copy{min-width:0!important;padding-left:clamp(.5rem,2vw,1.4rem)!important}
+.lab-head{display:block!important;margin-bottom:clamp(1.2rem,3vw,2rem)!important}
+.lab-head h2{max-width:14ch!important;font-size:clamp(3rem,6.5vw,6.8rem)!important;line-height:.84!important;margin:.25rem 0 1rem!important}
+.lab-head p:last-child{max-width:48rem!important}
+.scroll-theatre{min-height:auto!important;margin:clamp(2rem,5vw,4rem) 0!important}
+.theatre-sticky{height:min(78vh,760px)!important;min-height:520px!important}
+.showcase-section{padding-top:clamp(2rem,5vw,4rem)!important}
+.artifact-field-shell{min-height:auto!important;padding:1rem!important}
+.project-grid.artifact-field .project-card,.project-grid.brain-grid .project-card{opacity:1!important;visibility:visible!important;transform:none!important;filter:none!important}
+@media(max-width:900px){.brain-hero{grid-template-columns:1fr!important;overflow:visible!important}.brain-copy h1{font-size:clamp(4rem,18vw,7rem)!important;max-width:8ch!important}.lab-head h2{font-size:clamp(3rem,14vw,5.6rem)!important}}
