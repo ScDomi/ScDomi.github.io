@@ -28,7 +28,7 @@
       <nav class="nav">
         <a href="#interface">Interface</a>
         <a href="#artifacts">Artifacts</a>
-        <a href="#map">Map</a>
+        <a href="#map">Logic</a>
       </nav>
     </div>
   </header>
@@ -192,27 +192,34 @@ truth: refuses presets
       </div>
     </section>
 
-    <section class="project-scroll" id="project-scroll" aria-label="project scroll spotlight">
+    <section class="project-scroll proof-scroll" id="project-scroll" aria-label="artifact proof sequence">
       <div class="project-stage">
         <div class="stage-bg" aria-hidden="true"><span></span><span></span><span></span></div>
-        <aside class="stage-rail"><span>PROJECT STREAM</span><b id="stage-count">01 / 07</b></aside>
+        <aside class="stage-rail"><span>EVIDENCE STREAM</span><b id="stage-count">01 / 07</b></aside>
         <div class="stage-copy">
           <p class="section-kicker" id="stage-kicker">CV / YOLO</p>
           <h2 id="stage-title">gesture vision</h2>
           <p id="stage-desc">Hand signs into boxes and classes — messy labels turned into visible detection.</p>
           <div class="stage-tags" id="stage-tags"><span>YOLO</span><span>dataset cleanup</span><span>visual proof</span></div>
         </div>
-        <div class="stage-visual" id="stage-visual" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="proof-logic" aria-hidden="true">
+          <span>surface</span><i></i><span>pattern</span><i></i><span>rule</span><i></i><span>artifact</span>
+        </div>
       </div>
     </section>
 
-    <section id="map" class="wrap section brain-map">
-      <div class="map-node core"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx"></div>
-      <div class="map-node n1"><strong>vision</strong><span>images / boxes / control</span></div>
-      <div class="map-node n2"><strong>language</strong><span>questions / answers / eval</span></div>
-      <div class="map-node n3"><strong>systems</strong><span>agents / memory / workflows</span></div>
-      <div class="map-node n4"><strong>rules</strong><span>math / logic / constraints</span></div>
-      <svg class="map-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M50 50 L20 22 M50 50 L82 27 M50 50 L24 78 M50 50 L78 76" /></svg>
+    <section id="map" class="wrap section philosophy-stack">
+      <div class="stack-head">
+        <p class="section-kicker">operating logic</p>
+        <h2>the loop is the identity.</h2>
+        <p>No random mind-map. scryx is a repeatable move: notice the default, test the rule, turn the result into proof.</p>
+      </div>
+      <div class="stack-grid" aria-label="scryx operating loop">
+        <article><span>01</span><strong>surface</strong><p>Look at the visible thing without trusting the label on it.</p></article>
+        <article><span>02</span><strong>pattern</strong><p>Find what repeats across models, markets, sensors, language, behavior.</p></article>
+        <article><span>03</span><strong>fork</strong><p>Treat the default as editable. Change the rule and watch what breaks.</p></article>
+        <article><span>04</span><strong>evidence</strong><p>Make the thought runnable, visible, inspectable — otherwise it is just taste.</p></article>
+      </div>
     </section>
   </main>
 
@@ -235,8 +242,8 @@ truth: refuses presets
     <div class="cmd-modal">
       <div class="cmd-top"><span>command palette</span><button type="button" id="cmd-close">esc</button></div>
       <button data-jump="#artifacts"><b>open artifacts</b><span>jump to project grid</span></button>
-      <button data-jump="#project-scroll"><b>decrypt projects</b><span>scroll the project stream</span></button>
-      <button data-jump="#map"><b>trace map</b><span>open the outward brain view</span></button>
+      <button data-jump="#project-scroll"><b>inspect evidence</b><span>project stream as proof sequence</span></button>
+      <button data-jump="#map"><b>open logic</b><span>surface → pattern → fork → evidence</span></button>
       <button data-jump="#interface"><b>return boot</b><span>back to surface entry</span></button>
     </div>
   </dialog>
@@ -529,7 +536,7 @@ truth: refuses presets
       document.getElementById('project-scroll').dataset.project = p[4];
       if (window.gsap) {
         gsap.fromTo('.stage-copy > *', { y: 22, opacity: .2, filter: 'blur(7px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: .38, stagger: .035, ease: 'power2.out', overwrite: true });
-        gsap.fromTo('.stage-visual i', { scale: .92, opacity: .25, rotate: -8 }, { scale: 1, opacity: 1, rotate: 0, duration: .55, stagger: .045, ease: 'power2.out', overwrite: true });
+        gsap.fromTo('.proof-logic span', { x: 18, opacity: .35 }, { x: 0, opacity: 1, duration: .42, stagger: .04, ease: 'power2.out', overwrite: true });
       }
     }
 
@@ -571,8 +578,7 @@ truth: refuses presets
         }
       })
         .fromTo('.stage-copy', { y: 80, opacity: .35, filter: 'blur(8px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: .7, immediateRender: false }, 0)
-        .fromTo('.stage-visual i', { y: 140, opacity: .15, rotate: 16 }, { y: 0, opacity: 1, rotate: 0, stagger: .06, duration: .9, immediateRender: false }, .1)
-        .to('.stage-visual', { rotate: 10, scale: 1.08, duration: 2.4 }, .5)
+        .fromTo('.proof-logic span', { x: 80, opacity: .12 }, { x: 0, opacity: 1, stagger: .08, duration: .9, immediateRender: false }, .1)
         .to('.stage-bg span', { x: 'random(-160,160)', y: 'random(-100,100)', rotate: 'random(-25,25)', stagger: .1, duration: 2.6 }, 0)
         .to('.project-stage', { backgroundColor: '#05020a', duration: 2.5 }, 0);
     } else {
