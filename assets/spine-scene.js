@@ -474,8 +474,8 @@ function boot() {
       const iv = setInterval(() => { if (swapped) { clearInterval(iv); return; } swap(); }, 1500);
     }
     const texLoader = new THREE.TextureLoader();
-    const screenGeo = new THREE.PlaneGeometry(1.72, 1.09);
-    const frameGeo = new THREE.PlaneGeometry(1.82, 1.2);
+    const screenGeo = new THREE.PlaneGeometry(1.96, 1.24);
+    const frameGeo = new THREE.PlaneGeometry(2.07, 1.36);
     function makeScreenTexture(name, kind, imgUrl, idx) {
       const cv = document.createElement('canvas');
       cv.width = 512; cv.height = 324;
@@ -487,13 +487,12 @@ function boot() {
         g.fillStyle = '#05070c';
         g.fillRect(0, 0, 512, 324);
         if (img) {
-          const s = Math.max(512 / img.width, 248 / img.height);
+          const s = Math.max(512 / img.width, 250 / img.height);
           const w = img.width * s, h = img.height * s;
-          g.globalAlpha = 0.92;
-          g.drawImage(img, (512 - w) / 2, (248 - h) / 2, w, h);
-          g.globalAlpha = 1;
-          g.fillStyle = 'rgba(5,7,12,.28)';
-          g.fillRect(0, 0, 512, 248);
+          g.drawImage(img, (512 - w) / 2, (250 - h) / 2, w, h);
+          // only a light grade so the photo reads, not buried
+          g.fillStyle = 'rgba(5,7,12,.16)';
+          g.fillRect(0, 0, 512, 250);
         } else {
           // typographic fallback panel (no photo yet)
           g.strokeStyle = 'rgba(73,230,255,.35)';
@@ -508,9 +507,9 @@ function boot() {
           g.textAlign = 'center';
           g.fillText('SIGNAL RECOVERY PENDING', 256, 128);
         }
-        const grad = g.createLinearGradient(0, 220, 0, 324);
+        const grad = g.createLinearGradient(0, 218, 0, 324);
         grad.addColorStop(0, 'rgba(5,7,12,0)');
-        grad.addColorStop(0.35, '#05070c');
+        grad.addColorStop(0.3, '#05070c');
         g.fillStyle = grad;
         g.fillRect(0, 210, 512, 114);
         g.fillStyle = '#49e6ff';
@@ -540,7 +539,7 @@ function boot() {
         const grp = new THREE.Group();
         const frame = new THREE.Mesh(frameGeo, new THREE.MeshBasicMaterial({ color: 0x0b1420, transparent: true, opacity: 0.92 }));
         frame.position.z = -0.012;
-        const edge = new THREE.Mesh(new THREE.PlaneGeometry(1.82, 1.2), new THREE.MeshBasicMaterial({ color: 0x2fd6ff, transparent: true, opacity: 0.0, blending: THREE.AdditiveBlending, depthWrite: false }));
+        const edge = new THREE.Mesh(new THREE.PlaneGeometry(2.07, 1.36), new THREE.MeshBasicMaterial({ color: 0x2fd6ff, transparent: true, opacity: 0.0, blending: THREE.AdditiveBlending, depthWrite: false }));
         edge.position.z = -0.02;
         edge.scale.setScalar(1.02);
         const screen = new THREE.Mesh(screenGeo, new THREE.MeshBasicMaterial({ map: makeScreenTexture(name, kind, img, i), transparent: true }));
