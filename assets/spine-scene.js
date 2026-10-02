@@ -52,59 +52,76 @@ function boot() {
   backLight.position.set(-5, -6, -8);
   scene.add(backLight);
 
-  // ---------- particle field (independent of mesh loading) ----------
+  // ---------- particle field: dense organic swarm (active-theory style) ----------
+  // thousands of motes forming a swirling cloud that gathers around the column
   const SPINE_H = 56;
-  const COUNT = lowPower ? 1600 : 4200;
+  const COUNT = lowPower ? 2600 : 9000;
   const pos = new Float32Array(COUNT * 3);
-  const seed = new Float32Array(COUNT * 3);
+  const seed = new Float32Array(COUNT * 4); // x,y,z,w = random seeds
   for (let i = 0; i < COUNT; i++) {
-    const r = 6 + Math.random() * 26;
+    // concentrate near the column axis, taper off with radius
+    const rr = Math.pow(Math.random(), 0.6);          // bias toward center
+    const r = 1.2 + rr * 24;
     const th = Math.random() * Math.PI * 2;
-    const y = (Math.random() - 0.5) * SPINE_H * 1.2;
+    const y = (Math.random() - 0.5) * SPINE_H * 1.3;
     pos[i * 3] = Math.cos(th) * r;
     pos[i * 3 + 1] = y;
     pos[i * 3 + 2] = Math.sin(th) * r;
-    seed[i * 3] = Math.random(); seed[i * 3 + 1] = Math.random(); seed[i * 3 + 2] = Math.random();
+    seed[i * 4] = Math.random(); seed[i * 4 + 1] = Math.random(); seed[i * 4 + 2] = Math.random(); seed[i * 4 + 3] = Math.random();
   }
   const pGeo = new THREE.BufferGeometry();
   pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  pGeo.setAttribute('aSeed', new THREE.BufferAttribute(seed, 3));
+  pGeo.setAttribute('aSeed', new THREE.BufferAttribute(seed, 4));
   const pMat = new THREE.ShaderMaterial({
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
     uniforms: {
       uTime: { value: 0 }, uScroll: { value: 0 },
       uMouse: { value: new THREE.Vector2(9, 9) },
+      uFocusY: { value: 0 },
       uPixelRatio: { value: renderer.getPixelRatio() }
     },
     vertexShader: `
-      attribute vec3 aSeed; uniform float uTime,uScroll,uPixelRatio; uniform vec2 uMouse;
+      attribute vec4 aSeed; uniform float uTime,uScroll,uPixelRatio,uFocusY; uniform vec2 uMouse;
       varying float vA; varying float vMix;
+      // cheap curl-ish swirl around the column axis
       void main(){
         vec3 p = position;
-        float t = uTime * (0.12 + aSeed.x * 0.22);
-        p.x += sin(t + aSeed.y * 6.283) * 0.55;
-        p.y += cos(t * 0.8 + aSeed.z * 6.283) * 0.55 + uScroll * -6.0;
-        p.z += sin(t * 0.6 + aSeed.x * 6.283) * 0.55;
+        float t = uTime * (0.10 + aSeed.x * 0.24);
+        // orbital swirl around Y axis (the column)
+        float ang = t * (0.4 + aSeed.y*0.5) + aSeed.z * 6.283;
+        float ca = cos(ang*0.15), sa = sin(ang*0.15);
+        p.xz = mat2(ca,-sa,sa,ca) * p.xz;
+        // gentle bob + turbulence
+        p.x += sin(t*1.3 + aSeed.y*6.283) * (0.5 + aSeed.w*0.7);
+        p.y += cos(t*0.9 + aSeed.z*6.283) * (0.5 + aSeed.x*0.7) + uScroll * -6.0;
+        p.z += sin(t*1.1 + aSeed.x*6.283) * (0.5 + aSeed.y*0.7);
+        // attract toward the focus height (forms a denser band near camera focus)
+        float gather = exp(-abs(p.y - uFocusY) * 0.05);
+        p.y = mix(p.y, uFocusY + sin(aSeed.x*6.283)*4.0, gather*0.35);
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
         vec4 clip = projectionMatrix * mv;
         vec2 ndc = clip.xy / clip.w;
+        // mouse repel
         vec2 d = ndc - uMouse;
         float dist = length(d);
-        float push = smoothstep(0.35, 0.0, dist);
-        ndc += normalize(d + 1e-4) * push * 0.12;
-        vA = 0.34 + aSeed.z * 0.5 + push * 0.4;
+        float push = smoothstep(0.4, 0.0, dist);
+        ndc += normalize(d + 1e-4) * push * 0.14;
+        vA = 0.30 + aSeed.z * 0.5 + push * 0.5;
         vMix = aSeed.y;
         gl_Position = vec4(ndc * clip.w, clip.z, clip.w);
-        gl_PointSize = (1.6 + aSeed.x * 2.8 + push * 2.4) * uPixelRatio * clamp(6.0 / max(0.1, -mv.z), 0.6, 3.2);
+        gl_PointSize = (1.3 + aSeed.x * 3.0 + push * 2.6) * uPixelRatio * clamp(7.0 / max(0.1, -mv.z), 0.5, 3.4);
       }`,
     fragmentShader: `
       varying float vA; varying float vMix;
       void main(){
         vec2 uv = gl_PointCoord - 0.5; float d = length(uv);
-        float a = smoothstep(0.5, 0.0, d) * vA;
+        float a = smoothstep(0.5, 0.05, d) * vA;
         vec3 cyan = vec3(0.286, 0.902, 1.0);
         vec3 violet = vec3(0.651, 0.451, 1.0);
-        gl_FragColor = vec4(mix(cyan, violet, vMix), a);
+        vec3 white = vec3(0.95, 0.98, 1.0);
+        vec3 col = mix(cyan, violet, vMix);
+        col = mix(col, white, smoothstep(0.85, 1.0, vMix) * 0.6); // few bright sparks
+        gl_FragColor = vec4(col, a);
       }`
   });
   scene.add(new THREE.Points(pGeo, pMat));
@@ -437,136 +454,8 @@ function boot() {
     packetGeo.setAttribute('position', new THREE.BufferAttribute(packetPos, 3));
     spine.add(new THREE.Points(packetGeo, new THREE.PointsMaterial({ color: 0x9df1ff, size: 0.15, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true })));
 
-    // flying 3D screen panels orbiting the spine (active-theory style)
-    // per screen: [key, name, kind, poster image, ambient video loop (optional)]
-    const screens = [];
-    const projectScreens = [
-      ['gesture', '01 gesture vision', 'cv / yolo', 'assets/projects/gesture/gesture-1.jpg', null],
-      ['squad', '02 squad qa', 'nlp / qa', 'assets/projects/nlp/finetuning-large-language-models.pdf.png', null],
-      ['rl', '03 dqn racing', 'rl / vision', 'assets/projects/DQN-Car.png', null],
-      ['emotion', '04 emotion stream', 'realtime cv', null, null],
-      ['ubique', '05 ubiquepulse', 'iot / systems', 'assets/projects/IOT.png', null],
-      ['alpaca', '06 alpaca markets', 'markets / agent', 'assets/projects/stocks.png', null],
-      ['foundations', '07 foundations', 'math / cs', 'assets/projects/foundations/turmites.png', null]
-    ];
-    // wires a looping video onto a screen mesh; canvas poster stays as fallback
-    function attachVideo(screenMesh, url) {
-      if (!url || !screenMesh) return;
-      const vid = document.createElement('video');
-      vid.muted = true; vid.loop = true; vid.playsInline = true; vid.autoplay = true;
-      vid.preload = 'metadata';
-      vid.style.display = 'none';
-      document.body.appendChild(vid);
-      let swapped = false;
-      const swap = () => {
-        if (swapped || vid.readyState < 2 || !vid.videoWidth) return;
-        swapped = true;
-        const vt = new THREE.VideoTexture(vid);
-        vt.colorSpace = THREE.SRGBColorSpace;
-        screenMesh.material.map = vt;
-        screenMesh.material.needsUpdate = true;
-        vid.play().catch(() => {});
-      };
-      vid.addEventListener('error', () => { vid.remove(); }, { once: true });
-      vid.addEventListener('loadeddata', swap, { once: true });
-      vid.src = url;
-      // safety retry for slow loads
-      const iv = setInterval(() => { if (swapped) { clearInterval(iv); return; } swap(); }, 1500);
-    }
-    const texLoader = new THREE.TextureLoader();
-    const screenGeo = new THREE.PlaneGeometry(1.96, 1.24);
-    const frameGeo = new THREE.PlaneGeometry(2.07, 1.36);
-    function makeScreenTexture(name, kind, imgUrl, idx) {
-      const cv = document.createElement('canvas');
-      cv.width = 512; cv.height = 324;
-      const g = cv.getContext('2d');
-      const tex = new THREE.CanvasTexture(cv);
-      tex.colorSpace = THREE.SRGBColorSpace;
-      tex.anisotropy = 4;
-      const draw = img => {
-        g.fillStyle = '#05070c';
-        g.fillRect(0, 0, 512, 324);
-        if (img) {
-          const s = Math.max(512 / img.width, 250 / img.height);
-          const w = img.width * s, h = img.height * s;
-          g.drawImage(img, (512 - w) / 2, (250 - h) / 2, w, h);
-          // only a light grade so the photo reads, not buried
-          g.fillStyle = 'rgba(5,7,12,.16)';
-          g.fillRect(0, 0, 512, 250);
-        } else {
-          // typographic fallback panel (no photo yet)
-          g.strokeStyle = 'rgba(73,230,255,.35)';
-          g.lineWidth = 1.5;
-          for (let r = 0; r < 5; r++) {
-            g.beginPath();
-            g.arc(256, 124, 26 + r * 18, r * 0.7, r * 0.7 + 4.4);
-            g.stroke();
-          }
-          g.fillStyle = 'rgba(73,230,255,.8)';
-          g.font = '700 13px ui-monospace, Menlo, monospace';
-          g.textAlign = 'center';
-          g.fillText('SIGNAL RECOVERY PENDING', 256, 128);
-        }
-        const grad = g.createLinearGradient(0, 218, 0, 324);
-        grad.addColorStop(0, 'rgba(5,7,12,0)');
-        grad.addColorStop(0.3, '#05070c');
-        g.fillStyle = grad;
-        g.fillRect(0, 210, 512, 114);
-        g.fillStyle = '#49e6ff';
-        g.fillRect(22, 262, 26, 2);
-        g.textAlign = 'left';
-        g.font = '800 21px ui-monospace, Menlo, monospace';
-        g.fillStyle = '#eaf6ff';
-        g.fillText(name.toUpperCase(), 22, 292);
-        g.font = '700 13px ui-monospace, Menlo, monospace';
-        g.fillStyle = 'rgba(157,148,181,.9)';
-        g.fillText(kind.toUpperCase(), 22, 312);
-        g.textAlign = 'right';
-        g.fillStyle = 'rgba(73,230,255,.75)';
-        g.fillText(String(idx + 1).padStart(2, '0') + ' / ' + String(projectScreens.length).padStart(2, '0'), 490, 312);
-        tex.needsUpdate = true;
-      };
-      if (imgUrl) {
-        const im = new Image();
-        im.onload = () => draw(im);
-        im.onerror = () => draw(null);
-        im.src = imgUrl;
-      } else draw(null);
-      return tex;
-    }
-    if (!isMobile || innerWidth >= 480) {
-      projectScreens.forEach(([key, name, kind, img, vid], i) => {
-        const grp = new THREE.Group();
-        const frame = new THREE.Mesh(frameGeo, new THREE.MeshBasicMaterial({ color: 0x0b1420, transparent: true, opacity: 0.92 }));
-        frame.position.z = -0.012;
-        const edge = new THREE.Mesh(new THREE.PlaneGeometry(2.07, 1.36), new THREE.MeshBasicMaterial({ color: 0x2fd6ff, transparent: true, opacity: 0.0, blending: THREE.AdditiveBlending, depthWrite: false }));
-        edge.position.z = -0.02;
-        edge.scale.setScalar(1.02);
-        const screen = new THREE.Mesh(screenGeo, new THREE.MeshBasicMaterial({ map: makeScreenTexture(name, kind, img, i), transparent: true }));
-        if (vid) attachVideo(screen, vid);
-        grp.add(frame, edge, screen);
-        const vi = Math.min(i * 2, vertebrae.length - 1);
-        spine.add(grp);
-        screens.push({
-          key, grp, screen, frame, edge,
-          tHome: 0.06 + (i / (projectScreens.length - 1)) * 0.88,
-          tOff: Math.sin(i * 3.7) * 0.04,
-          radius: (2.5 + (i % 3) * 0.6) * Math.min(1.3, aspectRadius()),
-          speed: (i % 2 ? -1 : 1) * (0.2 + (i % 3) * 0.06),
-          phase: i * 2.13,
-          vertIdx: vi,
-          hoverK: 0,
-          line: null
-        });
-      });
-      const screenLineMat = new THREE.LineBasicMaterial({ color: 0x6fe7ff, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending, depthWrite: false });
-      for (const s of screens) {
-        const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
-        s.line = new THREE.Line(g, screenLineMat);
-        spine.add(s.line);
-      }
-      window.__spineScreens = screens;
-    }
+    // (flying screens removed — the project panels live in the artifact grid below;
+    //  the spine scene stays a pure atmosphere of particles + traces + the swarm)
 
     // ---------- branch nodes + HTML panels ----------
     const panelRoot = document.getElementById('spine-panels');
@@ -631,8 +520,6 @@ function boot() {
     addAnchor(0.77, -1, -0.05, 'signal', 'node');
     addAnchor(0.97, -1, -0.35, 'pattern', 'node');
 
-    const screenWorld = new THREE.Vector3();
-
     // ---------- satellite swarm: small flying things around the column ----------
     const satGeos = [new THREE.TetrahedronGeometry(0.09), new THREE.OctahedronGeometry(0.08), new THREE.BoxGeometry(0.11, 0.11, 0.11)];
     const satMats = [cyanMat, violetMat, new THREE.MeshBasicMaterial({ color: 0xdff7ff })];
@@ -675,28 +562,8 @@ function boot() {
       r.m.visible = true;
     });
 
-    // hover + click on the flying 3D screens
-    let hoverScreen = null;
-    const screenMeshes = [];
-    for (const s of screens) { screenMeshes.push(s.screen); s.screen.userData.owner = s; s.frame.userData.owner = s; screenMeshes.push(s.frame); }
-    addEventListener('pointermove', e => {
-      if (!screens.length) return;
-      ndc.set((e.clientX / innerWidth) * 2 - 1, -((e.clientY / innerHeight) * 2 - 1));
-      raycaster.setFromCamera(ndc, camera);
-      const hit = raycaster.intersectObjects(screenMeshes, false)[0];
-      const s = hit ? hit.object.userData.owner : null;
-      if (s !== hoverScreen) {
-        hoverScreen = s;
-        window.__spineFocus = s ? s.vertIdx : -1;
-        window.__spineHoverLabel = s ? 'open' : '';
-        document.dispatchEvent(new CustomEvent('spine-hover'));
-      }
-    }, { passive: true });
-    addEventListener('pointerdown', e => {
-      if (hoverScreen && !e.target.closest('dialog')) {
-        window.openProject?.(hoverScreen.key);
-      }
-    });
+    // (screens removed — hover/click on them is gone; the artifact grid below
+    //  remains the project entry point via window.openProject on the cards)
 
     function updatePanels() {
       if (!panelRoot) return;
@@ -782,27 +649,6 @@ function boot() {
         u.inner.rotation.y = Math.sin(t * 0.5 + u.phase) * 0.012;
       }
 
-      // flying screens orbit the column as real 3D planes, tethered to their vertebra
-      for (const s of screens) {
-        const ts = Math.min(0.995, Math.max(0.005, s.tHome + Math.sin(t * 0.12 + s.phase) * 0.02 + s.tOff));
-        const baseR = sampleFrame(ts, screenWorld, nTmp, bTmp); // spine space
-        const a = s.phase + t * s.speed;
-        screenWorld.addScaledVector(nTmp, Math.cos(a) * (baseR + s.radius))
-                   .addScaledVector(bTmp, Math.sin(a) * (baseR + s.radius) * 0.8)
-                   .addScaledVector(frames.tangents[Math.min(SAMPLES - 1, Math.round(ts * SAMPLES))], Math.sin(t * 0.6 + s.phase) * 0.3);
-        s.grp.position.copy(screenWorld);
-        s.grp.lookAt(camera.position);          // soft billboard, keeps real depth/parallax
-        s.grp.rotateZ(Math.sin(t * 0.4 + s.phase) * 0.05); // gentle screen tilt
-        s.hoverK += ((hoverScreen === s ? 1 : 0) - s.hoverK) * 0.15;
-        s.grp.scale.setScalar(1 + s.hoverK * 0.14);
-        s.edge.material.opacity = 0.12 + s.hoverK * 0.75;
-        const lp = s.line.geometry.attributes.position;
-        lp.setXYZ(0, centers[s.vertIdx].x, centers[s.vertIdx].y, centers[s.vertIdx].z);
-        lp.setXYZ(1, screenWorld.x, screenWorld.y, screenWorld.z);
-        lp.needsUpdate = true;
-        s.line.material.opacity = 0.16 + s.hoverK * 0.5;
-      }
-
       // satellites swarm
       for (const sat of sats) {
         sat.t = (sat.t + dt * sat.v + 1) % 1;
@@ -837,7 +683,8 @@ function boot() {
       const path = Math.min(0.94, scroll * 0.94);
       spineCurve.getPointAt(Math.min(1, path + 0.04), focusPt);
       const ang = scroll * Math.PI * 1.7 + t * 0.045 + mouse.x * 0.3;
-      const rad = (6.1 + Math.sin(scroll * Math.PI * 2.4) * 1.1) * aspectRadius();
+      const topness3 = brain ? (1 - Math.min(1, scroll / 0.18)) : 0;
+      const rad = (6.1 + Math.sin(scroll * Math.PI * 2.4) * 1.1 + topness3 * 2.4) * aspectRadius();
       camera.position.set(
         focusPt.x + Math.cos(ang) * rad,
         focusPt.y + 2.1 + Math.sin(t * 0.3) * 0.25 + mouse.y * 0.7,
@@ -848,7 +695,7 @@ function boot() {
       camTarget.y = focusPt.y - 0.4;
       if (brain) {
         const topness = 1 - Math.min(1, scroll / 0.18);
-        camTarget.y = focusPt.y - 0.4 + topness * 2.0; // gentle tilt up so the brain sits in the upper third
+        camTarget.y = focusPt.y - 0.4 + topness * 1.4; // gentle tilt up, brain sits comfortably in upper frame
       }
       camera.lookAt(camTarget);
       rimLight.position.set(camera.position.x + 4, camera.position.y + 5, camera.position.z + 5);
