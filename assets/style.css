@@ -276,3 +276,8 @@ body.home-scryx::after{background:radial-gradient(circle at var(--mx,76vw) var(-
 .brain-terminal{transition:transform .45s cubic-bezier(.16,1,.3,1),box-shadow .45s ease,border-color .45s ease}
 .brain-terminal:hover{transform:translateY(-6px);border-color:rgba(216,199,255,.28);box-shadow:0 38px 130px rgba(0,0,0,.5),0 0 80px rgba(143,77,255,.14),inset 0 1px 0 rgba(255,255,255,.08)}
 #term-scroll,#term-focus{color:#f4efff;text-shadow:0 0 14px rgba(185,101,255,.7)}
+
+/* readability pass: repo/artifact cards */
+.project-grid .project-card::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.34) 0%,rgba(0,0,0,.58) 46%,rgba(0,0,0,.78) 100%),radial-gradient(520px 300px at 70% 80%,rgba(143,77,255,.18),transparent 66%)!important;opacity:.9!important}
+.project-grid .project-card>*{position:relative;z-index:2}.project-grid .project-card h3,.project-grid .project-card p,.project-grid .project-card .tag,.project-grid .project-card .card-index{color:#f7f1ff!important;text-shadow:0 2px 18px rgba(0,0,0,.85)}
+.project-grid .project-card p{background:rgba(3,3,4,.56)!important;border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(10px);padding:.48rem .58rem!important;border-radius:12px!important;max-width:34ch!important}.project-grid .project-card .tag{background:rgba(3,3,4,.62)!important;border-color:rgba(255,255,255,.16)!important}.project-grid .project-card:hover::before{opacity:.96!important;background:linear-gradient(180deg,rgba(0,0,0,.42),rgba(0,0,0,.64) 48%,rgba(0,0,0,.84)),radial-gradient(520px 300px at 70% 80%,rgba(143,77,255,.23),transparent 66%)!important}
