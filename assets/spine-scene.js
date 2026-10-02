@@ -54,8 +54,8 @@ function boot() {
 
   // ---------- particle field: dense organic swarm (active-theory style) ----------
   // thousands of motes forming a swirling cloud that gathers around the column
-  const SPINE_H = 56;
-  const COUNT = lowPower ? 2600 : 9000;
+  const SPINE_H = 46;
+  const COUNT = lowPower ? 1600 : (isMobile ? 2400 : 9000);
   const pos = new Float32Array(COUNT * 3);
   const seed = new Float32Array(COUNT * 4); // x,y,z,w = random seeds
   for (let i = 0; i < COUNT; i++) {
@@ -684,10 +684,10 @@ function boot() {
       spineCurve.getPointAt(Math.min(1, path + 0.04), focusPt);
       const ang = scroll * Math.PI * 1.7 + t * 0.045 + mouse.x * 0.3;
       const topness3 = brain ? (1 - Math.min(1, scroll / 0.18)) : 0;
-      const rad = (6.1 + Math.sin(scroll * Math.PI * 2.4) * 1.1 + topness3 * 2.4) * aspectRadius();
+      const rad = (9.5 + Math.sin(scroll * Math.PI * 2.4) * 1.25 + topness3 * 3.2) * aspectRadius();
       camera.position.set(
         focusPt.x + Math.cos(ang) * rad,
-        focusPt.y + 2.1 + Math.sin(t * 0.3) * 0.25 + mouse.y * 0.7,
+        focusPt.y + 3.0 + Math.sin(t * 0.3) * 0.25 + mouse.y * 0.7,
         focusPt.z + Math.sin(ang) * rad
       );
       // look at the column; near the top tilt the gaze up so the brain enters the upper frame

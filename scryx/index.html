@@ -274,7 +274,7 @@ default: editable
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script type="module" src="assets/spine-scene.js?v=spine-16"></script>
+  <script type="module" src="assets/spine-scene.js?v=spine-17"></script>
   <script>
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isMobile = window.matchMedia('(max-width: 760px)').matches;
@@ -521,7 +521,8 @@ default: editable
 
     const sparkCanvas = document.getElementById('spark-canvas');
     const sparkCtx = sparkCanvas?.getContext('2d');
-    const sparks = Array.from({ length: lowPower ? 46 : 78 }, () => ({ x: Math.random(), y: Math.random(), z: Math.random(), s: Math.random() * 2 + .6, a: Math.random() * .55 + .08 }));
+    // fewer, fainter sparks on mobile/low power — the 3D swarm carries the effect
+    const sparks = Array.from({ length: lowPower ? 12 : (isMobile ? 22 : 64) }, () => ({ x: Math.random(), y: Math.random(), z: Math.random(), s: Math.random() * 1.6 + .5, a: Math.random() * (lowPower ? .2 : .4) + .05 }));
     function renderSparks(){
       if (!sparkCanvas || !sparkCtx) return;
       const dpr = lowPower ? 1 : Math.min(window.devicePixelRatio || 1, 1.5), w = sparkCanvas.clientWidth, h = sparkCanvas.clientHeight;
@@ -532,9 +533,9 @@ default: editable
         p.y = (p.y + .0007 + p.z*.0016 + scroll*.0005) % 1;
         const x = p.x*w + Math.sin((p.y+scroll)*8+p.z*5)*28;
         const y = p.y*h;
-        const grad = sparkCtx.createRadialGradient(x,y,0,x,y,p.s*7);
-        grad.addColorStop(0, `rgba(255,255,255,${p.a})`); grad.addColorStop(.35, `rgba(185,101,255,${p.a*.45})`); grad.addColorStop(1, 'rgba(185,101,255,0)');
-        sparkCtx.fillStyle = grad; sparkCtx.beginPath(); sparkCtx.arc(x,y,p.s*7,0,Math.PI*2); sparkCtx.fill();
+        const grad = sparkCtx.createRadialGradient(x,y,0,x,y,p.s*6);
+        grad.addColorStop(0, `rgba(216,199,255,${p.a})`); grad.addColorStop(.4, `rgba(185,101,255,${p.a*.4})`); grad.addColorStop(1, 'rgba(185,101,255,0)');
+        sparkCtx.fillStyle = grad; sparkCtx.beginPath(); sparkCtx.arc(x,y,p.s*6,0,Math.PI*2); sparkCtx.fill();
       }
       requestAnimationFrame(renderSparks);
     }

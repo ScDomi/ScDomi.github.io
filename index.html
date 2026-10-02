@@ -9,15 +9,30 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=20260930-blackbox-1" />
+  <link rel="stylesheet" href="assets/style.css?v=20261002-responsive-1" />
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
 </head>
 <body class="home-scryx brain-interface active-lite">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
   <canvas class="spark-canvas" id="spark-canvas" aria-hidden="true"></canvas>
   <canvas class="matrix-canvas" id="matrix-canvas" aria-hidden="true"></canvas>
   <canvas class="webgl-core-canvas" id="webgl-core-canvas" aria-hidden="true"></canvas>
+  <canvas class="spine-canvas" id="spine-canvas" aria-hidden="true"></canvas>
+  <div class="spine-panels" id="spine-panels" aria-hidden="true"></div>
   <div class="shader-depth-readout" aria-hidden="true"><span>scryx field</span><b id="shader-depth">00.000</b></div>
   <div class="cursor-orb" id="cursor-orb" aria-hidden="true"></div>
+  <div class="cursor-system" id="cursor-system" aria-hidden="true">
+    <div class="cursor-ring" id="cursor-ring"></div>
+    <div class="cursor-reticle" id="cursor-reticle">
+      <i class="c-dot"></i><i class="c-arm n"></i><i class="c-arm e"></i><i class="c-arm s"></i><i class="c-arm w"></i>
+      <div class="cursor-meta"><span id="cursor-label"></span><b id="cursor-coords">0000/0000</b></div>
+    </div>
+  </div>
   <div class="scanline-layer" aria-hidden="true"></div>
   <div class="boot-overlay" id="boot-overlay" aria-hidden="true"><code id="boot-log"></code></div>
   <div class="hack-hud" aria-hidden="true"><span>root@scryx</span><b id="hud-state">signal:clean</b><i>rules != truth</i></div>
@@ -31,7 +46,7 @@
       <nav class="nav">
         <a href="#interface">Interface</a>
         <a href="#artifacts">Artifacts</a>
-        <a href="#map">Logic</a><a href="/ml/">ML Visualized</a>
+        <a href="#map">Logic</a><a href="/ml/">ML Visualized</a><a href="/dl/">Deep Learning</a>
       </nav>
     </div>
   </header>
@@ -40,7 +55,7 @@
     <section id="interface" class="wrap brain-hero">
       <div class="terminal-panel brain-terminal" aria-label="brain terminal">
         <div class="term-top"><i></i><i></i><i></i><span>~/domi/brain_surface</span></div>
-        <pre><code><span class="dim">$</span> whoami
+        <pre><code id="live-terminal"><span class="dim">$</span> whoami
 ScDomi <span class="violet">// scryx</span>
 
 <span class="dim">$</span> ./open_head --read-only
@@ -54,9 +69,10 @@ agents          <span class="dim">→</span> memory + tools
 simulations     <span class="dim">→</span> rules moving
 foundations     <span class="dim">→</span> logic underneath
 
-<span class="dim">$</span> blink default
-rule: on probation
-truth: refuses presets
+<span class="dim">$</span> live trace
+scroll: <span id="term-scroll">00</span>%
+focus: <span id="term-focus">surface</span>
+default: editable
 <span class="dim">↳</span> fork the rule.</code></pre>
       </div>
 
@@ -244,11 +260,20 @@ truth: refuses presets
     </div>
   </dialog>
 
-  <footer class="site-footer"><div class="wrap footer-row"><small>© 2026 Domi</small><small>scryx</small></div></footer>
+  <footer class="site-footer"><div class="wrap footer-row"><small>© 2026 Domi</small><small>scryx</small><small class="mesh-credit">vertebra meshes: BodyParts3D © DBCLS, CC BY-SA 2.1</small></div></footer>
+
+  <div class="cookie-consent" id="cookie-consent" role="dialog" aria-live="polite" aria-label="cookie notice" hidden>
+    <p>this site can remember your command-palette + consent choice locally. no tracking unless you say yes.</p>
+    <div class="cookie-actions">
+      <button type="button" id="cookie-decline">essentials only</button>
+      <button type="button" id="cookie-accept">allow local memory</button>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script type="module" src="assets/spine-scene.js?v=spine-17"></script>
   <script>
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isMobile = window.matchMedia('(max-width: 760px)').matches;
@@ -408,6 +433,44 @@ truth: refuses presets
       }
     }, { passive: true });
 
+    // custom reticle cursor: instant dot/arms, lagging ring, context label + coords
+    (function cursorSystem(){
+      if (isMobile || window.matchMedia('(pointer: coarse)').matches) return;
+      const sys = document.getElementById('cursor-system');
+      const ring = document.getElementById('cursor-ring');
+      const ret = document.getElementById('cursor-reticle');
+      const label = document.getElementById('cursor-label');
+      const coords = document.getElementById('cursor-coords');
+      if (!sys || !ring || !ret) return;
+      let x = innerWidth / 2, y = innerHeight / 2, rx = x, ry = y;
+      const lag = reduceMotion ? 1 : .16;
+      window.addEventListener('pointermove', (e) => {
+        x = e.clientX; y = e.clientY;
+        sys.classList.add('on');
+        if (coords) coords.textContent = `${String(Math.round(x)).padStart(4, '0')}/${String(Math.round(y)).padStart(4, '0')}`;
+        const hit = e.target.closest?.('a, button, .project-card, .spine-chip, [data-cursor]');
+        let txt = '';
+        if (hit) txt = hit.dataset.cursor || (hit.classList?.contains('spine-chip') ? 'open' : hit.classList?.contains('project-card') ? 'inspect' : hit.tagName === 'A' ? 'jump' : 'exec');
+        else if (window.__spineHoverLabel) txt = window.__spineHoverLabel;
+        if (label) label.textContent = txt;
+        sys.classList.toggle('is-hover', !!hit || !!window.__spineHoverLabel);
+      }, { passive: true });
+      window.addEventListener('pointerdown', () => sys.classList.add('is-down'));
+      window.addEventListener('pointerup', () => sys.classList.remove('is-down'));
+      document.documentElement.addEventListener('mouseleave', () => sys.classList.remove('on'));
+      document.addEventListener('spine-hover', () => {
+        const on = !!window.__spineHoverLabel;
+        if (label && on) label.textContent = window.__spineHoverLabel;
+        sys.classList.toggle('is-hover', on);
+      });
+      (function chase(){
+        rx += (x - rx) * lag; ry += (y - ry) * lag;
+        ret.style.transform = `translate(${x}px, ${y}px)`;
+        ring.style.transform = `translate(${rx}px, ${ry}px)`;
+        requestAnimationFrame(chase);
+      })();
+    })();
+
     const scrollPercent = document.getElementById('scroll-percent');
     function updateScrollInterface(){
       const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
@@ -415,6 +478,10 @@ truth: refuses presets
       document.documentElement.style.setProperty('--scroll', progress.toFixed(4));
       document.documentElement.style.setProperty('--scroll-deg', `${(progress * 360).toFixed(1)}deg`);
       if (scrollPercent) scrollPercent.textContent = String(Math.round(progress * 100)).padStart(2, '0');
+      const termScroll = document.getElementById('term-scroll');
+      const termFocus = document.getElementById('term-focus');
+      if (termScroll) termScroll.textContent = String(Math.round(progress * 100)).padStart(2, '0');
+      if (termFocus) termFocus.textContent = progress > .72 ? 'logic' : progress > .45 ? 'evidence' : progress > .18 ? 'artifacts' : 'surface';
       const depth = document.getElementById('depth-readout');
       if (depth) depth.textContent = (progress * 7.777).toFixed(3).padStart(6, '0');
       const hud = document.getElementById('hud-state');
@@ -453,7 +520,8 @@ truth: refuses presets
 
     const sparkCanvas = document.getElementById('spark-canvas');
     const sparkCtx = sparkCanvas?.getContext('2d');
-    const sparks = Array.from({ length: lowPower ? 46 : 78 }, () => ({ x: Math.random(), y: Math.random(), z: Math.random(), s: Math.random() * 2 + .6, a: Math.random() * .55 + .08 }));
+    // fewer, fainter sparks on mobile/low power — the 3D swarm carries the effect
+    const sparks = Array.from({ length: lowPower ? 12 : (isMobile ? 22 : 64) }, () => ({ x: Math.random(), y: Math.random(), z: Math.random(), s: Math.random() * 1.6 + .5, a: Math.random() * (lowPower ? .2 : .4) + .05 }));
     function renderSparks(){
       if (!sparkCanvas || !sparkCtx) return;
       const dpr = lowPower ? 1 : Math.min(window.devicePixelRatio || 1, 1.5), w = sparkCanvas.clientWidth, h = sparkCanvas.clientHeight;
@@ -464,9 +532,9 @@ truth: refuses presets
         p.y = (p.y + .0007 + p.z*.0016 + scroll*.0005) % 1;
         const x = p.x*w + Math.sin((p.y+scroll)*8+p.z*5)*28;
         const y = p.y*h;
-        const grad = sparkCtx.createRadialGradient(x,y,0,x,y,p.s*7);
-        grad.addColorStop(0, `rgba(255,255,255,${p.a})`); grad.addColorStop(.35, `rgba(185,101,255,${p.a*.45})`); grad.addColorStop(1, 'rgba(185,101,255,0)');
-        sparkCtx.fillStyle = grad; sparkCtx.beginPath(); sparkCtx.arc(x,y,p.s*7,0,Math.PI*2); sparkCtx.fill();
+        const grad = sparkCtx.createRadialGradient(x,y,0,x,y,p.s*6);
+        grad.addColorStop(0, `rgba(216,199,255,${p.a})`); grad.addColorStop(.4, `rgba(185,101,255,${p.a*.4})`); grad.addColorStop(1, 'rgba(185,101,255,0)');
+        sparkCtx.fillStyle = grad; sparkCtx.beginPath(); sparkCtx.arc(x,y,p.s*6,0,Math.PI*2); sparkCtx.fill();
       }
       requestAnimationFrame(renderSparks);
     }
@@ -502,13 +570,17 @@ truth: refuses presets
     const bootLog = document.getElementById('boot-log');
     const bootOverlay = document.getElementById('boot-overlay');
     const bootLines = ['$ ./scryx --surface public', 'loading artifacts ........ ok', 'audio disabled .......... ok', 'rules mounted as defaults', 'truth: refusing presets', 'interface unlocked'];
-    if (bootLog && bootOverlay && !sessionStorage.getItem('scryxBooted')) {
+    // Mobile should show the actual page immediately; the boot layer looked like the site was broken.
+    if (bootLog && bootOverlay && !sessionStorage.getItem('scryxBooted') && !isMobile && !reduceMotion) {
       let idx = 0;
       const tick = setInterval(() => {
         bootLog.textContent += bootLines[idx++] + '\n';
         if (idx >= bootLines.length) { clearInterval(tick); sessionStorage.setItem('scryxBooted','1'); setTimeout(()=>bootOverlay.classList.add('done'), 450); }
       }, 120);
-    } else if (bootOverlay) bootOverlay.classList.add('done');
+    } else if (bootOverlay) {
+      bootOverlay.classList.add('done');
+      try { sessionStorage.setItem('scryxBooted','1'); } catch (e) {}
+    }
 
     const spotlightProjects = [
       ['CV / YOLO','gesture vision','Hand signs into boxes and classes — messy labels turned into visible detection.',['YOLO','dataset cleanup','visual proof'],'gesture'],
@@ -591,6 +663,24 @@ truth: refuses presets
       window.addEventListener('resize', updateMobileStage);
       updateMobileStage();
     }
+
+    // cookie consent: opt-in local memory only, no tracking without a yes
+    (function cookieConsent(){
+      const box = document.getElementById('cookie-consent');
+      if (!box) return;
+      const KEY = 'scryxConsent';
+      let stored = null;
+      try { stored = localStorage.getItem(KEY); } catch (e) {}
+      if (!stored) { box.hidden = false; }
+      const set = v => {
+        try { localStorage.setItem(KEY, v); } catch (e) {}
+        window.scryxConsent = v;
+        box.hidden = true;
+      };
+      document.getElementById('cookie-accept')?.addEventListener('click', () => set('allow'));
+      document.getElementById('cookie-decline')?.addEventListener('click', () => set('essential'));
+      window.scryxConsent = stored || 'unset';
+    })();
   </script>
 </body>
 </html>
