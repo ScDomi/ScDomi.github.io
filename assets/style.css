@@ -453,3 +453,11 @@ body.home-scryx .webgl-core-canvas{opacity:.16!important;filter:saturate(.9) con
 .card-bg-img img{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.92) contrast(1.08) brightness(.88)}
 .card-bg-img::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(5,5,5,.22),rgba(5,5,5,.62));pointer-events:none}
 @media(max-width:760px){.card-bg-img{width:min(52vw,200px);height:120px}}
+
+/* all repo cards can use real/AI-generated project images */
+.project-card .card-bg-img{position:absolute!important;right:1rem!important;bottom:1rem!important;width:min(46vw,230px)!important;height:min(34vh,170px)!important;border-radius:18px!important;overflow:hidden!important;border:1px solid rgba(255,255,255,.10)!important;box-shadow:0 20px 60px rgba(0,0,0,.42)!important;padding:0!important;background:none!important;display:block!important;opacity:.92!important;transform:none!important}
+.project-card.large .card-bg-img{width:min(52vw,285px)!important;height:min(36vh,205px)!important}
+.project-card .card-bg-img img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;filter:saturate(.95) contrast(1.08) brightness(.88)!important}
+.project-card .card-bg-img::after{content:""!important;position:absolute!important;inset:0!important;background:linear-gradient(135deg,rgba(5,5,5,.10),rgba(5,5,5,.66))!important;pointer-events:none!important}
+.project-card .card-bg-img i,.project-card .card-bg-img b,.project-card .card-bg-img span,.project-card .card-bg-img strong{display:none!important}
+@media(max-width:760px){.project-card .card-bg-img{width:min(58vw,220px)!important;height:132px!important}.project-card.large .card-bg-img{width:min(64vw,240px)!important;height:150px!important}}
