@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
   <link rel="stylesheet" href="assets/style.css?v=20260930-blackbox-1" />
-  <link rel="stylesheet" href="assets/ml-visualizer.css?v=flybrain-2" />
+  <link rel="stylesheet" href="assets/ml-visualizer.css?v=flybrain-3" />
 </head>
 <body class="home-scryx brain-interface active-lite ml-page dl-page">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
@@ -229,9 +229,22 @@ status: gradients flowing (mostly)</code></pre>
         <div class="flybrain-visual">
           <canvas id="flyBrainCanvas" width="1440" height="760" aria-label="real Virtual Fly Brain Drosophila brain mesh rendered in 3D"></canvas>
           <div class="flybrain-readout" aria-live="polite">
-            <span>real morphology</span>
+            <span id="flyBrainModeLabel">real morphology</span>
             <strong id="flyBrainStatus">loading 3D brain…</strong>
             <p id="flyBrainStat">Virtual Fly Brain mesh + surface pulse points. Move the pointer over it — this is the brain shape, not the matrix.</p>
+          </div>
+          <div class="flybrain-controls" aria-label="interactive fly brain controls">
+            <button type="button" data-fly-mode="activity" class="active">signal flow</button>
+            <button type="button" data-fly-mode="regions">regions</button>
+            <button type="button" data-fly-mode="wiring">wiring</button>
+            <button type="button" id="flyBrainPause">pause</button>
+            <label>speed <input id="flyBrainSpeed" type="range" min="0" max="100" value="58"></label>
+          </div>
+          <div class="flybrain-lessons" aria-label="guided explanation">
+            <button type="button" data-fly-lesson="0" class="active"><b>1</b> shape</button>
+            <button type="button" data-fly-lesson="1"><b>2</b> signal</button>
+            <button type="button" data-fly-lesson="2"><b>3</b> regions</button>
+            <button type="button" data-fly-lesson="3"><b>4</b> matrix</button>
           </div>
         </div>
         <div class="flybrain-matrix-shell compare-stage">
@@ -275,6 +288,6 @@ status: gradients flowing (mostly)</code></pre>
   </script>
   <script src="assets/ml-visualizer.js?v=stepwise-6"></script>
   <script src="assets/dl-visualizer.js?v=dl-9"></script>
-  <script type="module" src="assets/dl-flybrain-3d.js?v=flybrain-4"></script>
+  <script type="module" src="assets/dl-flybrain-3d.js?v=flybrain-5"></script>
 </body>
 </html>
