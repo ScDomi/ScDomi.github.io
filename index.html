@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=20261002-arcade-1" />
+  <link rel="stylesheet" href="assets/style.css?v=20261002-responsive-4" />
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -17,7 +17,7 @@
     } }
   </script>
 </head>
-<body class="home-scryx brain-interface active-lite arcade-mode">
+<body class="home-scryx brain-interface active-lite">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
   <canvas class="spark-canvas" id="spark-canvas" aria-hidden="true"></canvas>
   <canvas class="matrix-canvas" id="matrix-canvas" aria-hidden="true"></canvas>
@@ -36,20 +36,6 @@
   <div class="scanline-layer" aria-hidden="true"></div>
   <div class="boot-overlay" id="boot-overlay" aria-hidden="true"><code id="boot-log"></code></div>
   <div class="hack-hud" aria-hidden="true"><span>root@scryx</span><b id="hud-state">signal:clean</b><i>rules != truth</i></div>
-
-  <div class="arcade-hud" aria-hidden="true">
-    <nav class="arcade-menu">
-      <a href="#interface" class="active">explore</a>
-      <a href="#artifacts">works</a>
-      <a href="#map">about</a>
-    </nav>
-    <div class="arcade-now"><i></i><span>NOW PLAYING...</span><b>SCRYX — SURFACE MODE</b></div>
-    <div class="arcade-controls">
-      <div class="dpad"><button>▲</button><button>◀</button><button>●</button><button>▶</button><button>▼</button></div>
-      <kbd>SPACE</kbd><em>JUMP</em>
-    </div>
-    <div class="arcade-status"><span>Connected: 1</span><span>Engine: BrainGL</span><span>Frame: unstable</span></div>
-  </div>
   <div class="detail-mesh" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
   <div class="breach-feed" aria-hidden="true"><span>syslog</span><b>trace / fork / verify</b><i>no gods, no defaults</i></div>
   <button class="cmd-trigger" id="cmd-trigger" type="button" aria-label="open command palette">⌘ /</button>
