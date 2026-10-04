@@ -55,7 +55,7 @@ function boot() {
   // ---------- particle field: dense organic swarm (active-theory style) ----------
   // thousands of motes forming a swirling cloud that gathers around the column
   const SPINE_H = 46;
-  const COUNT = lowPower ? 1600 : (isMobile ? 2400 : 9000);
+  const COUNT = lowPower ? 1800 : (isMobile ? 2800 : 12800);
   const pos = new Float32Array(COUNT * 3);
   const seed = new Float32Array(COUNT * 4); // x,y,z,w = random seeds
   for (let i = 0; i < COUNT; i++) {
@@ -109,7 +109,7 @@ function boot() {
         vA = 0.30 + aSeed.z * 0.5 + push * 0.5;
         vMix = aSeed.y;
         gl_Position = vec4(ndc * clip.w, clip.z, clip.w);
-        gl_PointSize = (1.3 + aSeed.x * 3.0 + push * 2.6) * uPixelRatio * clamp(7.0 / max(0.1, -mv.z), 0.5, 3.4);
+        gl_PointSize = (1.6 + aSeed.x * 3.8 + push * 4.0) * uPixelRatio * clamp(8.5 / max(0.1, -mv.z), 0.55, 4.6);
       }`,
     fragmentShader: `
       varying float vA; varying float vMix;
@@ -283,10 +283,10 @@ function boot() {
         bg.computeBoundingBox();
         const bc = bg.boundingBox.getCenter(new THREE.Vector3());
         const local = bg.clone().translate(-bc.x, -bc.y, -bc.z);
-        const brainMat = new THREE.MeshStandardMaterial({ color: 0x6f5bb0, metalness: 0.28, roughness: 0.38, emissive: 0x2b1a52, emissiveIntensity: 1.55, transparent: true, opacity: 0.54 });
-        const brainWireMat = new THREE.LineBasicMaterial({ color: 0xd8c7ff, transparent: true, opacity: 0.20, blending: THREE.AdditiveBlending, depthWrite: false });
+        const brainMat = new THREE.MeshStandardMaterial({ color: 0x8b63ff, metalness: 0.18, roughness: 0.32, emissive: 0x3a1675, emissiveIntensity: 2.05, transparent: true, opacity: 0.62, side: THREE.DoubleSide });
+        const brainWireMat = new THREE.LineBasicMaterial({ color: 0xf1dfff, transparent: true, opacity: 0.27, blending: THREE.AdditiveBlending, depthWrite: false });
         const brainWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), brainWireMat);
-        const brainInnerWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false }));
+        const brainInnerWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.11, blending: THREE.AdditiveBlending, depthWrite: false }));
         brainInnerWire.scale.setScalar(0.985);
         const brainSolid = new THREE.Mesh(local, brainMat);
         const brainFresnel = new THREE.Mesh(local, fresnelMat.clone());
