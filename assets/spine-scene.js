@@ -699,16 +699,16 @@ function boot() {
       // gentle whole-column sway
       spine.rotation.y = Math.sin(t * 0.09) * 0.04 + mouse.x * 0.02;
 
-      // camera descends from the brain (top) down the real curve with a slow orbit
-      // scroll 0 = brain/hero, scroll 1 = bottom of the column
-      const path = Math.min(0.94, scroll * 0.94);
-      spineCurve.getPointAt(Math.min(1, path + 0.04), focusPt);
-      const ang = scroll * Math.PI * 1.7 + t * 0.045 + mouse.x * 0.3;
-      const topness3 = brain ? (1 - Math.min(1, scroll / 0.18)) : 0;
-      const rad = (9.5 + Math.sin(scroll * Math.PI * 2.4) * 1.25 + topness3 * 3.2) * aspectRadius();
+      // camera glides around the brain/spine instead of racing down the column.
+      // The previous path followed scroll too aggressively, making the whole spine feel like it climbed upward.
+      const path = Math.min(0.58, Math.pow(scroll, 0.82) * 0.58);
+      spineCurve.getPointAt(Math.min(1, path + 0.025), focusPt);
+      const ang = scroll * Math.PI * 1.18 + t * 0.038 + mouse.x * 0.26;
+      const topness3 = brain ? (1 - Math.min(1, scroll / 0.24)) : 0;
+      const rad = (10.1 + Math.sin(scroll * Math.PI * 1.6) * 0.72 + topness3 * 3.4) * aspectRadius();
       camera.position.set(
         focusPt.x + Math.cos(ang) * rad,
-        focusPt.y + 3.0 + Math.sin(t * 0.3) * 0.25 + mouse.y * 0.7,
+        focusPt.y + 3.45 + Math.sin(t * 0.3) * 0.18 + mouse.y * 0.55 - scroll * 1.15,
         focusPt.z + Math.sin(ang) * rad
       );
       // look at the column; near the top tilt the gaze up so the brain enters the upper frame
