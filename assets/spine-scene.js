@@ -93,7 +93,7 @@ function boot() {
         p.xz = mat2(ca,-sa,sa,ca) * p.xz;
         // gentle bob + turbulence
         p.x += sin(t*1.3 + aSeed.y*6.283) * (0.5 + aSeed.w*0.7);
-        p.y += cos(t*0.9 + aSeed.z*6.283) * (0.5 + aSeed.x*0.7) + uScroll * -6.0;
+        p.y += cos(t*0.9 + aSeed.z*6.283) * (0.5 + aSeed.x*0.7) + uScroll * -1.6;
         p.z += sin(t*1.1 + aSeed.x*6.283) * (0.5 + aSeed.y*0.7);
         // attract toward the focus height (forms a denser band near camera focus)
         float gather = exp(-abs(p.y - uFocusY) * 0.05);
@@ -297,7 +297,7 @@ function boot() {
         bInner.add(brainSolid, brainWire, brainInnerWire, brainFresnel);
         bInner.quaternion.copy(qFix);            // anatomical Z-up → Y-up
         const brainHeight = Math.max(1, bg.boundingBox.max.z - bg.boundingBox.min.z);
-        const brainScale = (SPINE_H * 0.46) / brainHeight;
+        const brainScale = (SPINE_H * 0.405) / brainHeight;
         bInner.scale.setScalar(brainScale);
         // position: centroid over the spinal column top, brainstem (low Z of mesh) faces down into C3
         const colTop = centers[0]; // C3 centroid (world)
@@ -728,14 +728,14 @@ function boot() {
 
       // camera glides around the brain/spine instead of racing down the column.
       // The previous path followed scroll too aggressively, making the whole spine feel like it climbed upward.
-      const path = Math.min(0.58, Math.pow(scroll, 0.82) * 0.58);
+      const path = Math.min(0.50, Math.pow(scroll, 1.08) * 0.50);
       spineCurve.getPointAt(Math.min(1, path + 0.025), focusPt);
       const ang = scroll * Math.PI * 1.18 + t * 0.038 + mouse.x * 0.26;
       const topness3 = brain ? (1 - Math.min(1, scroll / 0.24)) : 0;
-      const rad = (9.6 + Math.sin(scroll * Math.PI * 1.6) * 0.62 + topness3 * 3.65) * aspectRadius();
+      const rad = (11.2 + Math.sin(scroll * Math.PI * 1.3) * 0.45 + topness3 * 4.6) * aspectRadius();
       camera.position.set(
         focusPt.x + Math.cos(ang) * rad,
-        focusPt.y + 3.25 + Math.sin(t * 0.3) * 0.18 + mouse.y * 0.55 - scroll * 1.05,
+        focusPt.y + 3.65 + Math.sin(t * 0.3) * 0.14 + mouse.y * 0.42 - scroll * 0.35,
         focusPt.z + Math.sin(ang) * rad
       );
       // look at the column; near the top tilt the gaze up so the brain enters the upper frame
@@ -743,7 +743,7 @@ function boot() {
       camTarget.y = focusPt.y - 0.4;
       if (brain) {
         const topness = 1 - Math.min(1, scroll / 0.18);
-        camTarget.y = focusPt.y - 0.2 + topness * 6.0; // hero now frames brain + hanging spine as the main background object
+        camTarget.y = focusPt.y - 0.55 + topness * 4.25; // keep brain visible without flying the camera into the cortex
       }
       camera.lookAt(camTarget);
       rimLight.position.set(camera.position.x + 4, camera.position.y + 5, camera.position.z + 5);
