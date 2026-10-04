@@ -557,3 +557,38 @@ body.home-scryx[data-zone="project-scroll"] .premium-particles{opacity:.54!impor
 /* boot overlay hard release guard */
 .boot-overlay{position:fixed;inset:0;z-index:210;display:grid;place-items:center;background:radial-gradient(circle at 50% 46%,rgba(143,77,255,.13),transparent 28%),rgba(0,0,0,.92);transition:opacity .55s ease,visibility .55s ease;pointer-events:auto}.boot-overlay.done{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}.boot-overlay code{min-width:min(680px,86vw);padding:1.3rem 1.55rem;border:1px solid rgba(36,255,186,.34);background:rgba(0,0,0,.36);box-shadow:0 0 80px rgba(36,255,186,.08);color:#24ffba;text-shadow:0 0 16px rgba(36,255,186,.5);font:800 clamp(.82rem,1.2vw,1rem)/1.75 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap}.boot-overlay:not(.done){animation:bootFailsafe 1.8s 1.8s forwards}@keyframes bootFailsafe{to{opacity:0;visibility:hidden;pointer-events:none}}
 /* cache marker: cursor-active-spine-2b */
+
+
+/* ===== samsy-like precision accent pass: graphic lines, cleaner screens, calmer brain hero ===== */
+body.home-scryx::before{background:
+  linear-gradient(90deg,rgba(248,244,255,.05) 1px,transparent 1px),
+  linear-gradient(0deg,rgba(248,244,255,.035) 1px,transparent 1px),
+  radial-gradient(circle at 50% 42%,rgba(143,220,255,.10),transparent 22%),
+  radial-gradient(circle at 64% 28%,rgba(185,101,255,.16),transparent 30%)!important;
+  background-size:96px 96px,96px 96px,auto,auto!important;
+  mask-image:radial-gradient(circle at 58% 34%,black,transparent 72%)!important;
+  opacity:.38!important}
+body.home-scryx::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+  linear-gradient(90deg,transparent 0 18%,rgba(216,199,255,.08) 18.04% 18.10%,transparent 18.16% 48%,rgba(73,230,255,.06) 48.04% 48.10%,transparent 48.16%),
+  linear-gradient(0deg,transparent 0 22%,rgba(216,199,255,.06) 22.04% 22.10%,transparent 22.16% 71%,rgba(185,101,255,.055) 71.04% 71.10%,transparent 71.16%),
+  radial-gradient(circle at var(--mx,62vw) var(--my,36vh),rgba(143,220,255,.12),transparent 18%);
+  opacity:.52!important;mix-blend-mode:screen}
+.brain-hero{position:relative}.brain-hero::before{content:"";position:absolute;inset:clamp(5rem,9vh,8rem) clamp(1rem,5vw,5rem) clamp(2rem,6vh,5rem);z-index:-1;pointer-events:none;border:1px solid rgba(216,199,255,.10);background:
+  linear-gradient(90deg,rgba(216,199,255,.13) 0 1px,transparent 1px 100%),
+  linear-gradient(0deg,rgba(216,199,255,.10) 0 1px,transparent 1px 100%);
+  background-size:25% 100%,100% 33.333%;opacity:.42;filter:drop-shadow(0 0 34px rgba(143,220,255,.08))}
+.terminal-panel{background:linear-gradient(135deg,rgba(4,4,8,.66),rgba(20,12,38,.42))!important;border-color:rgba(216,199,255,.18)!important}.brain-terminal{opacity:.82!important;backdrop-filter:blur(14px)}
+.spine-canvas{opacity:.84!important;filter:saturate(1.08) contrast(1.12) brightness(.88) drop-shadow(0 0 38px rgba(185,101,255,.13))!important}
+body.home-scryx[data-zone="interface"] .spine-canvas{opacity:.78!important;filter:saturate(1.02) contrast(1.08) brightness(.80) drop-shadow(0 0 34px rgba(143,220,255,.10))!important}
+.shader-depth-readout{background:rgba(3,3,6,.42)!important;border-color:rgba(216,199,255,.12)!important;box-shadow:0 0 44px rgba(143,220,255,.06)!important}.hack-hud,.breach-feed{opacity:.72!important}
+.scroll-theatre .theatre-sticky{background:
+  radial-gradient(circle at 50% 50%,rgba(143,220,255,.12),transparent 18%),
+  radial-gradient(circle at var(--mx,50vw) var(--my,50vh),rgba(185,101,255,.20),transparent 24%),
+  linear-gradient(135deg,#030304,#080611 60%,#030304)!important}.theatre-sticky::after{opacity:.86!important;border-color:rgba(143,220,255,.16)!important}
+.theatre-sigil{opacity:.86!important;filter:brightness(1.35) contrast(1.18) drop-shadow(0 0 46px rgba(143,220,255,.16))!important}.theatre-copy{border-color:rgba(216,199,255,.13)!important;background:linear-gradient(135deg,rgba(3,3,4,.58),rgba(20,12,38,.34))!important}
+.artifact-field-shell{position:relative;border:1px solid rgba(216,199,255,.10)!important;background:linear-gradient(135deg,rgba(4,4,8,.58),rgba(10,7,18,.42))!important;box-shadow:0 34px 140px rgba(0,0,0,.58),0 0 100px rgba(143,220,255,.05),inset 0 1px 0 rgba(255,255,255,.06)!important}.artifact-field-shell::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(216,199,255,.06) 1px,transparent 1px),linear-gradient(0deg,rgba(216,199,255,.045) 1px,transparent 1px);background-size:88px 88px;mask-image:radial-gradient(circle at 50% 50%,black,transparent 80%);opacity:.42}.artifact-lines path{stroke:rgba(143,220,255,.30)!important;stroke-width:.28!important;filter:drop-shadow(0 0 8px rgba(143,220,255,.18))}
+.project-grid.artifact-field .project-card{border-radius:22px!important;background:linear-gradient(150deg,rgba(9,9,14,.64),rgba(3,3,7,.86) 64%,rgba(14,8,27,.82))!important;border-color:rgba(216,199,255,.13)!important;box-shadow:0 24px 90px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.06)!important}.project-grid.artifact-field .project-card::after{inset:9px!important;border-color:rgba(216,199,255,.075)!important;border-radius:17px!important}.project-grid.artifact-field .project-card:hover{border-color:rgba(143,220,255,.36)!important;box-shadow:0 44px 130px rgba(0,0,0,.56),0 0 70px rgba(143,220,255,.13),inset 0 1px 0 rgba(255,255,255,.10)!important}
+.project-grid.artifact-field .project-card h3{letter-spacing:-.07em!important}.project-grid.artifact-field .project-card p{background:rgba(3,3,5,.58)!important;border-color:rgba(216,199,255,.10)!important;backdrop-filter:blur(10px)}
+.card-bg-img{opacity:.52!important;filter:saturate(.88) contrast(1.10) brightness(.64)!important;mix-blend-mode:screen}.project-grid.artifact-field .project-card:hover .card-bg-img{opacity:.78!important;filter:saturate(1.02) contrast(1.15) brightness(.82)!important}.project-card .card-bg-img::after{background:linear-gradient(180deg,rgba(0,0,0,.10),rgba(0,0,0,.58)),linear-gradient(135deg,rgba(143,220,255,.13),transparent 38%,rgba(185,101,255,.10))!important}
+@media(max-width:760px){body.home-scryx::after{opacity:.24!important}.brain-hero::before{display:none}.spine-canvas{opacity:.70!important}.brain-terminal{opacity:.70!important}.artifact-field-shell::before{opacity:.22}.card-bg-img{mix-blend-mode:normal}}
+/* cache marker: samsy-accent-brain-1 */

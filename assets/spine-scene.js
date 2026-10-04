@@ -283,10 +283,10 @@ function boot() {
         bg.computeBoundingBox();
         const bc = bg.boundingBox.getCenter(new THREE.Vector3());
         const local = bg.clone().translate(-bc.x, -bc.y, -bc.z);
-        const brainMat = new THREE.MeshStandardMaterial({ color: 0xb899ff, metalness: 0.08, roughness: 0.24, emissive: 0x4c20a0, emissiveIntensity: 2.8, transparent: true, opacity: 0.86, side: THREE.DoubleSide, depthWrite: false });
-        const brainWireMat = new THREE.LineBasicMaterial({ color: 0xf1dfff, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false });
+        const brainMat = new THREE.MeshStandardMaterial({ color: 0xcbb7ff, metalness: 0.03, roughness: 0.42, emissive: 0x3b187a, emissiveIntensity: 1.95, transparent: true, opacity: 0.78, side: THREE.DoubleSide, depthWrite: false });
+        const brainWireMat = new THREE.LineBasicMaterial({ color: 0xf6efff, transparent: true, opacity: 0.045, blending: THREE.AdditiveBlending, depthWrite: false });
         const brainWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), brainWireMat);
-        const brainInnerWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.045, blending: THREE.AdditiveBlending, depthWrite: false }));
+        const brainInnerWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.028, blending: THREE.AdditiveBlending, depthWrite: false }));
         brainInnerWire.scale.setScalar(0.985);
         const brainSolid = new THREE.Mesh(local, brainMat);
         brainSolid.renderOrder = 4;
@@ -297,24 +297,44 @@ function boot() {
         bInner.add(brainSolid, brainWire, brainInnerWire, brainFresnel);
         bInner.quaternion.copy(qFix);            // anatomical Z-up → Y-up
         const brainHeight = Math.max(1, bg.boundingBox.max.z - bg.boundingBox.min.z);
-        const brainScale = (SPINE_H * 0.56) / brainHeight;
+        const brainScale = (SPINE_H * 0.36) / brainHeight;
         bInner.scale.setScalar(brainScale);
         // position: centroid over the spinal column top, brainstem (low Z of mesh) faces down into C3
         const colTop = centers[0]; // C3 centroid (world)
-        bInner.position.set(colTop.x + 1.7, 0, colTop.z - 0.8);
+        bInner.position.set(colTop.x + 3.2, 0, colTop.z - 1.9);
         // Float the brain clearly above C3 so the spine reads as hanging below it.
         bInner.position.y = colTop.y + BRAIN_FLOAT_GAP;
         brain = new THREE.Group();
         brain.add(bInner);
         const brainHalo = new THREE.Mesh(
           new THREE.SphereGeometry(2.9, 40, 24),
-          new THREE.MeshBasicMaterial({ color: 0x8b63ff, transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.BackSide })
+          new THREE.MeshBasicMaterial({ color: 0x8b63ff, transparent: true, opacity: 0.10, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.BackSide })
         );
         brainHalo.position.copy(bInner.position);
-        brainHalo.scale.setScalar(2.15);
+        brainHalo.scale.setScalar(1.56);
         spine.add(brainHalo);
         spine.add(brain);
-        brain.userData = { inner: bInner, mat: brainMat, phase: 0.0, focusK: 0, solid: brainSolid, brainScale, halo: brainHalo };
+        // thin anatomical latitude rings: a Samsy-like technical accent that makes the cortex read as an object,
+        // not just a purple polygon cloud.
+        const cortexRings = new THREE.Group();
+        const ringMat = new THREE.LineBasicMaterial({ color: 0xd8c7ff, transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false });
+        for (let ri = 0; ri < 5; ri++) {
+          const yNorm = -0.55 + ri * 0.27;
+          const radius = 1.25 * Math.sqrt(Math.max(0.12, 1 - yNorm * yNorm));
+          const ring = new THREE.Line(
+            new THREE.BufferGeometry().setFromPoints(Array.from({ length: 96 }, (_, k) => {
+              const a = (k / 95) * Math.PI * 2;
+              return new THREE.Vector3(Math.cos(a) * radius, yNorm * 1.1, Math.sin(a) * radius * 0.58);
+            })),
+            ringMat.clone()
+          );
+          ring.position.copy(bInner.position);
+          ring.scale.setScalar(brainScale * 3.9);
+          ring.rotation.set(-0.08 + ri * 0.025, 0.18, 0.02);
+          cortexRings.add(ring);
+        }
+        spine.add(cortexRings);
+        brain.userData = { inner: bInner, mat: brainMat, phase: 0.0, focusK: 0, solid: brainSolid, brainScale, halo: brainHalo, cortexRings };
         window.__spineBrain = brain;
         window.__spineCenters = centers;
         window.__spineS = S;
@@ -613,13 +633,20 @@ function boot() {
       // brain: slow breathing + cortical shimmer
       if (brain) {
         const bu = brain.userData;
-        bu.mat.emissiveIntensity = 1.0 + Math.sin(t * 1.1) * 0.25;
+        bu.mat.emissiveIntensity = 1.55 + Math.sin(t * 1.1) * 0.22;
         bu.inner.scale.setScalar(bu.brainScale * (1 + Math.sin(t * 0.9) * 0.01));
-        bu.inner.rotation.y = Math.sin(t * 0.22) * 0.03;
+        bu.inner.rotation.y = Math.sin(t * 0.22) * 0.022;
         if (bu.halo) {
           bu.halo.position.copy(bu.inner.position);
-          bu.halo.scale.setScalar(2.15 + Math.sin(t * 1.05) * 0.12);
-          bu.halo.material.opacity = 0.13 + Math.sin(t * 1.2) * 0.035;
+          bu.halo.scale.setScalar(1.56 + Math.sin(t * 1.05) * 0.06);
+          bu.halo.material.opacity = 0.075 + Math.sin(t * 1.2) * 0.022;
+        }
+        if (bu.cortexRings) {
+          bu.cortexRings.children.forEach((ring, i) => {
+            ring.position.copy(bu.inner.position);
+            ring.rotation.y = 0.18 + Math.sin(t * 0.18 + i) * 0.08;
+            ring.material.opacity = 0.10 + Math.sin(t * 0.8 + i * 0.7) * 0.035;
+          });
         }
         if (brainCoreMat) brainCoreMat.opacity = 0.6 + Math.sin(t * 3.1) * 0.25;
         if (brainPulsePts) brainPulsePts.material.uniforms.uTime.value = t;
@@ -660,7 +687,7 @@ function boot() {
         u.focusK += (target - u.focusK) * 0.12;
         u.mat.emissive.setHex(0x0a1420).lerp(focusColor, u.focusK * 0.5);
         const heroFade = brain ? (1 - Math.min(1, scroll / 0.16)) : 0;
-        u.mat.opacity = 0.08 + (1 - heroFade) * 0.50 + u.focusK * 0.18;
+        u.mat.opacity = 0.115 + (1 - heroFade) * 0.38 + u.focusK * 0.16;
         u.mat.emissiveIntensity = 1 + u.focusK * 5;
         u.focusRing.material.opacity = u.focusK * 0.85;
         u.focusRing.scale.setScalar(1 + u.focusK * 0.4);
@@ -705,7 +732,7 @@ function boot() {
       spineCurve.getPointAt(Math.min(1, path + 0.025), focusPt);
       const ang = scroll * Math.PI * 1.18 + t * 0.038 + mouse.x * 0.26;
       const topness3 = brain ? (1 - Math.min(1, scroll / 0.24)) : 0;
-      const rad = (10.1 + Math.sin(scroll * Math.PI * 1.6) * 0.72 + topness3 * 3.4) * aspectRadius();
+      const rad = (10.8 + Math.sin(scroll * Math.PI * 1.6) * 0.72 + topness3 * 4.9) * aspectRadius();
       camera.position.set(
         focusPt.x + Math.cos(ang) * rad,
         focusPt.y + 3.45 + Math.sin(t * 0.3) * 0.18 + mouse.y * 0.55 - scroll * 1.15,
