@@ -155,7 +155,8 @@ function boot() {
   const spineLoad = Promise.all(VERTEBRAE.map(name =>
     new Promise((res, rej) => loader.load(`${baseUrl}${name}.obj`, res, undefined, rej))
   ));
-  const brainLoad = new Promise((res, rej) => loader.load('assets/models/brain.obj', res, undefined, rej)).catch(() => null);
+  // Real Drosophila brain mesh from Virtual Fly Brain (VFB_00101567), loaded as OBJ.
+  const brainLoad = new Promise((res, rej) => loader.load('assets/models/fly-brain-vfb-00101567-lite.obj', res, undefined, rej)).catch(() => null);
   const jellyLoad = new Promise((res, rej) => loader.load('assets/models/ambient/jellyfish.obj', res, undefined, rej)).catch(() => null);
   Promise.all([spineLoad, brainLoad, jellyLoad]).then(([objects, brain, jelly]) => buildSpine(objects, brain, jelly)).catch(err => console.warn('spine meshes failed, particles only', err));
 
@@ -271,10 +272,10 @@ function boot() {
       spine.add(disc);
     }
 
-    // ---------- the brain: real CT cortex, docked on top of the spinal cord ----------
-    // same anatomical frame (mm, Z-up) → same S/qFix transform, sits right above C3.
+    // ---------- the brain: floating cortex above the spinal column ----------
+    // Keep the column visually underneath the brain; the old medulla-fit made vertebrae read like they were sitting on top.
     let brain = null, brainCoreMat = null, brainPulsePts = null;
-    const BRAIN_LIFT = 1.15; // extra gap so the medulla reads as the brainstem joining C1–C3
+    const BRAIN_FLOAT_GAP = SPINE_H * 0.18;
     if (brainObj) {
       let bg = null;
       brainObj.traverse(c => { if (c.isMesh && !bg) bg = c.geometry; });
@@ -293,17 +294,18 @@ function boot() {
         const bInner = new THREE.Group();
         bInner.add(brainSolid, brainWire, brainInnerWire, brainFresnel);
         bInner.quaternion.copy(qFix);            // anatomical Z-up → Y-up
-        bInner.scale.setScalar(S);
+        const brainHeight = Math.max(1, bg.boundingBox.max.z - bg.boundingBox.min.z);
+        const brainScale = (SPINE_H * 0.42) / brainHeight;
+        bInner.scale.setScalar(brainScale);
         // position: centroid over the spinal column top, brainstem (low Z of mesh) faces down into C3
         const colTop = centers[0]; // C3 centroid (world)
         bInner.position.set(colTop.x, 0, colTop.z);
-        // place the medulla (lowest anatomical Z = brainstem) just above the column top
-        const minToCentroidMM = bc.z - bg.boundingBox.min.z;
-        bInner.position.y = colTop.y + (minToCentroidMM * S) * 0.72;
+        // Float the brain clearly above C3 so the spine reads as hanging below it.
+        bInner.position.y = colTop.y + BRAIN_FLOAT_GAP;
         brain = new THREE.Group();
         brain.add(bInner);
         spine.add(brain);
-        brain.userData = { inner: bInner, mat: brainMat, phase: 0.0, focusK: 0, solid: brainSolid };
+        brain.userData = { inner: bInner, mat: brainMat, phase: 0.0, focusK: 0, solid: brainSolid, brainScale };
         window.__spineBrain = brain;
         window.__spineCenters = centers;
         window.__spineS = S;
@@ -351,7 +353,7 @@ function boot() {
               gl_FragColor=vec4(mix(vec3(0.56,0.35,1.0),vec3(0.4,0.9,1.0),vA), a); }`
         }));
         brainPulsePts.quaternion.copy(qFix);
-        brainPulsePts.scale.setScalar(S);
+        brainPulsePts.scale.setScalar(brainScale);
         brainPulsePts.position.copy(bInner.position);
         spine.add(brainPulsePts);
       }
@@ -603,7 +605,7 @@ function boot() {
       if (brain) {
         const bu = brain.userData;
         bu.mat.emissiveIntensity = 1.0 + Math.sin(t * 1.1) * 0.25;
-        bu.inner.scale.setScalar(S * (1 + Math.sin(t * 0.9) * 0.01));
+        bu.inner.scale.setScalar(bu.brainScale * (1 + Math.sin(t * 0.9) * 0.01));
         bu.inner.rotation.y = Math.sin(t * 0.22) * 0.03;
         if (brainCoreMat) brainCoreMat.opacity = 0.6 + Math.sin(t * 3.1) * 0.25;
         if (brainPulsePts) brainPulsePts.material.uniforms.uTime.value = t;
