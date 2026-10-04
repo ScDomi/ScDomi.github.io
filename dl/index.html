@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
   <link rel="stylesheet" href="assets/style.css?v=20260930-blackbox-1" />
-  <link rel="stylesheet" href="assets/ml-visualizer.css?v=stepwise-4" />
+  <link rel="stylesheet" href="assets/ml-visualizer.css?v=flybrain-2" />
 </head>
 <body class="home-scryx brain-interface active-lite ml-page dl-page">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
@@ -224,18 +224,28 @@ status: gradients flowing (mostly)</code></pre>
         </div>
         <p class="section-note">FlyWire’s whole-brain connectome (Nature 2024): 139,255 proofread neurons, 50M+ synapses. Below is the real wiring aggregated to 28 brain regions — hover any cell. This network was never trained. It grew.</p>
       </div>
-      <div class="chalk-stage compare-stage">
-        <aside class="chapter-rail"><b>06</b><span>connectome</span><i></i></aside>
-        <div class="step-readout" aria-live="polite">
-          <span>real data</span>
-          <strong id="flyTitle">hover the matrix</strong>
-          <p id="flyText">Each cell = synapses from region (row) to region (column), log-scaled brightness. The diagonal glows because regions mostly talk to themselves — the same small-world trick your MLP accidentally reinvented.</p>
+      <div class="chalk-stage flybrain-stage">
+        <aside class="chapter-rail"><b>06</b><span>3D brain + connectome</span><i></i></aside>
+        <div class="flybrain-visual">
+          <canvas id="flyBrainCanvas" width="1440" height="760" aria-label="real Virtual Fly Brain Drosophila brain mesh rendered in 3D"></canvas>
+          <div class="flybrain-readout" aria-live="polite">
+            <span>real morphology</span>
+            <strong id="flyBrainStatus">loading 3D brain…</strong>
+            <p id="flyBrainStat">Virtual Fly Brain mesh + surface pulse points. Move the pointer over it — this is the brain shape, not the matrix.</p>
+          </div>
         </div>
-        <canvas id="flyCanvas" width="1440" height="760" aria-label="FlyWire whole-brain connectome neuropil adjacency matrix"></canvas>
-        <div class="math-card" aria-live="polite">
-          <strong id="flyCardTitle">Drosophila melanogaster · adult female</strong>
-          <code id="flyCardStat">48.9M synapses mapped · 28 regions</code>
-          <p id="flyCardText">Source: FlyWire Consortium, proofread_connections_783 (Zenodo 10676866). gaba / ach / glut = dominant neurotransmitter share per edge.</p>
+        <div class="flybrain-matrix-shell compare-stage">
+          <div class="step-readout" aria-live="polite">
+            <span>real wiring</span>
+            <strong id="flyTitle">hover the matrix</strong>
+            <p id="flyText">Each cell = synapses from region (row) to region (column), log-scaled brightness. The diagonal glows because regions mostly talk to themselves — the same small-world trick your MLP accidentally reinvented.</p>
+          </div>
+          <canvas id="flyCanvas" width="1440" height="760" aria-label="FlyWire whole-brain connectome neuropil adjacency matrix"></canvas>
+          <div class="math-card" aria-live="polite">
+            <strong id="flyCardTitle">Drosophila melanogaster · adult female</strong>
+            <code id="flyCardStat">48.9M synapses mapped · 28 regions</code>
+            <p id="flyCardText">Source: FlyWire Consortium, proofread_connections_783 (Zenodo 10676866). gaba / ach / glut = dominant neurotransmitter share per edge.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -260,7 +270,11 @@ status: gradients flowing (mostly)</code></pre>
     <span class="live-pill"><i></i> real backprop</span>
   </div>
 
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/" } }
+  </script>
   <script src="assets/ml-visualizer.js?v=stepwise-6"></script>
-  <script src="assets/dl-visualizer.js?v=dl-8"></script>
+  <script src="assets/dl-visualizer.js?v=dl-9"></script>
+  <script type="module" src="assets/dl-flybrain-3d.js?v=flybrain-4"></script>
 </body>
 </html>
