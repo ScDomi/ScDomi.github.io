@@ -155,8 +155,8 @@ function boot() {
   const spineLoad = Promise.all(VERTEBRAE.map(name =>
     new Promise((res, rej) => loader.load(`${baseUrl}${name}.obj`, res, undefined, rej))
   ));
-  // Real Drosophila brain mesh from Virtual Fly Brain (VFB_00101567), loaded as OBJ.
-  const brainLoad = new Promise((res, rej) => loader.load('assets/models/fly-brain-vfb-00101567-lite.obj', res, undefined, rej)).catch(() => null);
+  // Homepage hero needs a legible brain silhouette; the real fly-brain mesh is used interactively on /dl/.
+  const brainLoad = new Promise((res, rej) => loader.load('assets/models/brain.obj', res, undefined, rej)).catch(() => null);
   const jellyLoad = new Promise((res, rej) => loader.load('assets/models/ambient/jellyfish.obj', res, undefined, rej)).catch(() => null);
   Promise.all([spineLoad, brainLoad, jellyLoad]).then(([objects, brain, jelly]) => buildSpine(objects, brain, jelly)).catch(err => console.warn('spine meshes failed, particles only', err));
 
@@ -165,7 +165,7 @@ function boot() {
     scene.add(spine);
 
     // anatomical data: Z-up, millimeters → rotate to Y-up, scale to world
-    const boneMatBase = new THREE.MeshStandardMaterial({ color: 0x2b3550, metalness: 0.82, roughness: 0.26, emissive: 0x0b1626, emissiveIntensity: 1 });
+    const boneMatBase = new THREE.MeshStandardMaterial({ color: 0x2b3550, metalness: 0.82, roughness: 0.26, emissive: 0x0b1626, emissiveIntensity: 1, transparent: true, opacity: 0.58 });
     const wireMat = new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.11, blending: THREE.AdditiveBlending, depthWrite: false });
     const fresnelMat = new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.FrontSide,
@@ -275,7 +275,7 @@ function boot() {
     // ---------- the brain: floating cortex above the spinal column ----------
     // Keep the column visually underneath the brain; the old medulla-fit made vertebrae read like they were sitting on top.
     let brain = null, brainCoreMat = null, brainPulsePts = null;
-    const BRAIN_FLOAT_GAP = SPINE_H * 0.18;
+    const BRAIN_FLOAT_GAP = SPINE_H * 0.34;
     if (brainObj) {
       let bg = null;
       brainObj.traverse(c => { if (c.isMesh && !bg) bg = c.geometry; });
@@ -283,29 +283,38 @@ function boot() {
         bg.computeBoundingBox();
         const bc = bg.boundingBox.getCenter(new THREE.Vector3());
         const local = bg.clone().translate(-bc.x, -bc.y, -bc.z);
-        const brainMat = new THREE.MeshStandardMaterial({ color: 0x8b63ff, metalness: 0.18, roughness: 0.32, emissive: 0x3a1675, emissiveIntensity: 2.05, transparent: true, opacity: 0.62, side: THREE.DoubleSide });
-        const brainWireMat = new THREE.LineBasicMaterial({ color: 0xf1dfff, transparent: true, opacity: 0.27, blending: THREE.AdditiveBlending, depthWrite: false });
+        const brainMat = new THREE.MeshStandardMaterial({ color: 0xb899ff, metalness: 0.08, roughness: 0.24, emissive: 0x4c20a0, emissiveIntensity: 2.8, transparent: true, opacity: 0.86, side: THREE.DoubleSide, depthWrite: false });
+        const brainWireMat = new THREE.LineBasicMaterial({ color: 0xf1dfff, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false });
         const brainWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), brainWireMat);
-        const brainInnerWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.11, blending: THREE.AdditiveBlending, depthWrite: false }));
+        const brainInnerWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.045, blending: THREE.AdditiveBlending, depthWrite: false }));
         brainInnerWire.scale.setScalar(0.985);
         const brainSolid = new THREE.Mesh(local, brainMat);
+        brainSolid.renderOrder = 4;
         const brainFresnel = new THREE.Mesh(local, fresnelMat.clone());
+        brainFresnel.renderOrder = 5;
         brainFresnel.material.fragmentShader = fresnelMat.fragmentShader.replace('0.29, 0.9, 1.0', '0.78, 0.55, 1.0'); // visible violet cortex rim
         const bInner = new THREE.Group();
         bInner.add(brainSolid, brainWire, brainInnerWire, brainFresnel);
         bInner.quaternion.copy(qFix);            // anatomical Z-up → Y-up
         const brainHeight = Math.max(1, bg.boundingBox.max.z - bg.boundingBox.min.z);
-        const brainScale = (SPINE_H * 0.42) / brainHeight;
+        const brainScale = (SPINE_H * 0.56) / brainHeight;
         bInner.scale.setScalar(brainScale);
         // position: centroid over the spinal column top, brainstem (low Z of mesh) faces down into C3
         const colTop = centers[0]; // C3 centroid (world)
-        bInner.position.set(colTop.x, 0, colTop.z);
+        bInner.position.set(colTop.x + 1.7, 0, colTop.z - 0.8);
         // Float the brain clearly above C3 so the spine reads as hanging below it.
         bInner.position.y = colTop.y + BRAIN_FLOAT_GAP;
         brain = new THREE.Group();
         brain.add(bInner);
+        const brainHalo = new THREE.Mesh(
+          new THREE.SphereGeometry(2.9, 40, 24),
+          new THREE.MeshBasicMaterial({ color: 0x8b63ff, transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.BackSide })
+        );
+        brainHalo.position.copy(bInner.position);
+        brainHalo.scale.setScalar(2.15);
+        spine.add(brainHalo);
         spine.add(brain);
-        brain.userData = { inner: bInner, mat: brainMat, phase: 0.0, focusK: 0, solid: brainSolid, brainScale };
+        brain.userData = { inner: bInner, mat: brainMat, phase: 0.0, focusK: 0, solid: brainSolid, brainScale, halo: brainHalo };
         window.__spineBrain = brain;
         window.__spineCenters = centers;
         window.__spineS = S;
@@ -607,6 +616,11 @@ function boot() {
         bu.mat.emissiveIntensity = 1.0 + Math.sin(t * 1.1) * 0.25;
         bu.inner.scale.setScalar(bu.brainScale * (1 + Math.sin(t * 0.9) * 0.01));
         bu.inner.rotation.y = Math.sin(t * 0.22) * 0.03;
+        if (bu.halo) {
+          bu.halo.position.copy(bu.inner.position);
+          bu.halo.scale.setScalar(2.15 + Math.sin(t * 1.05) * 0.12);
+          bu.halo.material.opacity = 0.13 + Math.sin(t * 1.2) * 0.035;
+        }
         if (brainCoreMat) brainCoreMat.opacity = 0.6 + Math.sin(t * 3.1) * 0.25;
         if (brainPulsePts) brainPulsePts.material.uniforms.uTime.value = t;
       }
@@ -645,6 +659,8 @@ function boot() {
         const target = focus === i ? 1 : 0;
         u.focusK += (target - u.focusK) * 0.12;
         u.mat.emissive.setHex(0x0a1420).lerp(focusColor, u.focusK * 0.5);
+        const heroFade = brain ? (1 - Math.min(1, scroll / 0.16)) : 0;
+        u.mat.opacity = 0.08 + (1 - heroFade) * 0.50 + u.focusK * 0.18;
         u.mat.emissiveIntensity = 1 + u.focusK * 5;
         u.focusRing.material.opacity = u.focusK * 0.85;
         u.focusRing.scale.setScalar(1 + u.focusK * 0.4);
@@ -700,7 +716,7 @@ function boot() {
       camTarget.y = focusPt.y - 0.4;
       if (brain) {
         const topness = 1 - Math.min(1, scroll / 0.18);
-        camTarget.y = focusPt.y - 0.4 + topness * 1.4; // gentle tilt up, brain sits comfortably in upper frame
+        camTarget.y = focusPt.y - 0.4 + topness * 4.8; // at hero: look high enough to keep the fly brain visible, spine hangs underneath
       }
       camera.lookAt(camTarget);
       rimLight.position.set(camera.position.x + 4, camera.position.y + 5, camera.position.z + 5);
