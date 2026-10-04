@@ -282,13 +282,16 @@ function boot() {
         bg.computeBoundingBox();
         const bc = bg.boundingBox.getCenter(new THREE.Vector3());
         const local = bg.clone().translate(-bc.x, -bc.y, -bc.z);
-        const brainMat = new THREE.MeshStandardMaterial({ color: 0x4a3f6e, metalness: 0.5, roughness: 0.42, emissive: 0x241a48, emissiveIntensity: 1.5 });
-        const brainWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), new THREE.LineBasicMaterial({ color: 0xb98cff, transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false }));
+        const brainMat = new THREE.MeshStandardMaterial({ color: 0x6f5bb0, metalness: 0.28, roughness: 0.38, emissive: 0x2b1a52, emissiveIntensity: 1.55, transparent: true, opacity: 0.54 });
+        const brainWireMat = new THREE.LineBasicMaterial({ color: 0xd8c7ff, transparent: true, opacity: 0.20, blending: THREE.AdditiveBlending, depthWrite: false });
+        const brainWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), brainWireMat);
+        const brainInnerWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false }));
+        brainInnerWire.scale.setScalar(0.985);
         const brainSolid = new THREE.Mesh(local, brainMat);
         const brainFresnel = new THREE.Mesh(local, fresnelMat.clone());
-        brainFresnel.material.fragmentShader = fresnelMat.fragmentShader.replace('0.29, 0.9, 1.0', '0.65, 0.45, 1.0'); // violet cortex rim
+        brainFresnel.material.fragmentShader = fresnelMat.fragmentShader.replace('0.29, 0.9, 1.0', '0.78, 0.55, 1.0'); // visible violet cortex rim
         const bInner = new THREE.Group();
-        bInner.add(brainSolid, brainWire, brainFresnel);
+        bInner.add(brainSolid, brainWire, brainInnerWire, brainFresnel);
         bInner.quaternion.copy(qFix);            // anatomical Z-up → Y-up
         bInner.scale.setScalar(S);
         // position: centroid over the spinal column top, brainstem (low Z of mesh) faces down into C3
@@ -320,7 +323,7 @@ function boot() {
         spine.add(brainCore, brainCoreGlow);
 
         // cortical pulse points shimmering over the brain surface
-        const bpCount = lowPower ? 60 : 130;
+        const bpCount = lowPower ? 120 : 260;
         const bp = new Float32Array(bpCount * 3);
         const bseed = new Float32Array(bpCount);
         // scatter points on the brain bounding surface (approx via random vertices)
@@ -340,7 +343,7 @@ function boot() {
             void main(){ vec3 p=position; vec4 mv=modelViewMatrix*vec4(p,1.0);
               float tw = 0.5 + 0.5*sin(uTime*(1.5+aSeed*3.0)+aSeed*40.0);
               vA = 0.15 + tw*0.75;
-              gl_PointSize = (2.0 + aSeed*3.0) * clamp(6.0/max(0.1,-mv.z),0.6,3.0);
+              gl_PointSize = (2.8 + aSeed*4.2) * clamp(7.0/max(0.1,-mv.z),0.75,3.8);
               gl_Position = projectionMatrix*mv; }`,
           fragmentShader: `varying float vA;
             void main(){ vec2 uv=gl_PointCoord-0.5; float d=length(uv);
