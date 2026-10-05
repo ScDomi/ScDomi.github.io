@@ -728,7 +728,7 @@ function boot() {
       // Keep the hero composition stable. Only the first slice of page scroll moves
       // through the anatomy; after that the spine fades into background texture so
       // cards never land inside/above the brain again.
-      const spineScroll = THREE.MathUtils.clamp(scroll / 0.18, 0, 1);
+      const spineScroll = 1 - Math.exp(-scroll / 0.18);
       const path = THREE.MathUtils.clamp(0.955 - Math.pow(spineScroll, 0.92) * 0.58, 0.375, 0.955);
       spineCurve.getPointAt(path, focusPt);
       const ang = spineScroll * Math.PI * 0.72 + t * 0.026 + mouse.x * 0.18;
