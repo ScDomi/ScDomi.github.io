@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=mycelium-swarm-bg-1" />
+  <link rel="stylesheet" href="assets/style.css?v=gesture-card-vision-1" />
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -132,7 +132,7 @@ default: suspicious
           <h3>gesture vision</h3>
           <p>Hand signs into boxes and classes — messy labels turned into visible detection.</p>
           <div class="card-spec"><span>YOLO</span><span>dataset cleanup</span><span>visual proof</span></div>
-          <div class="card-visual detection-sigil card-bg-img"><img src="assets/projects/gesture/gesture-1.jpg" alt="Gesture vision detection sample"></div>
+          <div class="card-visual detection-sigil card-bg-img gesture-card-visual"><img src="assets/projects/gesture/gesture-vision-card.jpg" alt="Gesture vision hand tracking interface"></div>
         </button>
 
         <button class="work-card project-card bright" data-project="squad" onclick="openProject('squad')" data-secret="reading test: confidence is fake until the answer span survives inspection.">
@@ -338,7 +338,7 @@ default: suspicious
         tech: 'YOLO-style object detection on merged gesture datasets. The actual work is not just training: label semantics had to be normalized, examples inspected, and the output made visible.',
         points: ['7 gesture classes', 'merged Roboflow-style datasets', 'label perspective cleanup', 'fine-tuned detector + visual samples'],
         github: 'https://github.com/ScDomi/gesture-vision-yolo',
-        media: '<div class="modal-gallery"><img src="assets/projects/gesture/gesture-1.jpg"><img src="assets/projects/gesture/gesture-2.jpg"></div><code class="media-caption">image → bbox → class</code>'
+        media: '<div class="modal-gallery"><img src="assets/projects/gesture/gesture-vision-card.jpg"><img src="assets/projects/gesture/gesture-1.jpg"><img src="assets/projects/gesture/gesture-2.jpg"></div><code class="media-caption">camera → landmarks → bbox → class</code>'
       },
       squad: {
         kicker: 'nlp / question answering', title: 'SQuAD QA benchmark',
