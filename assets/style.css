@@ -620,8 +620,112 @@ body.home-scryx::after{opacity:.72!important;background:
 .spine-panels{z-index:5!important}.spine-node,.spine-chip{opacity:.94!important;text-shadow:0 0 18px rgba(127,243,255,.35)}.spine-node.prime{color:#fff!important;text-shadow:0 0 22px rgba(127,243,255,.72),0 0 42px rgba(185,101,255,.28)}.spine-chip{background:rgba(2,3,8,.66)!important;border-color:rgba(127,243,255,.34)!important;box-shadow:0 0 28px rgba(127,243,255,.08)}
 .exploit-lab,.scroll-theatre,.showcase-section,.proof-scroll,.philosophy-stack{position:relative;z-index:6}.lab-panel,.artifact-field-shell,.project-stage,.work-card{background:linear-gradient(150deg,rgba(5,5,10,.66),rgba(4,3,8,.78) 62%,rgba(18,8,36,.76))!important;backdrop-filter:blur(18px) saturate(1.08)!important;border-color:rgba(216,199,255,.14)!important}.artifact-field-shell{background:linear-gradient(145deg,rgba(4,4,8,.52),rgba(13,8,24,.36))!important}.project-grid.artifact-field::before{opacity:.55!important}.project-grid.artifact-field .project-card{background:linear-gradient(160deg,rgba(7,7,13,.62),rgba(3,3,7,.80) 62%,rgba(14,8,27,.82))!important}.shader-depth-readout{z-index:32!important;background:rgba(3,2,7,.46)!important;border-color:rgba(127,243,255,.22)!important;color:#7ff3ff!important}
 body.home-scryx[data-zone="interface"] .spine-canvas{opacity:.96!important;filter:saturate(1.32) contrast(1.20) brightness(1.05) drop-shadow(0 0 74px rgba(185,101,255,.28))!important}
-body.home-scryx[data-zone="artifacts"] .spine-canvas,body.home-scryx[data-zone="project-scroll"] .spine-canvas{opacity:.56!important;filter:saturate(1.0) contrast(1.08) brightness(.74) blur(.25px)!important}
+body.home-scryx[data-zone="artifacts"] .spine-canvas,body.home-scryx[data-zone="project-scroll"] .spine-canvas,body.home-scryx[data-zone="map"] .spine-canvas{opacity:.16!important;filter:saturate(.82) contrast(1.02) brightness(.48) blur(1.4px)!important}
+body.home-scryx[data-zone="artifacts"] .spine-panels,body.home-scryx[data-zone="project-scroll"] .spine-panels,body.home-scryx[data-zone="map"] .spine-panels{opacity:0!important;pointer-events:none!important}
+body.home-scryx.spine-muted .spine-canvas{opacity:.10!important;filter:saturate(.68) contrast(.96) brightness(.38) blur(2px)!important}
+body.home-scryx.spine-muted .spine-panels{opacity:0!important;pointer-events:none!important}
 .low-power .spine-canvas{opacity:.76!important;filter:saturate(1.12) contrast(1.10) brightness(.92)!important}
 @media(max-width:760px){.spine-canvas{opacity:.88!important;filter:saturate(1.16) contrast(1.12) brightness(.92)!important}.brain-terminal{opacity:.50!important;margin-bottom:2.4rem!important}.brain-copy .lead{background:rgba(3,3,4,.48)}body.home-scryx::before{opacity:.26!important}body.home-scryx::after{opacity:.34!important}}
 /* cache marker: neural-spine-dominance-1 */
+/* repo tile media-as-background pass */
+.project-grid.artifact-field .project-card{
+  isolation:isolate!important;
+  min-height:420px!important;
+  padding:1.25rem!important;
+}
+.project-grid.artifact-field .project-card .card-bg-img,
+.project-grid.artifact-field .project-card .card-visual,
+.project-grid.artifact-field .project-card .qa-flow,
+.project-grid.artifact-field .project-card .track-visual,
+.project-grid.artifact-field .project-card .face-signal,
+.project-grid.artifact-field .project-card .iot-map,
+.project-grid.artifact-field .project-card .market-visual,
+.project-grid.artifact-field .project-card .rule-visual{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  border-radius:inherit!important;
+  overflow:hidden!important;
+  z-index:0!important;
+  opacity:.52!important;
+  transform:none!important;
+  border:0!important;
+  background:transparent!important;
+  filter:saturate(.82) contrast(1.12) brightness(.74)!important;
+}
+.project-grid.artifact-field .project-card .card-bg-img img,
+.project-grid.artifact-field .project-card .card-visual img,
+.project-grid.artifact-field .project-card .qa-flow img,
+.project-grid.artifact-field .project-card .track-visual img,
+.project-grid.artifact-field .project-card .face-signal img,
+.project-grid.artifact-field .project-card .iot-map img,
+.project-grid.artifact-field .project-card .market-visual img,
+.project-grid.artifact-field .project-card .rule-visual img{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  transform:scale(1.08)!important;
+  filter:inherit!important;
+}
+.project-grid.artifact-field .project-card::before{
+  z-index:1!important;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,.46) 34%,rgba(0,0,0,.86) 100%),
+    radial-gradient(620px 360px at 72% 22%,rgba(185,101,255,.28),transparent 62%),
+    linear-gradient(135deg,rgba(127,243,255,.12),transparent 34%,rgba(0,0,0,.24))!important;
+  opacity:1!important;
+}
+.project-grid.artifact-field .project-card::after{
+  z-index:2!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.08),transparent 24%,transparent 68%,rgba(127,243,255,.07))!important;
+}
+.project-grid.artifact-field .project-card>*:not(.card-bg-img):not(.card-visual):not(.qa-flow):not(.track-visual):not(.face-signal):not(.iot-map):not(.market-visual):not(.rule-visual){
+  position:relative!important;
+  z-index:3!important;
+}
+.project-grid.artifact-field .project-card h3{margin-top:.65rem!important;max-width:9.5ch!important}
+.project-grid.artifact-field .project-card p{
+  margin-top:auto!important;
+  background:rgba(3,3,4,.50)!important;
+  backdrop-filter:blur(14px) saturate(1.05)!important;
+}
+.project-grid.artifact-field .project-card .card-spec{margin-top:.75rem!important;position:relative!important;z-index:3!important}
+.project-grid.artifact-field .project-card:hover .card-bg-img,
+.project-grid.artifact-field .project-card:hover .card-visual,
+.project-grid.artifact-field .project-card:hover .qa-flow,
+.project-grid.artifact-field .project-card:hover .track-visual,
+.project-grid.artifact-field .project-card:hover .face-signal,
+.project-grid.artifact-field .project-card:hover .iot-map,
+.project-grid.artifact-field .project-card:hover .market-visual,
+.project-grid.artifact-field .project-card:hover .rule-visual{
+  opacity:.68!important;
+  filter:saturate(1.02) contrast(1.16) brightness(.86)!important;
+}
+.project-grid.artifact-field .project-card:hover .card-bg-img img,
+.project-grid.artifact-field .project-card:hover .card-visual img,
+.project-grid.artifact-field .project-card:hover .qa-flow img,
+.project-grid.artifact-field .project-card:hover .track-visual img,
+.project-grid.artifact-field .project-card:hover .face-signal img,
+.project-grid.artifact-field .project-card:hover .iot-map img,
+.project-grid.artifact-field .project-card:hover .market-visual img,
+.project-grid.artifact-field .project-card:hover .rule-visual img{
+  transform:scale(1.14)!important;
+  transition:transform .9s cubic-bezier(.16,1,.3,1),filter .45s ease!important;
+}
+@media(max-width:680px){
+  .project-grid.artifact-field .project-card{min-height:360px!important;padding-bottom:1.15rem!important}
+  .project-grid.artifact-field .project-card .card-bg-img,
+  .project-grid.artifact-field .project-card .card-visual,
+  .project-grid.artifact-field .project-card .qa-flow,
+  .project-grid.artifact-field .project-card .track-visual,
+  .project-grid.artifact-field .project-card .face-signal,
+  .project-grid.artifact-field .project-card .iot-map,
+  .project-grid.artifact-field .project-card .market-visual,
+  .project-grid.artifact-field .project-card .rule-visual{opacity:.44!important}
+}
+/* cache marker: repo-tile-bg-media-spinefade-2 */
 /* cache marker: samsy-accent-brain-1 */

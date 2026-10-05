@@ -157,8 +157,7 @@ function boot() {
   ));
   // Homepage hero needs a legible brain silhouette; the real fly-brain mesh is used interactively on /dl/.
   const brainLoad = new Promise((res, rej) => loader.load('assets/models/brain.obj', res, undefined, rej)).catch(() => null);
-  const jellyLoad = new Promise((res, rej) => loader.load('assets/models/ambient/jellyfish.obj', res, undefined, rej)).catch(() => null);
-  Promise.all([spineLoad, brainLoad, jellyLoad]).then(([objects, brain, jelly]) => buildSpine(objects, brain, jelly)).catch(err => console.warn('spine meshes failed, particles only', err));
+  Promise.all([spineLoad, brainLoad]).then(([objects, brain]) => buildSpine(objects, brain, null)).catch(err => console.warn('spine meshes failed, particles only', err));
 
   function buildSpine(objects, brainObj, jellyObj) {
     const spine = new THREE.Group();
@@ -275,7 +274,7 @@ function boot() {
     // ---------- the brain: floating cortex above the spinal column ----------
     // Keep the column visually underneath the brain; the old medulla-fit made vertebrae read like they were sitting on top.
     let brain = null, brainCoreMat = null, brainPulsePts = null;
-    const BRAIN_FLOAT_GAP = SPINE_H * 0.34;
+    const BRAIN_FLOAT_GAP = SPINE_H * 0.255;
     if (brainObj) {
       let bg = null;
       brainObj.traverse(c => { if (c.isMesh && !bg) bg = c.geometry; });
@@ -301,7 +300,7 @@ function boot() {
         bInner.scale.setScalar(brainScale);
         // position: centroid over the spinal column top, brainstem (low Z of mesh) faces down into C3
         const colTop = centers[0]; // C3 centroid (world)
-        bInner.position.set(colTop.x + 2.25, 0, colTop.z - 1.55);
+        bInner.position.set(colTop.x + 1.35, 0, colTop.z - 0.9);
         // Float the brain clearly above C3 so the spine reads as hanging below it.
         bInner.position.y = colTop.y + BRAIN_FLOAT_GAP;
         brain = new THREE.Group();
@@ -726,25 +725,27 @@ function boot() {
       // gentle whole-column sway
       spine.rotation.y = Math.sin(t * 0.09) * 0.04 + mouse.x * 0.02;
 
-      // camera glides around the brain/spine instead of racing down the column.
-      // The previous path followed scroll too aggressively, making the whole spine feel like it climbed upward.
-      const path = Math.min(0.50, Math.pow(scroll, 1.08) * 0.50);
-      spineCurve.getPointAt(Math.min(1, path + 0.025), focusPt);
-      const ang = scroll * Math.PI * 1.18 + t * 0.038 + mouse.x * 0.26;
-      const topness3 = brain ? (1 - Math.min(1, scroll / 0.24)) : 0;
-      const rad = (11.2 + Math.sin(scroll * Math.PI * 1.3) * 0.45 + topness3 * 4.6) * aspectRadius();
+      // Keep the hero composition stable. Only the first slice of page scroll moves
+      // through the anatomy; after that the spine fades into background texture so
+      // cards never land inside/above the brain again.
+      const spineScroll = THREE.MathUtils.clamp(scroll / 0.18, 0, 1);
+      const path = THREE.MathUtils.clamp(0.955 - Math.pow(spineScroll, 0.92) * 0.58, 0.375, 0.955);
+      spineCurve.getPointAt(path, focusPt);
+      const ang = spineScroll * Math.PI * 0.72 + t * 0.026 + mouse.x * 0.18;
+      const brainIntro = brain ? (1 - Math.min(1, spineScroll / 0.65)) : 0;
+      const rad = (11.1 + Math.sin(spineScroll * Math.PI) * 0.24 + brainIntro * 4.0) * aspectRadius();
+      const descent = spineScroll * 8.0;
       camera.position.set(
         focusPt.x + Math.cos(ang) * rad,
-        focusPt.y + 3.65 + Math.sin(t * 0.3) * 0.14 + mouse.y * 0.42 - scroll * 0.35,
+        focusPt.y + 3.15 + Math.sin(t * 0.3) * 0.10 + mouse.y * 0.32 - descent,
         focusPt.z + Math.sin(ang) * rad
       );
-      // look at the column; near the top tilt the gaze up so the brain enters the upper frame
+      // Look slightly down the column, but do not continue beyond the clean hero path.
       camTarget.copy(focusPt);
-      camTarget.y = focusPt.y - 0.4;
-      if (brain) {
-        const topness = 1 - Math.min(1, scroll / 0.18);
-        camTarget.y = focusPt.y - 0.55 + topness * 4.25; // keep brain visible without flying the camera into the cortex
-      }
+      const lookAhead = Math.max(0.32, path - 0.06);
+      spineCurve.getPointAt(lookAhead, tmpV);
+      camTarget.lerp(tmpV, 0.38);
+      if (brain && brainIntro > 0) camTarget.y += brainIntro * 5.2;
       camera.lookAt(camTarget);
       rimLight.position.set(camera.position.x + 4, camera.position.y + 5, camera.position.z + 5);
 
