@@ -340,14 +340,18 @@ function boot() {
         window.__spineCenters = centers;
         window.__spineS = S;
 
-        // glowing "neural core" tube running up from the spinal cord into the cortex
+        // glowing "neural core" tube: brain stem → spinal canal. Keep it on the
+        // same axis as the vertebral core so it reads as one nerve path, not a
+        // random diagonal cable beside the bones.
         const colTopW = new THREE.Vector3(colTop.x, colTop.y, colTop.z);
         const brainC = new THREE.Vector3().copy(bInner.position);
+        const canalX = colTopW.x;
+        const canalZ = colTopW.z;
         const upPath = new THREE.CatmullRomCurve3([
-          new THREE.Vector3(colTopW.x, colTopW.y - 0.15, colTopW.z),
-          new THREE.Vector3(colTopW.x, colTopW.y + 0.55, colTopW.z),
-          new THREE.Vector3(brainC.x, brainC.y - 0.95, brainC.z),
-          new THREE.Vector3(brainC.x, brainC.y + 0.18, brainC.z)
+          new THREE.Vector3(canalX, colTopW.y - 1.25, canalZ),
+          new THREE.Vector3(canalX, colTopW.y + 0.25, canalZ),
+          new THREE.Vector3(canalX, brainC.y - brainScale * 1.35, canalZ),
+          new THREE.Vector3(canalX, brainC.y - brainScale * 0.35, canalZ)
         ]);
         brainCoreMat = new THREE.MeshBasicMaterial({ color: 0x8f7bff, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false });
         const brainCore = new THREE.Mesh(new THREE.TubeGeometry(upPath, 40, 0.05, 8, false), brainCoreMat);
