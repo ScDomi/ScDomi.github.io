@@ -274,7 +274,7 @@ function boot() {
     // ---------- the brain: floating cortex above the spinal column ----------
     // Keep the column visually underneath the brain; the old medulla-fit made vertebrae read like they were sitting on top.
     let brain = null, brainCoreMat = null, brainPulsePts = null;
-    const BRAIN_FLOAT_GAP = SPINE_H * 0.255;
+    const BRAIN_FLOAT_GAP = SPINE_H * 0.005;
     if (brainObj) {
       let bg = null;
       brainObj.traverse(c => { if (c.isMesh && !bg) bg = c.geometry; });
@@ -296,12 +296,14 @@ function boot() {
         bInner.add(brainSolid, brainWire, brainInnerWire, brainFresnel);
         bInner.quaternion.copy(qFix);            // anatomical Z-up → Y-up
         const brainHeight = Math.max(1, bg.boundingBox.max.z - bg.boundingBox.min.z);
-        const brainScale = (SPINE_H * 0.405) / brainHeight;
+        const brainScale = (SPINE_H * 0.285) / brainHeight;
         bInner.scale.setScalar(brainScale);
-        // position: centroid over the spinal column top, brainstem (low Z of mesh) faces down into C3
-        const colTop = centers[0]; // C3 centroid (world)
-        bInner.position.set(colTop.x + 1.35, 0, colTop.z - 0.9);
-        // Float the brain clearly above C3 so the spine reads as hanging below it.
+        // Visual top of the on-screen column. The source meshes are anatomical-order,
+        // but after Z-up → Y-up conversion the rendered top is the last centroid.
+        // Put the human brain centered there, directly attached to the spine.
+        const colTop = centers[centers.length - 1];
+        bInner.position.set(colTop.x, 0, colTop.z);
+        // Float the brain just above the top vertebra so scrolling starts at cortex → spine.
         bInner.position.y = colTop.y + BRAIN_FLOAT_GAP;
         brain = new THREE.Group();
         brain.add(bInner);
