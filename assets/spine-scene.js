@@ -274,7 +274,7 @@ function boot() {
     // ---------- the brain: floating cortex above the spinal column ----------
     // Keep the column visually underneath the brain; the old medulla-fit made vertebrae read like they were sitting on top.
     let brain = null, brainCoreMat = null, brainPulsePts = null;
-    const BRAIN_FLOAT_GAP = SPINE_H * 0.005;
+    const BRAIN_FLOAT_GAP = SPINE_H * 0.012;
     if (brainObj) {
       let bg = null;
       brainObj.traverse(c => { if (c.isMesh && !bg) bg = c.geometry; });
@@ -296,13 +296,13 @@ function boot() {
         bInner.add(brainSolid, brainWire, brainInnerWire, brainFresnel);
         bInner.quaternion.copy(qFix);            // anatomical Z-up → Y-up
         const brainHeight = Math.max(1, bg.boundingBox.max.z - bg.boundingBox.min.z);
-        const brainScale = (SPINE_H * 0.285) / brainHeight;
+        const brainScale = (SPINE_H * 0.245) / brainHeight;
         bInner.scale.setScalar(brainScale);
         // Visual top of the on-screen column. The source meshes are anatomical-order,
         // but after Z-up → Y-up conversion the rendered top is the last centroid.
         // Put the human brain centered there, directly attached to the spine.
         const colTop = centers[centers.length - 1];
-        bInner.position.set(colTop.x, 0, colTop.z);
+        bInner.position.set(colTop.x - 0.08, 0, colTop.z + 0.12);
         // Float the brain just above the top vertebra so scrolling starts at cortex → spine.
         bInner.position.y = colTop.y + BRAIN_FLOAT_GAP;
         brain = new THREE.Group();
@@ -344,10 +344,10 @@ function boot() {
         const colTopW = new THREE.Vector3(colTop.x, colTop.y, colTop.z);
         const brainC = new THREE.Vector3().copy(bInner.position);
         const upPath = new THREE.CatmullRomCurve3([
-          new THREE.Vector3(colTopW.x, colTopW.y - 0.4, colTopW.z),
-          new THREE.Vector3(colTopW.x, colTopW.y + 0.8, colTopW.z),
-          new THREE.Vector3(brainC.x, brainC.y - 0.5, brainC.z),
-          new THREE.Vector3(brainC.x, brainC.y + 0.9, brainC.z)
+          new THREE.Vector3(colTopW.x, colTopW.y - 0.15, colTopW.z),
+          new THREE.Vector3(colTopW.x, colTopW.y + 0.55, colTopW.z),
+          new THREE.Vector3(brainC.x, brainC.y - 0.95, brainC.z),
+          new THREE.Vector3(brainC.x, brainC.y + 0.18, brainC.z)
         ]);
         brainCoreMat = new THREE.MeshBasicMaterial({ color: 0x8f7bff, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false });
         const brainCore = new THREE.Mesh(new THREE.TubeGeometry(upPath, 40, 0.05, 8, false), brainCoreMat);
@@ -727,27 +727,29 @@ function boot() {
       // gentle whole-column sway
       spine.rotation.y = Math.sin(t * 0.09) * 0.04 + mouse.x * 0.02;
 
-      // Keep the hero composition stable. Only the first slice of page scroll moves
-      // through the anatomy; after that the spine fades into background texture so
-      // cards never land inside/above the brain again.
-      const spineScroll = 1 - Math.exp(-scroll / 0.18);
-      const path = THREE.MathUtils.clamp(0.955 - Math.pow(spineScroll, 0.92) * 0.58, 0.375, 0.955);
+      // One continuous anatomical move: top starts on the human brain, then page
+      // scroll pushes the brain upward out of frame while the camera descends the spine.
+      const spineScroll = 1 - Math.exp(-scroll / 0.34);
+      const path = THREE.MathUtils.clamp(0.955 - Math.pow(spineScroll, 0.96) * 0.74, 0.215, 0.955);
       spineCurve.getPointAt(path, focusPt);
-      const ang = spineScroll * Math.PI * 0.72 + t * 0.026 + mouse.x * 0.18;
-      const brainIntro = brain ? (1 - Math.min(1, spineScroll / 0.65)) : 0;
-      const rad = (11.1 + Math.sin(spineScroll * Math.PI) * 0.24 + brainIntro * 4.0) * aspectRadius();
-      const descent = spineScroll * 8.0;
+      const brainIntro = brain ? (1 - Math.min(1, spineScroll / 0.42)) : 0;
+      if (brain && brainIntro > 0.001) {
+        focusPt.lerp(brain.userData.inner.position, brainIntro * 0.72);
+      }
+      const ang = spineScroll * Math.PI * 0.82 + t * 0.024 + mouse.x * 0.16;
+      const rad = (10.8 + brainIntro * 4.1 + Math.sin(spineScroll * Math.PI) * 0.34) * aspectRadius();
+      const descent = spineScroll * 10.5;
       camera.position.set(
         focusPt.x + Math.cos(ang) * rad,
-        focusPt.y + 3.15 + Math.sin(t * 0.3) * 0.10 + mouse.y * 0.32 - descent,
+        focusPt.y + 3.05 + Math.sin(t * 0.3) * 0.10 + mouse.y * 0.30 - descent + brainIntro * 1.2,
         focusPt.z + Math.sin(ang) * rad
       );
-      // Look slightly down the column, but do not continue beyond the clean hero path.
+      // Look from cortex into the upper cord, then increasingly farther down the column.
       camTarget.copy(focusPt);
-      const lookAhead = Math.max(0.32, path - 0.06);
+      const lookAhead = Math.max(0.18, path - (0.045 + spineScroll * 0.05));
       spineCurve.getPointAt(lookAhead, tmpV);
-      camTarget.lerp(tmpV, 0.38);
-      if (brain && brainIntro > 0) camTarget.y += brainIntro * 5.2;
+      camTarget.lerp(tmpV, 0.44);
+      if (brain && brainIntro > 0) camTarget.lerp(brain.userData.inner.position, brainIntro * 0.54);
       camera.lookAt(camTarget);
       rimLight.position.set(camera.position.x + 4, camera.position.y + 5, camera.position.z + 5);
 
