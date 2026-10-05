@@ -302,7 +302,7 @@ function boot() {
         // but after Z-up → Y-up conversion the rendered top is the last centroid.
         // Put the human brain centered there, directly attached to the spine.
         const colTop = centers[centers.length - 1];
-        bInner.position.set(colTop.x - 0.08, 0, colTop.z + 0.12);
+        bInner.position.set(colTop.x, 0, colTop.z);
         // Float the brain just above the top vertebra so scrolling starts at cortex → spine.
         bInner.position.y = colTop.y + BRAIN_FLOAT_GAP;
         brain = new THREE.Group();
