@@ -25,9 +25,9 @@
     path = normalize(path);
     if (path === '/') return 'home';
     if (path.startsWith('/projects/')) return 'projects';
-    if (path.startsWith('/math-lab/') || path.startsWith('/ml/')) return 'math';
-    if (path.startsWith('/ai-lab/') || path.startsWith('/dl/')) return 'ai';
-    if (path.startsWith('/cyber-lab/')) return 'cyber';
+    if (path.startsWith('/maths/')) return 'maths';
+    if (path.startsWith('/ml/')) return 'ml';
+    if (path.startsWith('/dl/')) return 'dl';
     if (path.startsWith('/about')) return 'about';
     return '';
   }
@@ -69,6 +69,13 @@
   addEventListener('resize', setActive, { passive: true });
   addEventListener('popstate', () => softNavigate(location.href, false));
 
+  async function mountRouteModules(path) {
+    if (path.startsWith('/maths/') && document.getElementById('lorenz-canvas')) {
+      if (window.__mountLorenzAttractor) window.__mountLorenzAttractor();
+      else await import('/assets/lorenz-attractor.js?v=lorenz-real-1');
+    }
+  }
+
   async function softNavigate(href, push = true) {
     const url = new URL(href, location.origin);
     if (!routeRoot || reduceMotion && false) return false;
@@ -76,7 +83,7 @@
     if (url.hash && url.pathname === location.pathname) return false;
     const currentSoft = document.body.dataset.softRouter === 'true';
     const targetPath = normalize(url.pathname);
-    const targetSoft = ['/projects/', '/math-lab/', '/ai-lab/', '/cyber-lab/', '/about/'].includes(targetPath) || targetPath === '/about.html';
+    const targetSoft = ['/projects/', '/maths/', '/about/'].includes(targetPath) || targetPath === '/about.html';
     if (!currentSoft && !targetSoft) return false;
 
     document.documentElement.classList.add('route-loading');
@@ -94,6 +101,7 @@
       document.body.className = doc.body.className;
       document.body.dataset.softRouter = 'true';
       routeRoot.innerHTML = nextRoot.innerHTML;
+      await mountRouteModules(targetPath);
       routeRoot.classList.remove('is-leaving');
       routeRoot.classList.add('is-entering');
       if (push) history.pushState({}, '', url.href);

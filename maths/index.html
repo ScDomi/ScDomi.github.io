@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maths / scryx</title>
+  <meta name="description" content="Interactive mathematical visualizations on scryx: Lorenz attractor first, extensible gallery next." />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="/assets/style.css?v=maths-lorenz-3" />
+</head>
+<body class="home-scryx brain-interface active-lite" data-soft-router="true">
+  <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
+  <canvas class="spark-canvas" id="spark-canvas" aria-hidden="true"></canvas>
+  <canvas class="matrix-canvas" aria-hidden="true"></canvas>
+  <div class="cursor-orb" id="cursor-orb" aria-hidden="true"></div>
+  <div class="scanline-layer" aria-hidden="true"></div>
+  <div class="hack-hud" aria-hidden="true"><span>maths@scryx</span><b id="hud-state">chaos:bounded</b><i>real equations</i></div>
+  <div class="detail-mesh" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  <header class="site-header glass-header scryx-nav-shell">
+    <div class="wrap nav-row">
+      <a class="brand brand-mark" href="/"><img src="/assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>scryx</span></a>
+      <nav class="nav scryx-nav" id="site-nav-menu" data-site-nav aria-label="Primary navigation">
+        <span class="scryx-nav-indicator" data-nav-indicator aria-hidden="true"></span>
+        <a href="/" data-nav="home">Home</a>
+        <a href="/projects/" data-nav="projects">Projects</a>
+        <a href="/maths/" data-nav="maths">Maths</a>
+        <a href="/ml/" data-nav="ml">ML</a>
+        <a href="/dl/" data-nav="dl">DL</a>
+        <a href="/about/" data-nav="about">About</a>
+      </nav>
+      <div class="scryx-nav-aux">
+        <span class="nav-status"><i></i> research surface</span>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-controls="site-nav-menu" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+  <main class="wrap lab-index-shell maths-shell" data-route-root>
+    <section class="lab-index-hero maths-hero">
+      <p class="eyebrow">maths / strange attractors</p>
+      <h1>chaos, but with receipts.</h1>
+      <p class="lead">A mathematical lab for real interactive systems: equations first, visualization second. The first exhibit is a numerically integrated Lorenz attractor — not a decorative loop.</p>
+    </section>
+
+    <section class="lorenz-lab" aria-labelledby="lorenz-title">
+      <div class="section-heading-row quiet-heading">
+        <div>
+          <p class="section-kicker">live system / differential equations</p>
+          <h2 id="lorenz-title">Lorenz Attractor</h2>
+        </div>
+      </div>
+      <div class="lorenz-grid">
+        <div class="lorenz-stage">
+          <canvas id="lorenz-canvas" aria-label="3D Lorenz attractor rendered from numerical integration"></canvas>
+          <div class="lorenz-readout" id="lorenz-readout">integrating…</div>
+        </div>
+        <aside class="lorenz-panel">
+          <div class="equation-card">
+            <span>governing equations</span>
+            <code>dx/dt = σ(y − x)</code>
+            <code>dy/dt = x(ρ − z) − y</code>
+            <code>dz/dt = xy − βz</code>
+            <p>The curve is integrated with RK4 from the Lorenz system. Tiny changes in the initial state eventually separate, even though the trajectory stays inside the same butterfly-shaped attractor.</p>
+          </div>
+          <form id="lorenz-controls" class="lorenz-controls">
+            <label>σ sigma <b data-lorenz-value="lorenz-sigma">10</b><input id="lorenz-sigma" type="range" min="4" max="18" step="0.1" value="10"></label>
+            <label>ρ rho <b data-lorenz-value="lorenz-rho">28</b><input id="lorenz-rho" type="range" min="8" max="45" step="0.1" value="28"></label>
+            <label>β beta <b data-lorenz-value="lorenz-beta">2.667</b><input id="lorenz-beta" type="range" min="1" max="4" step="0.01" value="2.667"></label>
+            <label>speed <b data-lorenz-value="lorenz-speed">1</b><input id="lorenz-speed" type="range" min="0.1" max="4" step="0.1" value="1"></label>
+            <label class="lorenz-check"><input id="lorenz-twin" type="checkbox" checked> show nearby initial condition</label>
+            <button id="lorenz-reset" type="button">reset parameters</button>
+          </form>
+          <p class="lorenz-hint">Drag to rotate. Scroll/pinch to zoom. The bright head is the moving state; the glowing segment is the evolving recent trail.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="maths-gallery" aria-label="Future mathematical visualizations">
+      <div class="section-heading-row quiet-heading"><div><p class="section-kicker">next shelves</p><h2>built to expand.</h2></div></div>
+      <div class="lab-collection-grid compact-gallery">
+        <article class="lab-entry-card dormant"><span>planned</span><div><h2>Mandelbrot</h2><p>Complex iteration, escape time, zoomable boundary structure.</p></div></article>
+        <article class="lab-entry-card dormant"><span>planned</span><div><h2>Julia Sets</h2><p>Parameter-space families and orbit behavior in the complex plane.</p></div></article>
+        <article class="lab-entry-card dormant"><span>planned</span><div><h2>Double Pendulum</h2><p>Chaotic mechanics with energy and phase-space readouts.</p></div></article>
+        <article class="lab-entry-card dormant"><span>planned</span><div><h2>Gradient Fields</h2><p>Vector fields, flow lines, optimization paths, and local geometry.</p></div></article>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="wrap footer-row"><small>© 2026 Domi</small><small>scryx · rules are defaults, not truth.</small></div></footer>
+  <script src="/assets/premium-interaction.js?v=cursor-active-spine-2"></script>
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/" } }
+  </script>
+  <script type="module" src="/assets/lorenz-attractor.js?v=lorenz-real-1"></script>
+  <script src="/assets/navigation.js?v=nav-maths-1"></script>
+</body>
+</html>
