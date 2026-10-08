@@ -282,29 +282,42 @@ function boot() {
         bg.computeBoundingBox();
         const bc = bg.boundingBox.getCenter(new THREE.Vector3());
         const local = bg.clone().translate(-bc.x, -bc.y, -bc.z);
-        const brainMat = new THREE.MeshStandardMaterial({ color: 0xd9c7ff, metalness: 0.02, roughness: 0.36, emissive: 0x5220a8, emissiveIntensity: 2.65, transparent: true, opacity: 0.88, side: THREE.DoubleSide, depthWrite: false });
+        const brainMat = new THREE.MeshStandardMaterial({ color: 0xd9c7ff, metalness: 0.02, roughness: 0.36, emissive: 0x5220a8, emissiveIntensity: 2.65, transparent: true, opacity: 0.86, side: THREE.DoubleSide, depthWrite: false });
+        const brainBackMat = new THREE.MeshBasicMaterial({ color: 0x5f35b9, transparent: true, opacity: 0.54, side: THREE.BackSide, depthWrite: false, depthTest: true });
+        const brainVolumeMat = new THREE.MeshBasicMaterial({ color: 0x8d63ff, transparent: true, opacity: 0.20, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
         const brainWireMat = new THREE.LineBasicMaterial({ color: 0xf6efff, transparent: true, opacity: 0.085, blending: THREE.AdditiveBlending, depthWrite: false });
         const brainWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), brainWireMat);
         const brainInnerWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.028, blending: THREE.AdditiveBlending, depthWrite: false }));
         brainInnerWire.scale.setScalar(0.985);
+        const brainBackfill = new THREE.Mesh(local, brainBackMat);
+        brainBackfill.scale.setScalar(1.012);
+        brainBackfill.renderOrder = 3;
+        const brainVolume = new THREE.Mesh(new THREE.SphereGeometry(1, 36, 22), brainVolumeMat);
+        brainVolume.scale.set(
+          (bg.boundingBox.max.x - bg.boundingBox.min.x) * 0.42,
+          (bg.boundingBox.max.y - bg.boundingBox.min.y) * 0.40,
+          (bg.boundingBox.max.z - bg.boundingBox.min.z) * 0.38
+        );
+        brainVolume.renderOrder = 2;
         const brainSolid = new THREE.Mesh(local, brainMat);
         brainSolid.renderOrder = 4;
         const brainFresnel = new THREE.Mesh(local, fresnelMat.clone());
         brainFresnel.renderOrder = 5;
         brainFresnel.material.fragmentShader = fresnelMat.fragmentShader.replace('0.29, 0.9, 1.0', '0.78, 0.55, 1.0'); // visible violet cortex rim
         const bInner = new THREE.Group();
-        bInner.add(brainSolid, brainWire, brainInnerWire, brainFresnel);
+        bInner.add(brainVolume, brainBackfill, brainSolid, brainWire, brainInnerWire, brainFresnel);
         bInner.quaternion.copy(qFix);            // anatomical Z-up → Y-up
         const brainHeight = Math.max(1, bg.boundingBox.max.z - bg.boundingBox.min.z);
-        const brainScale = (SPINE_H * 0.245) / brainHeight;
+        const brainScale = (SPINE_H * 0.205) / brainHeight;
         bInner.scale.setScalar(brainScale);
         // Visual top of the on-screen column. The source meshes are anatomical-order,
         // but after Z-up → Y-up conversion the rendered top is the last centroid.
-        // Put the human brain centered there, directly attached to the spine.
+        // Anchor the BOTTOM of the cortex above the spine; centering the brain on
+        // colTop made the upper vertebrae/core read as starting inside the brain.
         const colTop = centers[centers.length - 1];
-        bInner.position.set(colTop.x, 0, colTop.z);
-        // Float the brain just above the top vertebra so scrolling starts at cortex → spine.
-        bInner.position.y = colTop.y + BRAIN_FLOAT_GAP;
+        const brainWorldHeight = brainHeight * brainScale;
+        const brainBaseLift = brainWorldHeight * 0.5 + BRAIN_FLOAT_GAP + 0.22;
+        bInner.position.set(colTop.x, colTop.y + brainBaseLift, colTop.z);
         brain = new THREE.Group();
         brain.add(bInner);
         const brainHalo = new THREE.Mesh(
@@ -347,16 +360,56 @@ function boot() {
         const brainC = new THREE.Vector3().copy(bInner.position);
         const canalX = colTopW.x;
         const canalZ = colTopW.z;
+        const brainBottomY = brainC.y - brainWorldHeight * 0.5;
         const upPath = new THREE.CatmullRomCurve3([
           new THREE.Vector3(canalX, colTopW.y - 1.25, canalZ),
           new THREE.Vector3(canalX, colTopW.y + 0.25, canalZ),
-          new THREE.Vector3(canalX, brainC.y - brainScale * 1.35, canalZ),
-          new THREE.Vector3(canalX, brainC.y - brainScale * 0.35, canalZ)
+          new THREE.Vector3(canalX, brainBottomY + 0.08, canalZ),
+          new THREE.Vector3(canalX, brainBottomY + 0.42, canalZ)
         ]);
         brainCoreMat = new THREE.MeshBasicMaterial({ color: 0x8f7bff, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false });
         const brainCore = new THREE.Mesh(new THREE.TubeGeometry(upPath, 40, 0.05, 8, false), brainCoreMat);
         const brainCoreGlow = new THREE.Mesh(new THREE.TubeGeometry(upPath, 20, 0.22, 8, false), new THREE.MeshBasicMaterial({ color: 0x6a4dff, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false }));
         spine.add(brainCore, brainCoreGlow);
+
+        // transition filaments: spinal nerve traces continue into the brain stem,
+        // while the bones stop below it. This fixes the "vertebrae in brain" read
+        // without creating a dead gap between cortex and spinal canal.
+        const brainNerveGroup = new THREE.Group();
+        const brainNerveMat = new THREE.LineBasicMaterial({ color: 0xb8fbff, transparent: true, opacity: 0.42, blending: THREE.AdditiveBlending, depthWrite: false });
+        const brainNerveGlowMat = new THREE.LineBasicMaterial({ color: 0x8a6dff, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false });
+        const nerveDefs = [
+          { t: 0.935, side: -0.42, twist: 0.15 },
+          { t: 0.958, side: 0.34, twist: -0.28 },
+          { t: 0.984, side: 0.08, twist: 0.48 }
+        ];
+        const nervePoints = [];
+        for (const def of nerveDefs) {
+          const idx = Math.min(SAMPLES, Math.max(0, Math.round(def.t * SAMPLES)));
+          const r = (R[idx] || 2.6) * 0.42;
+          const start = P[idx].clone().addScaledVector(Nf[idx], def.side * r).addScaledVector(Bf[idx], def.twist * r);
+          const stem = new THREE.Vector3(canalX + def.side * 0.18, brainBottomY + 0.08, canalZ + def.twist * 0.16);
+          const intoBrain = new THREE.Vector3(brainC.x + def.side * 0.36, brainBottomY + 0.78, brainC.z + def.twist * 0.30);
+          const c = new THREE.CatmullRomCurve3([
+            start,
+            start.clone().lerp(colTopW, 0.36).setY(colTopW.y + 0.28),
+            stem,
+            intoBrain
+          ], false, 'centripetal', 0.45);
+          const pts = c.getPoints(34);
+          nervePoints.push(...pts);
+          brainNerveGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), brainNerveMat.clone()));
+        }
+        brainNerveGroup.add(new THREE.Points(
+          new THREE.BufferGeometry().setFromPoints(nervePoints.filter((_, i) => i % 5 === 0)),
+          new THREE.PointsMaterial({ color: 0xc9fbff, size: 0.105, transparent: true, opacity: 0.74, blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true })
+        ));
+        brainNerveGroup.add(new THREE.LineSegments(
+          new THREE.BufferGeometry().setFromPoints(nervePoints.filter((_, i) => i % 7 < 2)),
+          brainNerveGlowMat
+        ));
+        spine.add(brainNerveGroup);
+        brain.userData.brainNerveGroup = brainNerveGroup;
 
         // cortical pulse points shimmering over the brain surface
         const bpCount = lowPower ? 160 : 420;
@@ -684,15 +737,19 @@ function boot() {
       }
       packetGeo.attributes.position.needsUpdate = true;
 
-      // vertebrae: subtle breathing + focus glow from chip hover
+      // vertebrae: subtle breathing + focus glow from chip hover. In the hero state,
+      // fade only the top bones behind the brain so the visible continuity is nerves,
+      // not vertebrae punching into cortex.
       const focus = window.__spineFocus;
+      const heroFade = brain ? (1 - Math.min(1, scroll / 0.16)) : 0;
       for (let i = 0; i < vertebrae.length; i++) {
         const h = vertebrae[i], u = h.userData;
         const target = focus === i ? 1 : 0;
         u.focusK += (target - u.focusK) * 0.12;
         u.mat.emissive.setHex(0x0a1420).lerp(focusColor, u.focusK * 0.5);
-        const heroFade = brain ? (1 - Math.min(1, scroll / 0.16)) : 0;
-        u.mat.opacity = 0.22 + (1 - heroFade) * 0.48 + u.focusK * 0.20;
+        const topBoneMask = THREE.MathUtils.clamp((i - (vertebrae.length - 4)) / 3, 0, 1);
+        const brainClearanceFade = heroFade * topBoneMask * 0.74;
+        u.mat.opacity = Math.max(0.08, 0.22 + (1 - heroFade) * 0.48 + u.focusK * 0.20 - brainClearanceFade);
         u.mat.emissiveIntensity = 1.35 + u.focusK * 5.5;
         u.focusRing.material.opacity = u.focusK * 0.85;
         u.focusRing.scale.setScalar(1 + u.focusK * 0.4);
