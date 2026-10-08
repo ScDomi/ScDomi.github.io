@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=gesture-card-vision-1" />
+  <link rel="stylesheet" href="assets/style.css?v=nav-architecture-2" />
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -41,14 +41,22 @@
   <div class="breach-feed" aria-hidden="true"><span>syslog</span><b>trace / fork / verify</b><i>no gods, no defaults</i></div>
   <button class="cmd-trigger" id="cmd-trigger" type="button" aria-label="open command palette">⌘ /</button>
   <div class="scroll-system" aria-hidden="true"><span></span><b id="scroll-percent">00</b></div>
-  <header class="site-header glass-header">
+  <header class="site-header glass-header scryx-nav-shell">
     <div class="wrap nav-row">
-      <a class="brand brand-mark" href="index.html"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>scryx</span></a>
-      <nav class="nav">
-        <a href="#interface">Interface</a>
-        <a href="#artifacts">Artifacts</a>
-        <a href="#map">Logic</a><a href="/ml/">ML Visualized</a><a href="/dl/">Deep Learning</a>
+      <a class="brand brand-mark" href="/"><img src="assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>scryx</span></a>
+      <nav class="nav scryx-nav" id="site-nav-menu" data-site-nav aria-label="Primary navigation">
+        <span class="scryx-nav-indicator" data-nav-indicator aria-hidden="true"></span>
+        <a href="/" data-nav="home">Home</a>
+        <a href="/projects/" data-nav="projects">Projects</a>
+        <a href="/math-lab/" data-nav="math">Math Lab</a>
+        <a href="/ai-lab/" data-nav="ai">AI Lab</a>
+        <a href="/cyber-lab/" data-nav="cyber">Cyber Lab</a>
+        <a href="/about/" data-nav="about">About</a>
       </nav>
+      <div class="scryx-nav-aux">
+        <span class="nav-status"><i></i> research surface</span>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-controls="site-nav-menu" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      </div>
     </div>
   </header>
 
@@ -715,5 +723,6 @@ default: suspicious
     })();
   </script>
   <script src="assets/premium-interaction.js?v=cursor-active-spine-2"></script>
+  <script src="assets/navigation.js?v=nav-architecture-1"></script>
 </body>
 </html>
