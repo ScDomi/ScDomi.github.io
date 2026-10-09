@@ -509,5 +509,100 @@ function initFlywire(){
   }
 }
 
-initDlXor(); initActivation(); initCnn(); initAttention(); initLandscape(); initDigits(); initFlywire();
+
+/* ---------- chapter 08: Connectome Explorer 2.0 ---------- */
+function initConnectomeExplorer(){
+  const cv=document.getElementById('connectomeCanvas'); if(!cv) return;
+  const section=document.getElementById('connectome-explorer');
+  if(section && 'IntersectionObserver' in window){
+    new IntersectionObserver(entries=>{
+      document.body.classList.toggle('connectome-visible', entries.some(e=>e.isIntersecting && e.intersectionRatio>.22));
+    },{threshold:[0,.22,.5]}).observe(section);
+  }
+  const c=cv.getContext('2d'), W=cv.width, H=cv.height;
+  const buttons=[...document.querySelectorAll('[data-connectome-mode]')];
+  const modeEl=document.getElementById('connectomeModeLabel'), titleEl=document.getElementById('connectomeTitle'), textEl=document.getElementById('connectomeText');
+  const selectedEl=document.getElementById('connectomeSelected'), pathEl=document.getElementById('connectomePath'), hubEl=document.getElementById('connectomeHub');
+  const modes={isolate:'isolate regions',paths:'synapse paths',centrality:'centrality',compare:'bio vs artificial'};
+  let data=null, nodes=[], edges=[], mode='isolate', selected=0, hover=null, pulse=0;
+  fetch('assets/flywire_neuropil.json').then(r=>r.json()).then(d=>{ data=d; buildGraph(); draw(); requestAnimationFrame(loop); }).catch(()=>{ if(textEl) textEl.textContent='flywire_neuropil.json failed to load.'; });
+  buttons.forEach(btn=>btn.addEventListener('click',()=>{ mode=btn.dataset.connectomeMode; buttons.forEach(b=>b.classList.toggle('active',b===btn)); draw(); }));
+  cv.addEventListener('pointermove',e=>{ if(!nodes.length) return; const r=cv.getBoundingClientRect(), x=(e.clientX-r.left)/r.width*W, y=(e.clientY-r.top)/r.height*H; let best=null, bd=1e9; nodes.forEach((n,i)=>{ const d=Math.hypot(x-n.x,y-n.y); if(d<bd){bd=d;best=i;} }); hover=bd<38?best:null; if(hover!==null) selected=hover; draw(); },{passive:true});
+  cv.addEventListener('pointerleave',()=>{hover=null;draw();});
+  cv.addEventListener('click',()=>{ if(hover!==null){ selected=hover; draw(); }});
+  function buildGraph(){
+    const R=data.regions, M=data.syn, n=R.length;
+    const cx=W*.42, cy=H*.52, rx=W*.30, ry=H*.34;
+    nodes=R.map((name,i)=>{ const a=-Math.PI/2+i/n*Math.PI*2; return {name,i,x:cx+Math.cos(a)*rx,y:cy+Math.sin(a)*ry,out:0,in:0,total:0,cent:0}; });
+    edges=[];
+    let max=1;
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++){ const v=M[i][j]; if(v>0){ nodes[i].out+=v; nodes[j].in+=v; max=Math.max(max,v); if(i!==j) edges.push({i,j,v}); }}
+    nodes.forEach(nd=>{ nd.total=nd.in+nd.out; });
+    const maxTotal=Math.max(...nodes.map(n=>n.total)); nodes.forEach(nd=>{ nd.cent=nd.total/maxTotal; });
+    edges.sort((a,b)=>b.v-a.v); edges=edges.slice(0,110); edges.max=max;
+  }
+  function strongestPath(start){
+    const M=data.syn, R=data.regions, seen=new Set([start]); let cur=start, path=[start], strength=Infinity;
+    for(let k=0;k<4;k++){
+      let best=-1,bv=0; for(let j=0;j<R.length;j++){ if(!seen.has(j) && M[cur][j]>bv){best=j;bv=M[cur][j];} }
+      if(best<0||bv===0) break; path.push(best); seen.add(best); strength=Math.min(strength,bv); cur=best;
+    }
+    return {path,strength:strength===Infinity?0:strength};
+  }
+  function draw(){
+    c.clearRect(0,0,W,H); c.fillStyle='#05030b'; c.fillRect(0,0,W,H); drawGridInto(c,W,H,72);
+    if(!data){ c.fillStyle='rgba(244,234,255,.62)'; c.font=mono(16,800); c.fillText('loading Connectome Explorer 2.0…',48,H/2); return; }
+    const sel=nodes[selected]||nodes[0], path=strongestPath(selected), pathSet=new Set(path.path), hub=[...nodes].sort((a,b)=>b.cent-a.cent)[0];
+    drawLegend();
+    if(mode==='compare') drawArtificialNet();
+    edges.forEach(e=>drawEdge(e, sel, pathSet));
+    nodes.forEach((n,i)=>drawNode(n,i===selected,i===hover,pathSet.has(i),hub.i===i));
+    updateReadout(sel,path,hub);
+  }
+  function drawLegend(){
+    c.fillStyle='rgba(244,234,255,.72)'; c.font=mono(12,900); c.fillText('FlyWire region graph · edge weight = log synapse count · node size = in+out centrality',48,52);
+    c.fillStyle='rgba(244,234,255,.42)'; c.font=mono(10,800); c.fillText('Click / hover a region. The same biological wiring above becomes a graph here.',48,72);
+  }
+  function drawEdge(e, sel, pathSet){
+    const a=nodes[e.i], b=nodes[e.j], lv=Math.log10(e.v+1)/Math.log10(edges.max+1);
+    const related=e.i===sel.i||e.j===sel.i, inPath=mode==='paths'&&pathSet.has(e.i)&&pathSet.has(e.j);
+    let alpha=.045+lv*.16, color='166,115,255';
+    if(mode==='isolate'&&!related) alpha*=.18;
+    if(mode==='centrality') alpha=.035+lv*.1;
+    if(inPath){ alpha=.78; color='255,207,122'; }
+    if(mode==='compare') { alpha*=.55; color='143,220,255'; }
+    c.strokeStyle=`rgba(${color},${alpha})`; c.lineWidth=inPath?4:Math.max(1,lv*3.2);
+    const mx=(a.x+b.x)/2, my=(a.y+b.y)/2-50*Math.sin((e.i-e.j)*.7);
+    c.beginPath(); c.moveTo(a.x,a.y); c.quadraticCurveTo(mx,my,b.x,b.y); c.stroke();
+    if(inPath){ const t=(pulse%1), x=(1-t)*(1-t)*a.x+2*(1-t)*t*mx+t*t*b.x, y=(1-t)*(1-t)*a.y+2*(1-t)*t*my+t*t*b.y; c.fillStyle='rgba(255,207,122,.95)'; c.beginPath(); c.arc(x,y,7,0,Math.PI*2); c.fill(); }
+  }
+  function drawNode(n,isSel,isHover,inPath,isHub){
+    let r=9+n.cent*25; if(mode==='centrality') r=10+n.cent*38; if(isSel||isHover) r+=7;
+    const muted=mode==='isolate' && !(isSel||n.i===selected||edges.some(e=>(e.i===selected&&e.j===n.i)||(e.j===selected&&e.i===n.i)));
+    const col=isHub&&mode==='centrality'?'255,207,122':inPath?'255,207,122':'166,115,255';
+    c.fillStyle=`rgba(${col},${muted?.18:.82})`; c.strokeStyle=`rgba(244,234,255,${isSel? .9:.22})`; c.lineWidth=isSel?3:1;
+    c.beginPath(); c.arc(n.x,n.y,r,0,Math.PI*2); c.fill(); c.stroke();
+    c.fillStyle=muted?'rgba(244,234,255,.22)':'rgba(244,234,255,.82)'; c.font=mono(isSel?13:10,900); c.textAlign='center'; c.fillText(n.name,n.x,n.y-r-9); c.textAlign='start';
+  }
+  function drawArtificialNet(){
+    const x0=W*.72, y0=H*.22, layers=[4,6,5,3], dx=92, dy=52;
+    c.fillStyle='rgba(244,234,255,.72)'; c.font=mono(12,900); c.fillText('artificial net: layered, optimized, tidy',x0-48,y0-52);
+    c.fillStyle='rgba(244,234,255,.42)'; c.font=mono(10,800); c.fillText('brain graph: recurrent, hub-heavy, grown',x0-48,y0-32);
+    const pts=[]; layers.forEach((m,l)=>{ pts[l]=[]; for(let i=0;i<m;i++) pts[l].push({x:x0+l*dx,y:y0+(i-(m-1)/2)*dy+120}); });
+    c.strokeStyle='rgba(143,220,255,.16)'; c.lineWidth=1; for(let l=0;l<pts.length-1;l++) pts[l].forEach(a=>pts[l+1].forEach(b=>{c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();}));
+    pts.flat().forEach((p,i)=>{ c.fillStyle=i%3?'rgba(143,220,255,.72)':'rgba(255,207,122,.78)'; c.beginPath(); c.arc(p.x,p.y,9,0,Math.PI*2); c.fill(); });
+  }
+  function updateReadout(sel,path,hub){
+    const pathNames=path.path.map(i=>nodes[i].name);
+    if(modeEl) modeEl.textContent=modes[mode]||mode;
+    if(titleEl) titleEl.textContent=mode==='centrality'?`${hub.name} is the current hub`:mode==='paths'?`${pathNames.join(' → ')}`:mode==='compare'?'grown graph vs trained layers':`${sel.name} isolated`;
+    if(textEl) textEl.textContent=mode==='compare'?'Artificial networks usually start as clean layered DAGs. The fly connectome is recurrent, uneven, and hub-heavy — closer to a city than a pipeline.':mode==='centrality'?`Centrality here is weighted in+out synapse traffic. ${hub.name} dominates this aggregate because many high-weight edges pass through it.`:mode==='paths'?`Greedy strongest outgoing path from ${sel.name}; not “thought”, just the heaviest local route through the region graph.`:`Showing ${sel.name}, its incoming/outgoing neighbors, and the wiring pressure around that region.`;
+    if(selectedEl) selectedEl.textContent=`${sel.name} · ${(sel.total/1e6).toFixed(2)}M traffic`;
+    if(pathEl) pathEl.textContent=`${pathNames.slice(0,4).join(' → ')}`;
+    if(hubEl) hubEl.textContent=`${hub.name} · ${(hub.cent*100).toFixed(0)}%`;
+  }
+  function loop(){ pulse=(pulse+.012)%1; if(mode==='paths') draw(); requestAnimationFrame(loop); }
+}
+
+initDlXor(); initActivation(); initCnn(); initAttention(); initLandscape(); initDigits(); initFlywire(); initConnectomeExplorer();
 })();
