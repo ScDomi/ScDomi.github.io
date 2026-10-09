@@ -15,7 +15,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=card-link-fix-1" />
+  <link rel="stylesheet" href="assets/style.css?v=mobile-card-hotfix-1" />
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -408,16 +408,17 @@ default: suspicious
       const p = projects[card.dataset.project];
       if (!p) return;
       card.classList.toggle('has-github', Boolean(p.github));
-      card.setAttribute('aria-label', p.github ? `${p.title} — open GitHub on mobile, open detail on desktop` : `${p.title} — open detail`);
+      card.classList.toggle('repo-pending', !p.github);
+      card.setAttribute('aria-label', p.github ? `${p.title} — open GitHub` : `${p.title} — repo coming soon`);
     });
     const dialog = document.getElementById('project-dialog');
     const closeBtn = dialog.querySelector('.dialog-close');
     window.openProject = function openProject(key) {
       const p = projects[key];
       if (!p) return;
-      const mobileTap = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
-      if (mobileTap && p.github) {
-        window.location.href = p.github;
+      const mobileTap = window.innerWidth <= 760 || window.matchMedia('(pointer: coarse)').matches;
+      if (mobileTap) {
+        if (p.github) window.location.href = p.github;
         return;
       }
       document.getElementById('dialog-kicker').textContent = p.kicker;
