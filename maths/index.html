@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maths / scryx</title>
-  <meta name="description" content="Interactive mathematical visualizations on scryx: Lorenz attractor, double pendulum chaos, phase spaces, and real differential equations." />
+  <meta name="description" content="Interactive mathematical visualizations on scryx: Mandelbrot and Julia fractals, Lorenz attractor, double pendulum chaos, phase spaces, and real differential equations." />
   <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="stylesheet" href="/assets/style.css?v=maths-chaos-lab-1" />
+  <link rel="stylesheet" href="/assets/style.css?v=maths-fractal-explorer-1" />
 </head>
 <body class="home-scryx brain-interface active-lite" data-soft-router="true">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
@@ -36,9 +36,48 @@
   </header>
   <main class="wrap lab-index-shell maths-shell" data-route-root>
     <section class="lab-index-hero maths-hero">
-      <p class="eyebrow">maths / strange attractors</p>
+      <p class="eyebrow">maths / fractals + strange attractors</p>
       <h1>chaos, but with receipts.</h1>
-      <p class="lead">A mathematical lab for real interactive systems: equations first, visualization second. The first exhibit is a numerically integrated Lorenz attractor — not a decorative loop.</p>
+      <p class="lead">A mathematical lab for real interactive systems: complex dynamics, differential equations, chaos, and phase spaces — rendered as systems, not decorative loops.</p>
+    </section>
+
+    <section class="fractal-lab" aria-labelledby="fractal-title">
+      <div class="section-heading-row quiet-heading">
+        <div>
+          <p class="section-kicker">01 / infinite fractal explorer</p>
+          <h2 id="fractal-title">Mandelbrot / Julia GPU Lab</h2>
+        </div>
+      </div>
+      <div class="fractal-grid">
+        <div class="fractal-stage">
+          <canvas id="fractal-canvas" aria-label="WebGL Mandelbrot and Julia fractal explorer with infinite zoom"></canvas>
+          <div class="fractal-readout" id="fractal-readout">compiling shader…</div>
+        </div>
+        <aside class="fractal-panel">
+          <div class="equation-card fractal-equation-card">
+            <span>Complex Analysis · WebGL</span>
+            <code>zₙ₊₁ = zₙ² + c</code>
+            <code>Mandelbrot: z₀ = 0, c = pixel</code>
+            <code>Julia: z₀ = pixel, c = parameter</code>
+            <p>Drag to pan. Scroll to zoom into the boundary. The fragment shader evaluates escape time per pixel, then increases iteration detail as you dive deeper.</p>
+          </div>
+          <form id="fractal-controls" class="fractal-controls">
+            <label>mode <select id="fractal-mode"><option value="mandelbrot">Mandelbrot</option><option value="julia">Julia</option></select></label>
+            <label>iterations <b data-fractal-label="iterations">260</b><input id="fractal-iterations" type="range" min="80" max="820" step="10" value="260"></label>
+            <label>detail <b data-fractal-label="detail">1.2</b><input id="fractal-detail" type="range" min="0" max="5" step="0.1" value="1.2"></label>
+            <label>Julia real cₓ <input id="fractal-julia-x" type="range" min="-1" max="1" step="0.001" value="-0.745"></label>
+            <label>Julia imag cᵧ <input id="fractal-julia-y" type="range" min="-1" max="1" step="0.001" value="0.113"></label>
+            <div class="fractal-presets" aria-label="fractal presets">
+              <button type="button" data-fractal-preset="seahorse">seahorse valley</button>
+              <button type="button" data-fractal-preset="valley">needle valley</button>
+              <button type="button" data-fractal-preset="dendrite">julia dendrite</button>
+              <button type="button" data-fractal-preset="storm">julia storm</button>
+            </div>
+            <button id="fractal-reset" type="button">reset explorer</button>
+          </form>
+          <p class="fractal-hint">Not an image. Every visible pixel is calculated live by a WebGL shader from the complex recurrence.</p>
+        </aside>
+      </div>
     </section>
 
     <section class="lorenz-lab" aria-labelledby="lorenz-title">
@@ -109,8 +148,6 @@
     <section class="maths-gallery" aria-label="Future mathematical visualizations">
       <div class="section-heading-row quiet-heading"><div><p class="section-kicker">next shelves</p><h2>built to expand.</h2></div></div>
       <div class="lab-collection-grid compact-gallery">
-        <article class="lab-entry-card dormant"><span>planned</span><div><h2>Mandelbrot</h2><p>Complex iteration, escape time, zoomable boundary structure.</p></div></article>
-        <article class="lab-entry-card dormant"><span>planned</span><div><h2>Julia Sets</h2><p>Parameter-space families and orbit behavior in the complex plane.</p></div></article>
         <article class="lab-entry-card dormant"><span>planned</span><div><h2>Gradient Fields</h2><p>Vector fields, flow lines, optimization paths, and local geometry.</p></div></article>
       </div>
     </section>
@@ -120,6 +157,7 @@
   <script type="importmap">
     { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/" } }
   </script>
+  <script src="/assets/fractal-explorer.js?v=fractal-gpu-1"></script>
   <script type="module" src="/assets/lorenz-attractor.js?v=lorenz-real-1"></script>
   <script src="/assets/double-pendulum.js?v=chaos-lab-1"></script>
   <script src="/assets/navigation.js?v=nav-maths-1"></script>
