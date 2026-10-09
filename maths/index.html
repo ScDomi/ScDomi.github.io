@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maths / scryx</title>
-  <meta name="description" content="Interactive mathematical visualizations on scryx: Lorenz attractor first, extensible gallery next." />
+  <meta name="description" content="Interactive mathematical visualizations on scryx: Lorenz attractor, double pendulum chaos, phase spaces, and real differential equations." />
   <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="stylesheet" href="/assets/style.css?v=maths-lorenz-3" />
+  <link rel="stylesheet" href="/assets/style.css?v=maths-chaos-lab-1" />
 </head>
 <body class="home-scryx brain-interface active-lite" data-soft-router="true">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
@@ -74,12 +74,43 @@
       </div>
     </section>
 
+    <section class="pendulum-lab" aria-labelledby="pendulum-title">
+      <div class="section-heading-row quiet-heading">
+        <div>
+          <p class="section-kicker">02 / chaos laboratory</p>
+          <h2 id="pendulum-title">Double Pendulum</h2>
+        </div>
+      </div>
+      <div class="pendulum-grid">
+        <div class="pendulum-stage">
+          <canvas id="pendulum-canvas" aria-label="Double pendulum simulation with nearby initial conditions and phase spaces"></canvas>
+          <div class="pendulum-readout" id="pendulum-readout">integrating…</div>
+        </div>
+        <aside class="pendulum-panel">
+          <div class="equation-card pendulum-equation-card">
+            <span>Chaos Laboratory</span>
+            <code>θ̈₁, θ̈₂ from coupled nonlinear ODEs</code>
+            <code>state = [θ₁, ω₁, θ₂, ω₂]</code>
+            <code>λ(t) ≈ log(||δ(t)|| / ||δ₀||) / t</code>
+            <p>Two almost identical starts run through the same RK4 integrator. At first they overlap; then numerical reality does the ugly thing and the paths split.</p>
+          </div>
+          <form id="pendulum-controls" class="pendulum-controls">
+            <label>start angle <b data-pendulum-value="pendulum-theta">122</b><input id="pendulum-theta" type="range" min="70" max="170" step="1" value="122"></label>
+            <label>initial gap <b data-pendulum-value="pendulum-delta">1e-4</b><input id="pendulum-delta" type="range" min="0.00001" max="0.01" step="0.00001" value="0.0001"></label>
+            <label>kick energy <b data-pendulum-value="pendulum-energy">1</b><input id="pendulum-energy" type="range" min="0" max="2.4" step="0.05" value="1"></label>
+            <label>speed <b data-pendulum-value="pendulum-speed">1</b><input id="pendulum-speed" type="range" min="0.25" max="3" step="0.05" value="1"></label>
+            <button id="pendulum-reset" type="button">reset chaos</button>
+          </form>
+          <p class="pendulum-hint">Left: real double pendulum + nearby twin. Right: phase-space projections. The Lyapunov readout is a finite-time estimate, not decorative astrology.</p>
+        </aside>
+      </div>
+    </section>
+
     <section class="maths-gallery" aria-label="Future mathematical visualizations">
       <div class="section-heading-row quiet-heading"><div><p class="section-kicker">next shelves</p><h2>built to expand.</h2></div></div>
       <div class="lab-collection-grid compact-gallery">
         <article class="lab-entry-card dormant"><span>planned</span><div><h2>Mandelbrot</h2><p>Complex iteration, escape time, zoomable boundary structure.</p></div></article>
         <article class="lab-entry-card dormant"><span>planned</span><div><h2>Julia Sets</h2><p>Parameter-space families and orbit behavior in the complex plane.</p></div></article>
-        <article class="lab-entry-card dormant"><span>planned</span><div><h2>Double Pendulum</h2><p>Chaotic mechanics with energy and phase-space readouts.</p></div></article>
         <article class="lab-entry-card dormant"><span>planned</span><div><h2>Gradient Fields</h2><p>Vector fields, flow lines, optimization paths, and local geometry.</p></div></article>
       </div>
     </section>
@@ -90,6 +121,7 @@
     { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/" } }
   </script>
   <script type="module" src="/assets/lorenz-attractor.js?v=lorenz-real-1"></script>
+  <script src="/assets/double-pendulum.js?v=chaos-lab-1"></script>
   <script src="/assets/navigation.js?v=nav-maths-1"></script>
 </body>
 </html>
