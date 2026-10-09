@@ -15,7 +15,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=launch-polish-1" />
+  <link rel="stylesheet" href="assets/style.css?v=card-link-fix-1" />
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -351,7 +351,7 @@ default: suspicious
         simple: 'A camera sees a hand gesture and the model says what it is. Simple idea. Annoying details.',
         tech: 'YOLO-style object detection on merged gesture datasets. The actual work is not just training: label semantics had to be normalized, examples inspected, and the output made visible.',
         points: ['7 gesture classes', 'merged Roboflow-style datasets', 'label perspective cleanup', 'fine-tuned detector + visual samples'],
-        github: 'https://github.com/ScDomi/gesture-vision-yolo',
+        github: '',
         media: '<div class="modal-gallery"><img src="assets/projects/gesture/gesture-vision-card.jpg"><img src="assets/projects/gesture/gesture-1.jpg"><img src="assets/projects/gesture/gesture-2.jpg"></div><code class="media-caption">camera → landmarks → bbox → class</code>'
       },
       squad: {
@@ -359,7 +359,7 @@ default: suspicious
         simple: 'Give the system a paragraph and a question. It has to answer from the text. No magic, just reading under pressure.',
         tech: 'A SQuAD-style QA setup around context/question/answer triples: tokenizer artifacts, T5 fine-tuning, and room for comparison against larger reference models like ChatGPT/LLaMA.',
         points: ['known benchmark task', 'T5 QA fine-tuning', 'answer quality inspection', 'LLM comparison framing'],
-        github: 'https://github.com/ScDomi/squad-qa-benchmark',
+        github: '',
         media: '<div class="qa-card"><span>context</span><p>... a paragraph with the answer hidden inside ...</p><span>question</span><p>what did the model actually read?</p><span>answer</span><p class="violet">the smallest useful signal.</p></div><img class="doc-thumb" src="assets/projects/nlp/finetuning-large-language-models.pdf.png">'
       },
 
@@ -384,7 +384,7 @@ default: suspicious
         simple: 'A trading system project with a colleague. Dangerous if sloppy, interesting if treated like infrastructure.',
         tech: 'Collaborative repo access exists. Work should start on a new branch and separate research/backtesting, broker API integration, risk controls and execution logic instead of pretending a notebook is a strategy.',
         points: ['collaborative repo', 'new branch workflow', 'broker API integration', 'risk before hype'],
-        github: 'https://github.com/pleonastic6/Alpaca_Markets',
+        github: '',
         media: '<div class="qa-card"><span>rule</span><p>no live trading before boring checks pass</p><span>layers</span><p>data → signal → risk → execution</p><span>default</span><p class="violet">paper first, ego later</p></div>'
       },
       rl: {
@@ -404,10 +404,22 @@ default: suspicious
         media: '<img class="wide-shot" src="assets/projects/foundations/turmites.png"><code class="media-caption">simple rules, visible complexity</code>'
       }
     };
+    document.querySelectorAll('.project-card[data-project]').forEach(card => {
+      const p = projects[card.dataset.project];
+      if (!p) return;
+      card.classList.toggle('has-github', Boolean(p.github));
+      card.setAttribute('aria-label', p.github ? `${p.title} — open GitHub on mobile, open detail on desktop` : `${p.title} — open detail`);
+    });
     const dialog = document.getElementById('project-dialog');
     const closeBtn = dialog.querySelector('.dialog-close');
     window.openProject = function openProject(key) {
       const p = projects[key];
+      if (!p) return;
+      const mobileTap = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+      if (mobileTap && p.github) {
+        window.location.href = p.github;
+        return;
+      }
       document.getElementById('dialog-kicker').textContent = p.kicker;
       document.getElementById('dialog-title').textContent = p.title;
       document.getElementById('dialog-simple').textContent = p.simple;

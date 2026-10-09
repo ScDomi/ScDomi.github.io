@@ -785,3 +785,13 @@ body.home-scryx.spine-muted .spine-panels{opacity:0!important;pointer-events:non
 /* cache marker: nav-rename-active-repair-1 */
 body .site-header .scryx-nav a.is-active,body.nav-open .site-header .scryx-nav a.is-active{color:#050307!important;background:linear-gradient(135deg,#f4f1ea,#d9c7ff)!important}
 /* cache marker: nav-active-specificity-2 */
+
+/* launch fix: project cards must behave like links on mobile */
+.project-grid .project-card{position:relative!important;z-index:6!important;touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(199,169,255,.22)}
+.project-grid .project-card.has-github::after{content:"open github"!important;color:rgba(199,169,255,.72)!important}
+.project-grid .project-card:not(.has-github)::after{content:"open detail"!important}
+@media(max-width:760px){
+  .project-grid .project-card.has-github::after{content:"tap → github"!important}
+  .project-grid .project-card:not(.has-github)::after{content:"tap → detail"!important}
+  .artifact-field-shell,.artifact-field{pointer-events:auto!important}
+}
