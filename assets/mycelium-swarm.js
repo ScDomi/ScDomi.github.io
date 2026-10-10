@@ -5,6 +5,7 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const mobile = matchMedia('(max-width: 760px)').matches;
   if (reduce) return;
+  if (mobile) return;
   const canvas = document.getElementById('mycelium-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d', { alpha:true });
@@ -12,8 +13,8 @@
 
   const root = document.documentElement;
   let w=1,h=1,dpr=1,mx=.55,my=.45,scroll=0,t0=performance.now();
-  const nodeN = mobile ? 42 : 78;
-  const boidN = mobile ? 34 : 72;
+  const nodeN = 34;
+  const boidN = 18;
 
   function rnd(i){ const x = Math.sin(i*127.1+13.7)*43758.5453; return x-Math.floor(x); }
   const nodes = Array.from({length:nodeN},(_,i)=>{
@@ -115,7 +116,8 @@
     const g=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(w,h)*.62);
     g.addColorStop(0,`rgba(185,101,255,${.035*alphaTarget})`); g.addColorStop(1,'rgba(0,0,0,0)');
     ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
-    requestAnimationFrame(frame);
+    if (!document.hidden) requestAnimationFrame(frame);
   }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) requestAnimationFrame(frame); });
   requestAnimationFrame(frame);
 })();

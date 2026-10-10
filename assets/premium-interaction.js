@@ -89,7 +89,10 @@
   canvas.setAttribute('aria-hidden','true');
   document.body.prepend(canvas);
   const ctx = canvas.getContext('2d');
-  const count = reduce ? 0 : (isMobile ? 44 : 110);
+  // Global particles were a second full-screen animation layer on top of the
+  // WebGL spine + mycelium. Nice in screenshots, brutal in real scrolling.
+  const count = 0;
+  if (!count && canvas) canvas.remove();
   const nodes = Array.from({length: count}, (_, i) => ({
     x: Math.random(), y: Math.random(), z: Math.random(), a: Math.random()*Math.PI*2,
     v: .00035 + Math.random()*.00105, r: .6 + Math.random()*2.3,
@@ -126,9 +129,9 @@
         if(dist<155){ctx.strokeStyle=color(p.hue,(1-dist/155)*(.06+hot*.05));ctx.lineWidth=.65;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(qx,qy);ctx.stroke();}
       }
     }
-    requestAnimationFrame(frame);
+    if (!document.hidden) requestAnimationFrame(frame);
   }
-  if (!reduce) requestAnimationFrame(frame);
+  if (!reduce && count) requestAnimationFrame(frame);
 
   // Project-card micro intelligence: cards tilt toward pointer and reveal a scan node.
   const cards = [...document.querySelectorAll('.project-card, .lab-panel, .signal-card')];
@@ -143,6 +146,6 @@
 
   const hud=document.createElement('div'); hud.className='micro-intel-hud'; hud.setAttribute('aria-hidden','true'); hud.innerHTML='<span>micro-intel</span><b>000</b><i>details tracking</i>'; document.body.appendChild(hud);
   const hVal=hud.querySelector('b');
-  function hudLoop(){const max=Math.max(1,document.documentElement.scrollHeight-innerHeight),s=scrollY/max,motion=Math.min(1,Math.hypot(vx,vy)/120),val=Math.round((s*.62+motion*.38)*999); if(hVal)hVal.textContent=String(val).padStart(3,'0'); requestAnimationFrame(hudLoop);}
+  function hudLoop(){const max=Math.max(1,document.documentElement.scrollHeight-innerHeight),s=scrollY/max,motion=Math.min(1,Math.hypot(vx,vy)/120),val=Math.round((s*.62+motion*.38)*999); if(hVal)hVal.textContent=String(val).padStart(3,'0'); if(!document.hidden) requestAnimationFrame(hudLoop);}
   if(!isMobile) requestAnimationFrame(hudLoop);
 })();

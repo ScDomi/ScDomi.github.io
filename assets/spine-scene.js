@@ -8,7 +8,8 @@ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isMobile = window.matchMedia('(max-width: 760px)').matches;
-const lowPower = reduceMotion || isMobile || (navigator.hardwareConcurrency || 8) <= 4;
+const fullFx = new URLSearchParams(location.search).get('fx') === 'full';
+const lowPower = reduceMotion || isMobile || !matchMedia('(min-width: 980px)').matches || (navigator.hardwareConcurrency || 8) <= 4;
 
 const canvas = document.getElementById('spine-canvas');
 
@@ -21,15 +22,16 @@ const aspectRadius = () => {
   return THREE.MathUtils.clamp(1.0 / Math.max(0.55, a / 1.4), 1.0, 2.1);
 };
 
-if (!canvas || reduceMotion) {
+if (!canvas || lowPower || !fullFx) {
   // leave the existing GLSL core canvas as the visual fallback
 } else {
-  boot();
+  // Do not block first paint / scrolling on loading multi-MB OBJ meshes.
+  (window.requestIdleCallback || ((fn) => setTimeout(fn, 900)))(boot, { timeout: 1800 });
 }
 
 function boot() {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, lowPower ? 1 : 1.4));
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lowPower, alpha: false, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, lowPower ? 0.9 : 1.15));
   renderer.setSize(innerWidth, innerHeight);
   renderer.setClearColor(0x030304, 1);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -55,7 +57,9 @@ function boot() {
   // ---------- particle field: dense organic swarm (active-theory style) ----------
   // thousands of motes forming a swirling cloud that gathers around the column
   const SPINE_H = 46;
-  const COUNT = lowPower ? 1800 : (isMobile ? 2800 : 12800);
+  // Keep the homepage cinematic without melting phones/laptops. The old 12.8k
+  // particle cloud looked cool but made the public page feel sticky.
+  const COUNT = 1800;
   const pos = new Float32Array(COUNT * 3);
   const seed = new Float32Array(COUNT * 4); // x,y,z,w = random seeds
   for (let i = 0; i < COUNT; i++) {
@@ -137,7 +141,7 @@ function boot() {
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
   addEventListener('resize', () => {
     camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, lowPower ? 1 : 1.4));
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, lowPower ? 0.9 : 1.15));
     renderer.setSize(innerWidth, innerHeight);
   });
 
