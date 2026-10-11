@@ -286,14 +286,19 @@ default: suspicious
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-  <script type="module" src="assets/spine-scene.js?v=perf-cut-scroll-1"></script>
-  <script src="assets/mycelium-swarm.js?v=perf-cut-scroll-1" defer></script>
+  <script type="module" src="assets/spine-scene.js?v=visual-balance-1"></script>
+  <script src="assets/mycelium-swarm.js?v=visual-balance-1" defer></script>
   <script>
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isMobile = window.matchMedia('(max-width: 760px)').matches;
-    const fullFx = new URLSearchParams(location.search).get('fx') === 'full';
+    const fxParam = new URLSearchParams(location.search).get('fx');
+    const fullFx = fxParam === 'full';
+    const fxOff = fxParam === 'off';
     const lowPower = reduceMotion || navigator.hardwareConcurrency <= 4 || isMobile;
+    const ambientFx = !fxOff && !lowPower;
     document.documentElement.classList.toggle('low-power', lowPower);
+    document.documentElement.classList.toggle('ambient-fx', ambientFx);
+    document.documentElement.classList.toggle('full-fx', fullFx);
     if (fullFx && window.Lenis && !reduceMotion && !isMobile && navigator.hardwareConcurrency >= 6) {
       const lenis = new Lenis({ duration: .92, smoothWheel: true, wheelMultiplier: .9, touchMultiplier: .9, lerp: .12 });
       function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
@@ -344,7 +349,7 @@ default: suspicious
       }
       requestAnimationFrame(draw);
     }
-    if (fullFx) mountIntegratedWebGL();
+    if (ambientFx) mountIntegratedWebGL();
 
     const projects = {
       gesture: {
@@ -550,7 +555,7 @@ default: suspicious
       }
       if (!document.hidden) requestAnimationFrame(renderField);
     }
-    if (!lowPower && fullFx) renderField();
+    if (ambientFx) renderField();
 
     const sparkCanvas = document.getElementById('spark-canvas');
     const sparkCtx = sparkCanvas?.getContext('2d');
@@ -572,7 +577,7 @@ default: suspicious
       }
       if (!document.hidden) requestAnimationFrame(renderSparks);
     }
-    if (fullFx) renderSparks();
+    if (ambientFx) renderSparks();
 
     const matrixCanvas = document.getElementById('matrix-canvas');
     const matrixCtx = matrixCanvas?.getContext('2d');
@@ -599,7 +604,7 @@ default: suspicious
       });
       if (!document.hidden) requestAnimationFrame(renderMatrix);
     }
-    if (fullFx) renderMatrix();
+    if (ambientFx) renderMatrix();
 
     const bootLog = document.getElementById('boot-log');
     const bootOverlay = document.getElementById('boot-overlay');
