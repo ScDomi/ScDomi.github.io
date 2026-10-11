@@ -15,7 +15,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=mobile-card-hotfix-1" />
+  <link rel="stylesheet" href="assets/style.css?v=brain-sim-demo-1" />
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -121,6 +121,43 @@ default: suspicious
           <p>A lens for the same obsession: make the invisible structure navigable. Press <kbd>⌘ /</kbd>.</p>
           <div class="key-lines"><i></i><i></i><i></i><i></i></div>
         </article>
+      </div>
+    </section>
+
+
+    <section id="brain-demo" class="wrap section brain-sim-demo" aria-label="human brain simulation demo">
+      <div class="brain-sim-head">
+        <p class="section-kicker">human brain simulation / demo</p>
+        <h2>not a full brain. a tiny cognitive loop you can poke.</h2>
+        <p>This is the honest version: no fake 86-billion-neuron cosplay. It is a small spiking-style network with memory, attention, planning and feedback — a toy model of the loop behind an external cortex.</p>
+      </div>
+      <div class="brain-sim-grid">
+        <div class="brain-sim-stage">
+          <canvas id="brain-sim-canvas" aria-label="interactive neural network demo"></canvas>
+          <div class="brain-sim-readout" aria-live="polite">
+            <span>mode</span><b id="brain-mode">idle cortex</b>
+            <span>active neurons</span><b id="brain-active">000</b>
+            <span>synaptic flow</span><b id="brain-flow">0.00</b>
+          </div>
+        </div>
+        <div class="brain-sim-panel">
+          <div class="brain-sim-card">
+            <span>truth check</span>
+            <p>A real human brain is ~86B neurons and ~100T synapses. This page simulates the <em>idea</em>: signals compete, memory biases the next thought, feedback changes the path.</p>
+          </div>
+          <div class="brain-sim-controls" role="group" aria-label="brain simulation controls">
+            <button type="button" data-brain-pulse="perception">perception spike</button>
+            <button type="button" data-brain-pulse="memory">memory recall</button>
+            <button type="button" data-brain-pulse="planning">planning loop</button>
+            <button type="button" data-brain-pulse="feedback">feedback shock</button>
+          </div>
+          <div class="brain-sim-stack">
+            <span><b>perception</b><i>incoming signal</i></span>
+            <span><b>memory</b><i>weighted context</i></span>
+            <span><b>planning</b><i>next action search</i></span>
+            <span><b>feedback</b><i>rule update</i></span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -249,6 +286,7 @@ default: suspicious
   <dialog class="command-dialog" id="command-dialog" aria-label="scryx command palette">
     <div class="cmd-modal">
       <div class="cmd-top"><span>command palette</span><button type="button" id="cmd-close">esc</button></div>
+      <button data-jump="#brain-demo"><b>run brain demo</b><span>tiny cognitive loop, not biology cosplay</span></button>
       <button data-jump="#artifacts"><b>open artifacts</b><span>jump to project grid</span></button>
       <button data-jump="#project-scroll"><b>inspect evidence</b><span>project stream as proof sequence</span></button>
       <button data-jump="#map"><b>open logic</b><span>surface → pattern → fork → evidence</span></button>
@@ -605,6 +643,88 @@ default: suspicious
       if (!document.hidden) requestAnimationFrame(renderMatrix);
     }
     if (ambientFx) renderMatrix();
+
+
+    (function brainSimulationDemo(){
+      const canvas = document.getElementById('brain-sim-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const stage = canvas.closest('.brain-sim-stage');
+      const modeEl = document.getElementById('brain-mode');
+      const activeEl = document.getElementById('brain-active');
+      const flowEl = document.getElementById('brain-flow');
+      const layerNames = ['perception','memory','planning','feedback'];
+      const counts = [18, 24, 20, 14];
+      let nodes = [], links = [], pulses = [], tick = 0, pointer = { x:.5, y:.5, hot:0 }, mode = 'idle cortex';
+      function rebuild(){
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(devicePixelRatio || 1, lowPower ? 1 : 1.6);
+        canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+        canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+        const w = rect.width, h = rect.height;
+        nodes = []; links = [];
+        counts.forEach((count, li) => {
+          for (let i=0;i<count;i++) {
+            const band = (li + .55) / layerNames.length;
+            const x = w * (.16 + li*.22 + (Math.random()-.5)*.045);
+            const y = h * (.12 + (i+.5)/count*.76 + Math.sin(i*1.7+li)*.025);
+            nodes.push({ id:nodes.length, layer:li, x, y, baseX:x, baseY:y, charge:Math.random()*.25, bias:.45+Math.random()*.55 });
+          }
+        });
+        for (const a of nodes) for (const b of nodes) {
+          if (b.layer === a.layer + 1 && Math.random() < .28) links.push({ a:a.id, b:b.id, w:.25+Math.random()*.75, fire:0 });
+          if (b.layer === a.layer && b.id > a.id && Math.random() < .018) links.push({ a:a.id, b:b.id, w:.12+Math.random()*.28, fire:0 });
+        }
+      }
+      function pulse(kind='perception'){
+        const idx = Math.max(0, layerNames.indexOf(kind));
+        mode = kind === 'feedback' ? 'feedback rewiring' : `${kind} spike`;
+        nodes.filter(n => n.layer === idx || (kind === 'feedback' && n.layer > 1)).forEach((n,i) => { n.charge = Math.min(1.9, n.charge + .8 + (i%5)*.08); });
+        pulses.push({ layer:idx, t:0, kind });
+      }
+      stage?.addEventListener('pointermove', e => {
+        const r = canvas.getBoundingClientRect(); pointer = { x:(e.clientX-r.left)/r.width, y:(e.clientY-r.top)/r.height, hot:1 };
+        nodes.forEach(n => { const dx=n.x-e.clientX+r.left, dy=n.y-e.clientY+r.top, d=Math.hypot(dx,dy); if (d < 90) n.charge=Math.min(1.4,n.charge+(1-d/90)*.035); });
+      }, { passive:true });
+      stage?.addEventListener('click', () => pulse(layerNames[Math.floor(pointer.x*layerNames.length)] || 'perception'));
+      document.querySelectorAll('[data-brain-pulse]').forEach(btn => btn.addEventListener('click', () => pulse(btn.dataset.brainPulse)));
+      addEventListener('resize', rebuild); rebuild();
+      function draw(){
+        const w = canvas.clientWidth, h = canvas.clientHeight; tick += .016;
+        ctx.clearRect(0,0,w,h);
+        const grad = ctx.createRadialGradient(w*pointer.x,h*pointer.y,0,w*.5,h*.5,Math.max(w,h)*.72);
+        grad.addColorStop(0,'rgba(127,243,255,.10)'); grad.addColorStop(.38,'rgba(185,101,255,.065)'); grad.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.fillStyle = grad; ctx.fillRect(0,0,w,h);
+        nodes.forEach(n => {
+          n.charge *= .965;
+          n.x += (n.baseX + Math.sin(tick*.8+n.id)*4 - n.x) * .04;
+          n.y += (n.baseY + Math.cos(tick*.7+n.id)*5 - n.y) * .04;
+        });
+        links.forEach(l => {
+          const a=nodes[l.a], b=nodes[l.b]; if (!a || !b) return;
+          const signal = Math.max(0, a.charge*l.w - .28);
+          if (signal > .05) { b.charge = Math.min(1.7, b.charge + signal*.035); l.fire = Math.min(1, l.fire + signal*.22); }
+          l.fire *= .88;
+          ctx.strokeStyle = `rgba(${l.fire>.25?'127,243,255':'216,199,255'},${.045 + l.fire*.42})`;
+          ctx.lineWidth = .5 + l.fire*1.7; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.bezierCurveTo((a.x+b.x)/2,a.y,(a.x+b.x)/2,b.y,b.x,b.y); ctx.stroke();
+        });
+        pulses = pulses.filter(p => (p.t += .018) < 1);
+        pulses.forEach(p => { ctx.strokeStyle = p.kind === 'feedback' ? 'rgba(255,255,255,.42)' : 'rgba(127,243,255,.34)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(w*(.16+p.layer*.22), h*.5, p.t*Math.max(w,h)*.32, 0, Math.PI*2); ctx.stroke(); });
+        let active = 0, flow = 0;
+        nodes.forEach(n => {
+          const c = Math.min(1, n.charge); if (c>.22) active++; flow += c;
+          ctx.beginPath(); ctx.fillStyle = `rgba(244,241,234,${.18+c*.72})`; ctx.arc(n.x,n.y,1.6+c*4.5,0,Math.PI*2); ctx.fill();
+          if (c>.65) { ctx.strokeStyle=`rgba(127,243,255,${(c-.55)*.7})`; ctx.lineWidth=1; ctx.stroke(); }
+        });
+        layerNames.forEach((name,i)=>{ ctx.fillStyle='rgba(244,241,234,.42)'; ctx.font='800 10px ui-monospace,monospace'; ctx.fillText(name.toUpperCase(), w*(.09+i*.22), 22); });
+        if (Math.random() < .018) pulse(layerNames[Math.floor(Math.random()*layerNames.length)]);
+        pointer.hot *= .94;
+        if (modeEl) modeEl.textContent = mode; if (activeEl) activeEl.textContent = String(active).padStart(3,'0'); if (flowEl) flowEl.textContent = (flow/nodes.length).toFixed(2);
+        if (!document.hidden && !reduceMotion) requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    })();
 
     const bootLog = document.getElementById('boot-log');
     const bootOverlay = document.getElementById('boot-overlay');
