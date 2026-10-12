@@ -288,9 +288,10 @@ function boot() {
         bg.computeBoundingBox();
         const bc = bg.boundingBox.getCenter(new THREE.Vector3());
         const local = bg.clone().translate(-bc.x, -bc.y, -bc.z);
-        const brainMat = new THREE.MeshStandardMaterial({ color: 0xd9c7ff, metalness: 0.02, roughness: 0.36, emissive: 0x5220a8, emissiveIntensity: 2.65, transparent: true, opacity: 0.86, side: THREE.DoubleSide, depthWrite: false });
-        const brainBackMat = new THREE.MeshBasicMaterial({ color: 0x5f35b9, transparent: true, opacity: 0.54, side: THREE.BackSide, depthWrite: false, depthTest: true });
-        const brainVolumeMat = new THREE.MeshBasicMaterial({ color: 0x8d63ff, transparent: true, opacity: 0.20, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+        const brainMat = new THREE.MeshStandardMaterial({ color: 0xd9c7ff, metalness: 0.02, roughness: 0.36, emissive: 0x5220a8, emissiveIntensity: 2.8, transparent: true, opacity: 0.91, side: THREE.DoubleSide, depthWrite: false });
+        const brainBackMat = new THREE.MeshBasicMaterial({ color: 0x5f35b9, transparent: true, opacity: 0.62, side: THREE.BackSide, depthWrite: false, depthTest: true });
+        const brainVolumeMat = new THREE.MeshBasicMaterial({ color: 0xa985ff, transparent: true, opacity: 0.30, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+        const brainFillMat = new THREE.MeshBasicMaterial({ color: 0xd8c7ff, transparent: true, opacity: 0.24, depthWrite: false, depthTest: false, side: THREE.DoubleSide });
         const brainWireMat = new THREE.LineBasicMaterial({ color: 0xf6efff, transparent: true, opacity: 0.085, blending: THREE.AdditiveBlending, depthWrite: false });
         const brainWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), brainWireMat);
         const brainInnerWire = new THREE.LineSegments(new THREE.WireframeGeometry(local), new THREE.LineBasicMaterial({ color: 0x49e6ff, transparent: true, opacity: 0.028, blending: THREE.AdditiveBlending, depthWrite: false }));
@@ -305,13 +306,27 @@ function boot() {
           (bg.boundingBox.max.z - bg.boundingBox.min.z) * 0.38
         );
         brainVolume.renderOrder = 2;
+        // Some public cortex OBJ exports have open/partial sides. Add a soft
+        // internal two-lobe fill so the silhouette reads as a complete brain,
+        // while the real mesh/wire remains the visible anatomical surface.
+        const brainFill = new THREE.Group();
+        const bw = bg.boundingBox.max.x - bg.boundingBox.min.x;
+        const bd = bg.boundingBox.max.y - bg.boundingBox.min.y;
+        const bh = bg.boundingBox.max.z - bg.boundingBox.min.z;
+        for (const side of [-1, 1]) {
+          const lobe = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 24), brainFillMat.clone());
+          lobe.position.set(side * bw * 0.16, 0, bh * 0.015);
+          lobe.scale.set(bw * 0.31, bd * 0.43, bh * 0.39);
+          lobe.renderOrder = 1;
+          brainFill.add(lobe);
+        }
         const brainSolid = new THREE.Mesh(local, brainMat);
         brainSolid.renderOrder = 4;
         const brainFresnel = new THREE.Mesh(local, fresnelMat.clone());
         brainFresnel.renderOrder = 5;
         brainFresnel.material.fragmentShader = fresnelMat.fragmentShader.replace('0.29, 0.9, 1.0', '0.78, 0.55, 1.0'); // visible violet cortex rim
         const bInner = new THREE.Group();
-        bInner.add(brainVolume, brainBackfill, brainSolid, brainWire, brainInnerWire, brainFresnel);
+        bInner.add(brainFill, brainVolume, brainBackfill, brainSolid, brainWire, brainInnerWire, brainFresnel);
         bInner.quaternion.copy(qFix);            // anatomical Z-up → Y-up
         const brainHeight = Math.max(1, bg.boundingBox.max.z - bg.boundingBox.min.z);
         const brainScale = (SPINE_H * 0.205) / brainHeight;
