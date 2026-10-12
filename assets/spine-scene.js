@@ -8,7 +8,9 @@ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isMobile = window.matchMedia('(max-width: 760px)').matches;
-const fullFx = new URLSearchParams(location.search).get('fx') === 'full';
+const fxMode = new URLSearchParams(location.search).get('fx');
+const fullFx = fxMode === 'full';
+const fxOff = fxMode === 'off';
 const lowPower = reduceMotion || isMobile || !matchMedia('(min-width: 980px)').matches || (navigator.hardwareConcurrency || 8) <= 4;
 
 const canvas = document.getElementById('spine-canvas');
@@ -22,7 +24,7 @@ const aspectRadius = () => {
   return THREE.MathUtils.clamp(1.0 / Math.max(0.55, a / 1.4), 1.0, 2.1);
 };
 
-if (!canvas || lowPower || !fullFx) {
+if (!canvas || lowPower || fxOff) {
   // leave the existing GLSL core canvas as the visual fallback
 } else {
   // Do not block first paint / scrolling on loading multi-MB OBJ meshes.
