@@ -89,9 +89,9 @@
   canvas.setAttribute('aria-hidden','true');
   document.body.prepend(canvas);
   const ctx = canvas.getContext('2d');
-  // Global particles were a second full-screen animation layer on top of the
-  // WebGL spine + mycelium. Nice in screenshots, brutal in real scrolling.
-  const count = 0;
+  // Keep the reactive mouse field alive; it is lightweight compared with the
+  // mesh scene and gives the homepage its "particles react to me" feel.
+  const count = reduce ? 0 : (isMobile ? 54 : 120);
   if (!count && canvas) canvas.remove();
   const nodes = Array.from({length: count}, (_, i) => ({
     x: Math.random(), y: Math.random(), z: Math.random(), a: Math.random()*Math.PI*2,

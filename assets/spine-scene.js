@@ -59,9 +59,9 @@ function boot() {
   // ---------- particle field: dense organic swarm (active-theory style) ----------
   // thousands of motes forming a swirling cloud that gathers around the column
   const SPINE_H = 46;
-  // Keep the homepage cinematic without melting phones/laptops. The old 12.8k
-  // particle cloud looked cool but made the public page feel sticky.
-  const COUNT = 1800;
+  // Dense enough to read as the old living particle cloud, but below the old
+  // 12.8k full blast that made scrolling sticky on normal laptops.
+  const COUNT = fullFx ? 12800 : 6400;
   const pos = new Float32Array(COUNT * 3);
   const seed = new Float32Array(COUNT * 4); // x,y,z,w = random seeds
   for (let i = 0; i < COUNT; i++) {
@@ -99,7 +99,7 @@ function boot() {
         p.xz = mat2(ca,-sa,sa,ca) * p.xz;
         // gentle bob + turbulence
         p.x += sin(t*1.3 + aSeed.y*6.283) * (0.5 + aSeed.w*0.7);
-        p.y += cos(t*0.9 + aSeed.z*6.283) * (0.5 + aSeed.x*0.7) + uScroll * -1.6;
+        p.y += cos(t*0.9 + aSeed.z*6.283) * (0.5 + aSeed.x*0.7) + uScroll * -4.2;
         p.z += sin(t*1.1 + aSeed.x*6.283) * (0.5 + aSeed.y*0.7);
         // attract toward the focus height (forms a denser band near camera focus)
         float gather = exp(-abs(p.y - uFocusY) * 0.05);
