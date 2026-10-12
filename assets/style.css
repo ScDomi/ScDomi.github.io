@@ -822,4 +822,16 @@ body .site-header .scryx-nav a.is-active,body.nav-open .site-header .scryx-nav a
 @media(max-width:980px){.brain-sim-head,.brain-sim-grid{grid-template-columns:1fr}.brain-sim-stage{min-height:520px}}
 @media(max-width:680px){.brain-sim-head h2{font-size:clamp(2.6rem,14vw,4.8rem)!important;max-width:100%}.brain-sim-stage{min-height:430px}.brain-sim-controls{grid-template-columns:1fr}.brain-sim-readout{font-size:.56rem}}
 @media(prefers-reduced-motion:reduce){.brain-sim-stage canvas{opacity:.65}}
-/* cache marker: brain-sim-demo-1 */
+/* ===== easter eggs: horse protocol + honest inspect surface ===== */
+body[data-easter="horse"] .premium-particles{opacity:1!important;filter:saturate(1.85) contrast(1.22) brightness(1.16) drop-shadow(0 0 22px rgba(255,207,122,.22))!important}
+body[data-easter="horse"] .cursor-ring{border-color:rgba(255,207,122,.82)!important;box-shadow:0 0 54px rgba(255,207,122,.28),inset 0 0 26px rgba(255,207,122,.16)!important;animation:horseRing .44s ease-in-out infinite alternate}
+body[data-easter="horse"] .cursor-meta span::before{content:"HORSE PROTOCOL ";color:#ffcf7a}
+body[data-easter="horse"] .hack-hud{border-color:rgba(255,207,122,.28)!important;color:#ffcf7a!important;text-shadow:0 0 18px rgba(255,207,122,.36)}
+body[data-easter="horse"] .brain-copy h1{animation:horseGlitch .28s steps(2,end) 9}
+body.inspect-surface .brain-hero::before,body.inspect-surface .terminal-panel,body.inspect-surface .brain-copy,body.inspect-surface .artifact-field-shell,body.inspect-surface .project-stage{outline:1px dashed rgba(127,243,255,.48);outline-offset:8px}
+body.inspect-surface .brain-terminal::after,body.inspect-surface .brain-copy::after,body.inspect-surface .artifact-field-shell::after{position:absolute;z-index:12;top:-.75rem;left:1rem;padding:.25rem .45rem;border:1px solid rgba(127,243,255,.28);background:rgba(3,3,4,.82);color:#7ff3ff;font:900 .55rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase;letter-spacing:.12em;pointer-events:none}
+body.inspect-surface .brain-terminal::after{content:"fake terminal / real intent"}body.inspect-surface .brain-copy::after{content:"public brain metaphor"}body.inspect-surface .artifact-field-shell::after{content:"artifact proof grid"}
+@keyframes horseRing{to{transform:translate(var(--mx,50vw),var(--my,50vh)) scale(1.18)}}
+@keyframes horseGlitch{50%{transform:translateX(3px) skewX(-2deg);filter:drop-shadow(0 0 34px rgba(255,207,122,.25))}100%{transform:translateX(-2px) skewX(1deg)}}
+@media(max-width:760px),(prefers-reduced-motion:reduce){body[data-easter="horse"] .brain-copy h1,.cursor-ring{animation:none!important}}
+/* cache marker: easter-horse-inspect-1 */

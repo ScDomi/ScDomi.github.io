@@ -22,7 +22,8 @@
   const ret = document.getElementById('cursor-reticle');
   const label = document.getElementById('cursor-label');
   const coords = document.getElementById('cursor-coords');
-  let mx = innerWidth * .5, my = innerHeight * .5, vx = 0, vy = 0, rx = mx, ry = my;
+  let mx = innerWidth * .5, my = innerHeight * .5, vx = 0, vy = 0, rx = mx, ry = my, horseBoost = 0;
+  const orbitTrail = [];
   function labelFor(hit){
     if (!hit) return '';
     if (hit.dataset?.cursor) return hit.dataset.cursor;
@@ -33,6 +34,21 @@
   }
   addEventListener('pointermove', e => {
     vx = e.clientX - mx; vy = e.clientY - my; mx = e.clientX; my = e.clientY;
+    const now = performance.now();
+    orbitTrail.push({ x: mx, y: my, t: now });
+    while (orbitTrail.length && now - orbitTrail[0].t > 1150) orbitTrail.shift();
+    if (!horseBoost && orbitTrail.length > 18) {
+      const cx = orbitTrail.reduce((a,p)=>a+p.x,0) / orbitTrail.length;
+      const cy = orbitTrail.reduce((a,p)=>a+p.y,0) / orbitTrail.length;
+      let angleTravel = 0, prev = null, radius = 0;
+      for (const p of orbitTrail) {
+        const a = Math.atan2(p.y - cy, p.x - cx); radius += Math.hypot(p.x - cx, p.y - cy);
+        if (prev !== null) { let d = a - prev; while (d > Math.PI) d -= Math.PI*2; while (d < -Math.PI) d += Math.PI*2; angleTravel += Math.abs(d); }
+        prev = a;
+      }
+      radius /= orbitTrail.length;
+      if (angleTravel > Math.PI * 4.6 && radius > 34 && radius < 260) document.dispatchEvent(new CustomEvent('scryx-motion-summon'));
+    }
     root.style.setProperty('--mx', `${mx}px`);
     root.style.setProperty('--my', `${my}px`);
     root.style.setProperty('--mvx', `${Math.max(-1, Math.min(1, vx / 80)).toFixed(3)}`);
@@ -48,6 +64,11 @@
   addEventListener('pointerdown', () => sys?.classList.add('is-down'));
   addEventListener('pointerup', () => sys?.classList.remove('is-down'));
   document.documentElement.addEventListener('mouseleave', () => sys?.classList.remove('on'));
+  document.addEventListener('scryx-horse-protocol', () => {
+    horseBoost = 1;
+    body.dataset.easter = 'horse';
+    setTimeout(() => { horseBoost = 0; if (body.dataset.easter === 'horse') delete body.dataset.easter; }, 9000);
+  });
   if (sys && ret && ring && !coarse && !isMobile) {
     (function chase(){
       rx += (mx - rx) * (reduce ? 1 : .17); ry += (my - ry) * (reduce ? 1 : .17);
@@ -116,11 +137,12 @@
     const zoneBoost = zone === 'artifacts' ? 1.35 : zone === 'project-scroll' ? 1.65 : zone === 'map' ? 1.15 : 1;
     for (let i=0;i<nodes.length;i++) {
       const p=nodes[i];
-      const swirl = Math.sin(t*(.22+p.v*140)+p.a)*.0018*zoneBoost;
-      const pullX=(mx/Math.max(1,w)-p.x)*(.00018+p.z*.00034), pullY=(my/Math.max(1,h)-p.y)*(.00012+p.z*.00022);
-      p.x=(p.x+Math.cos(p.a+t*.18)*p.v+swirl+pullX+1)%1;
-      p.y=(p.y+Math.sin(p.a*1.7+t*.14)*p.v*.72+pullY+1)%1;
-      const x=p.x*w,y=p.y*h,hot=Math.max(0,1-Math.hypot(x-mx,y-my)/320),rr=p.r*(1+hot*2.4)*(0.75+p.z*1.4);
+      const swirl = Math.sin(t*(.22+p.v*140)+p.a)*(.0018 + horseBoost*.0026)*zoneBoost;
+      const pullX=(mx/Math.max(1,w)-p.x)*(.00018+p.z*.00034+horseBoost*.0028), pullY=(my/Math.max(1,h)-p.y)*(.00012+p.z*.00022+horseBoost*.0024);
+      const orbit = horseBoost * .0022;
+      p.x=(p.x+Math.cos(p.a+t*(.18+horseBoost*.9))*p.v+swirl+pullX+Math.sin(t*2.2+p.a)*orbit+1)%1;
+      p.y=(p.y+Math.sin(p.a*1.7+t*(.14+horseBoost*.72))*p.v*.72+pullY+Math.cos(t*1.8+p.a)*orbit+1)%1;
+      const x=p.x*w,y=p.y*h,hot=Math.max(0,1-Math.hypot(x-mx,y-my)/(horseBoost?460:320)),rr=p.r*(1+hot*(2.4+horseBoost*3.2))*(0.75+p.z*1.4);
       const grad=ctx.createRadialGradient(x,y,0,x,y,rr*7);
       grad.addColorStop(0,color(p.hue,.24+hot*.42)); grad.addColorStop(.35,color(p.hue,.07+hot*.15)); grad.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=grad; ctx.beginPath(); ctx.arc(x,y,rr*7,0,Math.PI*2); ctx.fill();

@@ -15,7 +15,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=brain-sim-demo-1" />
+  <link rel="stylesheet" href="assets/style.css?v=easter-horse-inspect-1" />
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -291,6 +291,8 @@ default: suspicious
       <button data-jump="#project-scroll"><b>inspect evidence</b><span>project stream as proof sequence</span></button>
       <button data-jump="#map"><b>open logic</b><span>surface → pattern → fork → evidence</span></button>
       <button data-jump="#interface"><b>return boot</b><span>back to surface entry</span></button>
+      <button data-easter="horse"><b>summon horse</b><span>absolutely unnecessary mammal protocol</span></button>
+      <button data-easter="inspect"><b>inspect surface</b><span>label the fake machine honestly</span></button>
       <button data-secret-open><b>unlock hidden layer</b><span>only visible if you look too hard</span></button>
     </div>
   </dialog>
@@ -492,6 +494,10 @@ default: suspicious
     cmdDialog?.addEventListener('click', e => { if (e.target === cmdDialog) cmdDialog.close(); });
     cmdDialog?.querySelectorAll('[data-jump]').forEach(btn => btn.addEventListener('click', () => {
       document.querySelector(btn.dataset.jump)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      cmdDialog.close();
+    }));
+    cmdDialog?.querySelectorAll('[data-easter]').forEach(btn => btn.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('scryx-easter', { detail: { mode: btn.dataset.easter } }));
       cmdDialog.close();
     }));
 
@@ -812,7 +818,32 @@ default: suspicious
       const logo = document.querySelector('.brand-mark');
       const terminal = document.getElementById('live-terminal');
       const cards = [...document.querySelectorAll('.project-card[data-secret]')];
-      let logoTaps = 0, typed = '', whisperDone = false;
+      let logoTaps = 0, typed = '', whisperDone = false, horseArmed = false, inspectArmed = false;
+      const appendTerminal = html => terminal?.insertAdjacentHTML('beforeend', `\n\n${html}`);
+      const flash = (mode, label) => {
+        document.body.dataset.easter = mode;
+        const hud = document.getElementById('hud-state');
+        if (hud) hud.textContent = label;
+        clearTimeout(window.__scryxEasterTimer);
+        window.__scryxEasterTimer = setTimeout(() => { delete document.body.dataset.easter; updateScrollInterface(); }, mode === 'horse' ? 9000 : 6500);
+      };
+      function triggerHorse(source='manual'){
+        if (horseArmed) return; horseArmed = true; setTimeout(() => horseArmed = false, 2500);
+        flash('horse', 'horse:loose');
+        appendTerminal('<span class="dim">$</span> summon horse --no-reason\nprotocol: unauthorized mammal detected 🐴\nparticles: herding toward cursor\n<span class="dim">↳</span> source: '+source+' / absolutely not production-critical');
+        document.dispatchEvent(new CustomEvent('scryx-horse-protocol'));
+      }
+      function triggerInspect(source='manual'){
+        inspectArmed = !inspectArmed;
+        document.body.classList.toggle('inspect-surface', inspectArmed);
+        flash('inspect', inspectArmed ? 'surface:inspect' : 'signal:clean');
+        appendTerminal('<span class="dim">$</span> inspect surface --honest\nhero shell: fake terminal / real intent\nbrain: public metaphor, suspiciously clickable\nportfolio: refused\n<span class="dim">↳</span> source: '+source);
+      }
+      document.addEventListener('scryx-easter', e => {
+        if (e.detail?.mode === 'horse') triggerHorse('command palette');
+        if (e.detail?.mode === 'inspect') triggerInspect('command palette');
+      });
+      document.addEventListener('scryx-motion-summon', () => triggerHorse('cursor orbit'));
       window.revealSecretVault = function revealSecretVault(){
         if (!vault) return;
         vault.classList.add('on');
@@ -831,6 +862,8 @@ default: suspicious
       addEventListener('keydown', e => {
         typed = (typed + e.key.toLowerCase()).slice(-12);
         if (typed.endsWith('scryx') || typed.endsWith('domi')) revealSecretVault();
+        if (typed.endsWith('horse') || typed.endsWith('summonhorse')) triggerHorse('typed code');
+        if (typed.endsWith('inspect')) triggerInspect('typed code');
         if (e.key === 'Escape') closeVault();
       });
       cards.forEach(card => {
@@ -872,7 +905,7 @@ default: suspicious
       window.scryxConsent = stored || 'unset';
     })();
   </script>
-  <script src="assets/premium-interaction.js?v=particles-return-1" defer></script>
+  <script src="assets/premium-interaction.js?v=easter-horse-inspect-1" defer></script>
   <script src="assets/navigation.js?v=nav-maths-1"></script>
 </body>
 </html>
