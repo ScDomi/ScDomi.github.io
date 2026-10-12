@@ -835,3 +835,17 @@ body.inspect-surface .brain-terminal::after{content:"fake terminal / real intent
 @keyframes horseGlitch{50%{transform:translateX(3px) skewX(-2deg);filter:drop-shadow(0 0 34px rgba(255,207,122,.25))}100%{transform:translateX(-2px) skewX(1deg)}}
 @media(max-width:760px),(prefers-reduced-motion:reduce){body[data-easter="horse"] .brain-copy h1,.cursor-ring{animation:none!important}}
 /* cache marker: easter-horse-inspect-1 */
+
+/* ===== remove scroll-card detour; let the background own the page ===== */
+.project-scroll,.proof-scroll,.project-stage{display:none!important}
+body.home-scryx .spine-canvas{opacity:.96!important;filter:saturate(1.24) contrast(1.22) brightness(1.02) drop-shadow(0 0 58px rgba(185,101,255,.22))!important}
+body.home-scryx[data-zone="artifacts"] .spine-canvas,
+body.home-scryx[data-zone="map"] .spine-canvas,
+body.home-scryx.spine-muted .spine-canvas{opacity:.74!important;filter:saturate(1.16) contrast(1.14) brightness(.88) blur(.12px) drop-shadow(0 0 46px rgba(127,243,255,.16))!important}
+body.home-scryx .webgl-core-canvas{opacity:.46!important;filter:saturate(1.28) contrast(1.24) brightness(.92)!important}
+body.home-scryx .field-canvas{opacity:.38!important;filter:saturate(1.14) brightness(.96)!important}
+body.home-scryx .spark-canvas{opacity:.48!important}
+body.home-scryx .matrix-canvas{opacity:.16!important}
+body.home-scryx .premium-particles{opacity:.88!important}
+.artifact-field-shell,.brain-map,.brain-sim-stage{background:linear-gradient(145deg,rgba(3,3,6,.58),rgba(2,2,4,.66))!important;backdrop-filter:blur(10px)!important}
+/* cache marker: no-scroll-cards-bg-1 */

@@ -15,7 +15,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=easter-horse-inspect-1" />
+  <link rel="stylesheet" href="assets/style.css?v=no-scroll-cards-bg-1" />
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -237,22 +237,6 @@ default: suspicious
       </div>
     </section>
 
-    <section class="project-scroll proof-scroll" id="project-scroll" aria-label="artifact proof sequence">
-      <div class="project-stage">
-        <div class="stage-bg" aria-hidden="true"><span></span><span></span><span></span></div>
-        <aside class="stage-rail"><span>EVIDENCE STREAM</span><b id="stage-count">01 / 07</b></aside>
-        <div class="stage-copy">
-          <p class="section-kicker" id="stage-kicker">CV / YOLO</p>
-          <h2 id="stage-title">gesture vision</h2>
-          <p id="stage-desc">Hand signs into boxes and classes — messy labels turned into visible detection.</p>
-          <div class="stage-tags" id="stage-tags"><span>YOLO</span><span>dataset cleanup</span><span>visual proof</span></div>
-        </div>
-        <div class="proof-logic" aria-hidden="true">
-          <span>surface</span><i></i><span>pattern</span><i></i><span>rule</span><i></i><span>artifact</span>
-        </div>
-      </div>
-    </section>
-
     <section id="map" class="wrap section philosophy-stack">
       <div class="stack-head">
         <p class="section-kicker">operating logic</p>
@@ -288,7 +272,6 @@ default: suspicious
       <div class="cmd-top"><span>command palette</span><button type="button" id="cmd-close">esc</button></div>
       <button data-jump="#brain-demo"><b>run brain demo</b><span>tiny cognitive loop, not biology cosplay</span></button>
       <button data-jump="#artifacts"><b>open artifacts</b><span>jump to project grid</span></button>
-      <button data-jump="#project-scroll"><b>inspect evidence</b><span>project stream as proof sequence</span></button>
       <button data-jump="#map"><b>open logic</b><span>surface → pattern → fork → evidence</span></button>
       <button data-jump="#interface"><b>return boot</b><span>back to surface entry</span></button>
       <button data-easter="horse"><b>summon horse</b><span>absolutely unnecessary mammal protocol</span></button>
@@ -747,32 +730,6 @@ default: suspicious
       try { sessionStorage.setItem('scryxBooted','1'); } catch (e) {}
     }
 
-    const spotlightProjects = [
-      ['CV / YOLO','gesture vision','Hand signs into boxes and classes — messy labels turned into visible detection.',['YOLO','dataset cleanup','visual proof'],'gesture'],
-      ['NLP / QA','SQuAD QA Benchmark','A paragraph, a question, one answer. Small task, brutal honesty test.',['SQuAD','T5','LLM compare'],'squad'],
-      ['RL / VISION','DQN Racing Agent','Pixels in, steering out — behavior learned through reward instead of instructions.',['DQN','control','reward trace'],'rl'],
-      ['REALTIME CV','emotion stream','Webcam in, face signal out — the live loop candidate hiding in the archive.',['webcam','face signal','archive hunt'],'emotion'],
-      ['IOT / SYSTEMS','UbiquePulse','Sensors, flows and app pieces — code touching reality instead of just screens.',['ESP32','Node-RED','WebApp'],'ubique'],
-      ['MARKETS / AGENT','Alpaca Markets','Automation with a seatbelt: data, risk, execution, then maybe confidence.',['broker API','risk first','paper bot'],'alpaca'],
-      ['FOUNDATIONS','Math & CS Foundations','Small rules making weird worlds — the non-flashy layer explaining the flashy one.',['logic','search','simulations'],'foundations']
-    ];
-    let activeStageIndex = -1;
-    function setStageProject(i){
-      if (i === activeStageIndex) return;
-      activeStageIndex = i;
-      const p = spotlightProjects[i]; if (!p) return;
-      document.getElementById('stage-kicker').textContent = p[0];
-      document.getElementById('stage-title').textContent = p[1];
-      document.getElementById('stage-desc').textContent = p[2];
-      document.getElementById('stage-tags').innerHTML = p[3].map(t=>`<span>${t}</span>`).join('');
-      document.getElementById('stage-count').textContent = `${String(i+1).padStart(2,'0')} / ${String(spotlightProjects.length).padStart(2,'0')}`;
-      document.getElementById('project-scroll').dataset.project = p[4];
-      if (window.gsap) {
-        gsap.fromTo('.stage-copy > *', { y: 22, opacity: .2, filter: 'blur(7px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: .38, stagger: .035, ease: 'power2.out', overwrite: true });
-        gsap.fromTo('.proof-logic span', { x: 18, opacity: .35 }, { x: 0, opacity: 1, duration: .42, stagger: .04, ease: 'power2.out', overwrite: true });
-      }
-    }
-
     if (fullFx && window.gsap && window.ScrollTrigger && !isMobile) {
       gsap.registerPlugin(ScrollTrigger);
       gsap.defaults({ ease: 'none' });
@@ -784,31 +741,6 @@ default: suspicious
         y: 120, opacity: 0, rotateX: 24, stagger: .07, duration: 1,
         scrollTrigger: { trigger: '.artifact-field-shell', start: 'top 70%', end: 'top 20%', scrub: .8 }
       });
-      setStageProject(0);
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '#project-scroll', start: 'top top', end: `+=${spotlightProjects.length * 390}`,
-          scrub: .9, pin: '.project-stage', anticipatePin: 1,
-          onUpdate: self => setStageProject(Math.min(spotlightProjects.length - 1, Math.floor(self.progress * spotlightProjects.length)))
-        }
-      })
-        .fromTo('.stage-copy', { y: 80, opacity: .35, filter: 'blur(8px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: .7, immediateRender: false }, 0)
-        .fromTo('.proof-logic span', { x: 80, opacity: .12 }, { x: 0, opacity: 1, stagger: .08, duration: .9, immediateRender: false }, .1)
-        .to('.stage-bg span', { x: 'random(-160,160)', y: 'random(-100,100)', rotate: 'random(-25,25)', stagger: .1, duration: 2.6 }, 0)
-        .to('.project-stage', { backgroundColor: '#05020a', duration: 2.5 }, 0);
-    } else {
-      setStageProject(0);
-      const updateMobileStage = () => {
-        const el = document.getElementById('project-scroll');
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const span = Math.max(1, rect.height - window.innerHeight);
-        const progress = Math.min(1, Math.max(0, -rect.top / span));
-        setStageProject(Math.min(spotlightProjects.length - 1, Math.floor(progress * spotlightProjects.length)));
-      };
-      window.addEventListener('scroll', updateMobileStage, { passive: true });
-      window.addEventListener('resize', updateMobileStage);
-      updateMobileStage();
     }
 
 
