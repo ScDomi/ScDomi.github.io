@@ -907,3 +907,10 @@ body.home-scryx .premium-particles{opacity:.88!important}
 @keyframes touchNeuralPulse{0%{transform:scale(.45);opacity:.95}80%{opacity:.42}100%{transform:scale(8);opacity:0}}
 @keyframes touchNeuralSpin{to{transform:rotate(160deg) scale(1.35);opacity:0}}
 /* cache marker: mobile-touch-neural-spine-1 */
+
+/* consistency audit fixes: mobile header must not create 7px overflow; cortex hint only on homepage */
+@media(max-width:760px),(pointer:coarse){
+  .scryx-nav-shell{width:calc(100% - 1.3rem)!important;max-width:calc(100% - 1.3rem)!important;box-sizing:border-box!important}
+  .ml-page .brain-copy::before,.projects-shell .brain-copy::before,.lab-index-shell .brain-copy::before,.about-shell .brain-copy::before{content:none!important;display:none!important}
+}
+/* cache marker: consistency-mobile-overflow-cortex-1 */
