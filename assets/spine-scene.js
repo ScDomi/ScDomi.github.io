@@ -11,6 +11,8 @@ const isMobile = window.matchMedia('(max-width: 760px)').matches;
 const fxMode = new URLSearchParams(location.search).get('fx');
 const fullFx = fxMode === 'full';
 const fxOff = fxMode === 'off';
+// Mobile should still get the brain/spine hero — just with lighter density.
+// Treat narrow screens as low-power for counts/quality, but do not block boot.
 const lowPower = reduceMotion || isMobile || !matchMedia('(min-width: 980px)').matches || (navigator.hardwareConcurrency || 8) <= 4;
 
 const canvas = document.getElementById('spine-canvas');
@@ -24,7 +26,7 @@ const aspectRadius = () => {
   return THREE.MathUtils.clamp(1.0 / Math.max(0.55, a / 1.4), 1.0, 2.1);
 };
 
-if (!canvas || lowPower || fxOff) {
+if (!canvas || reduceMotion || fxOff) {
   // leave the existing GLSL core canvas as the visual fallback
 } else {
   // Do not block first paint / scrolling on loading multi-MB OBJ meshes.
@@ -61,7 +63,7 @@ function boot() {
   const SPINE_H = 46;
   // Dense enough to read as the old living particle cloud, but below the old
   // 12.8k full blast that made scrolling sticky on normal laptops.
-  const COUNT = fullFx ? 12800 : 6400;
+  const COUNT = isMobile ? 2200 : (fullFx ? 12800 : 6400);
   const pos = new Float32Array(COUNT * 3);
   const seed = new Float32Array(COUNT * 4); // x,y,z,w = random seeds
   for (let i = 0; i < COUNT; i++) {

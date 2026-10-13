@@ -170,4 +170,35 @@
   const hVal=hud.querySelector('b');
   function hudLoop(){const max=Math.max(1,document.documentElement.scrollHeight-innerHeight),s=scrollY/max,motion=Math.min(1,Math.hypot(vx,vy)/120),val=Math.round((s*.62+motion*.38)*999); if(hVal)hVal.textContent=String(val).padStart(3,'0'); if(!document.hidden) requestAnimationFrame(hudLoop);}
   if(!isMobile) requestAnimationFrame(hudLoop);
+
+  // Mobile replacement for the desktop cursor: every touch becomes a small
+  // neural ping that pushes CSS variables and leaves a fading synapse ring.
+  if (isMobile || coarse) {
+    body.classList.add('touch-neural-mode');
+    function touchPulse(e){
+      const p = e.touches?.[0] || e.changedTouches?.[0] || e;
+      if (!p) return;
+      root.style.setProperty('--tap-x', `${p.clientX}px`);
+      root.style.setProperty('--tap-y', `${p.clientY}px`);
+      root.style.setProperty('--mx', `${p.clientX}px`);
+      root.style.setProperty('--my', `${p.clientY}px`);
+      const dot = document.createElement('i');
+      dot.className = 'touch-neural-pulse';
+      dot.style.left = `${p.clientX}px`;
+      dot.style.top = `${p.clientY}px`;
+      document.body.appendChild(dot);
+      setTimeout(() => dot.remove(), 950);
+      body.classList.add('is-touch-pulsing');
+      clearTimeout(window.__scryxTouchPulseTimer);
+      window.__scryxTouchPulseTimer = setTimeout(() => body.classList.remove('is-touch-pulsing'), 520);
+    }
+    addEventListener('touchstart', touchPulse, { passive:true });
+    addEventListener('touchmove', e => {
+      const p = e.touches?.[0];
+      if (!p) return;
+      root.style.setProperty('--mx', `${p.clientX}px`);
+      root.style.setProperty('--my', `${p.clientY}px`);
+    }, { passive:true });
+    addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') touchPulse(e); }, { passive:true });
+  }
 })();
