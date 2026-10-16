@@ -155,6 +155,7 @@ function boot() {
   const proj = new THREE.Vector3();
   const tmpV = new THREE.Vector3();
   let frameCount = 0;
+  let lastMobileRender = 0;
   window.__spineFocus = -1;
 
   // ---------- load real vertebra meshes, then build the scene ----------
@@ -695,7 +696,9 @@ function boot() {
       }
     }
 
-    (function frame() {
+    (function frame(now = performance.now()) {
+      if (isMobile && now - lastMobileRender < 22) { requestAnimationFrame(frame); return; }
+      lastMobileRender = now;
       const dt = Math.min(clock.getDelta(), 0.05);
       const t = clock.elapsedTime;
       frameCount++;
@@ -837,7 +840,7 @@ function boot() {
       camera.lookAt(camTarget);
       rimLight.position.set(camera.position.x + 4, camera.position.y + 5, camera.position.z + 5);
 
-      if (frameCount % 2 === 0) updatePanels();
+      if (!isMobile && frameCount % 2 === 0) updatePanels();
       renderer.render(scene, camera);
       requestAnimationFrame(frame);
     })();

@@ -892,21 +892,7 @@ body.home-scryx .premium-particles{opacity:.88!important}
 }
 /* cache marker: mobile-premium-pocket-scryx-1b */
 
-/* mobile interaction swap: no fake cursor, touch becomes neural input */
-@media(max-width:760px),(pointer:coarse){
-  body.touch-neural-mode .cursor-system{display:none!important}
-  body.touch-neural-mode::after{background:
-    radial-gradient(circle at var(--tap-x,50vw) var(--tap-y,22vh),rgba(127,243,255,.26),transparent 18%),
-    radial-gradient(circle at var(--mx,70vw) var(--my,18vh),rgba(185,101,255,.20),transparent 26%),
-    linear-gradient(180deg,rgba(255,255,255,.032),transparent 40%,rgba(185,101,255,.09))!important}
-  body.touch-neural-mode.is-touch-pulsing .spine-canvas{opacity:1!important;filter:saturate(1.55) contrast(1.28) brightness(1.16) drop-shadow(0 0 76px rgba(127,243,255,.30)) drop-shadow(0 0 58px rgba(185,101,255,.28))!important}
-  .touch-neural-pulse{position:fixed;z-index:72;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:999px;pointer-events:none;background:#f8f4ff;box-shadow:0 0 18px rgba(127,243,255,.9),0 0 54px rgba(185,101,255,.42);animation:touchNeuralPulse .9s cubic-bezier(.16,1,.3,1) forwards;mix-blend-mode:screen}
-  .touch-neural-pulse::before,.touch-neural-pulse::after{content:"";position:absolute;inset:-22px;border:1px solid rgba(127,243,255,.54);border-radius:999px}.touch-neural-pulse::after{inset:-42px;border-color:rgba(185,101,255,.34);animation:touchNeuralSpin .9s linear forwards}
-  .brain-copy::before{content:"tap the cortex";position:absolute;right:.2rem;top:-1.15rem;color:rgba(127,243,255,.58);font:900 .54rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;pointer-events:none}
-}
-@keyframes touchNeuralPulse{0%{transform:scale(.45);opacity:.95}80%{opacity:.42}100%{transform:scale(8);opacity:0}}
-@keyframes touchNeuralSpin{to{transform:rotate(160deg) scale(1.35);opacity:0}}
-/* cache marker: mobile-touch-neural-spine-1 */
+/* cache marker: mobile-touch-animation-removed-1 */
 
 /* consistency audit fixes: mobile header must not create 7px overflow; cortex hint only on homepage */
 @media(max-width:760px),(pointer:coarse){
