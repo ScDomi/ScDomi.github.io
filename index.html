@@ -15,7 +15,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=projects-mobile-rail-1" />
+  <link rel="stylesheet" href="assets/style.css?v=public-projects-mobile-cursor-1" />
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -174,8 +174,8 @@ default: suspicious
       </div>
 
       <div class="artifact-field-shell">
-        <div class="artifact-rail-meta" aria-label="Project gallery contains seven projects">
-          <span><b>07</b> projects</span>
+        <div class="artifact-rail-meta" aria-label="Project gallery contains two projects">
+          <span><b>02</b> projects</span>
           <span>swipe to explore <i aria-hidden="true">→</i></span>
         </div>
         <svg class="artifact-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -184,52 +184,12 @@ default: suspicious
           <path d="M28 18 C24 42 40 50 52 56 S70 68 74 88" />
         </svg>
         <div class="work-grid brain-grid project-grid artifact-field">
-        <button class="work-card project-card large purple" data-project="gesture" onclick="openProject('gesture')" data-secret="label entropy: the dataset cleanup matters more than the model flex.">
-          <span class="work-tag">CV / YOLO</span>
-          <h3>gesture vision</h3>
-          <p>Hand signs into boxes and classes — messy labels turned into visible detection.</p>
-          <div class="card-spec"><span>YOLO</span><span>dataset cleanup</span><span>visual proof</span></div>
-          <div class="card-visual detection-sigil card-bg-img gesture-card-visual"><img src="assets/projects/gesture/gesture-vision-card.jpg" alt="Gesture vision hand tracking interface"></div>
-        </button>
-
-        <button class="work-card project-card bright" data-project="squad" onclick="openProject('squad')" data-secret="reading test: confidence is fake until the answer span survives inspection.">
-          <span class="work-tag">NLP / QA</span>
-          <h3>SQuAD QA Benchmark</h3>
-          <p>A paragraph, a question, one answer. Small task, brutal honesty test.</p>
-          <div class="card-spec"><span>SQuAD</span><span>T5</span><span>LLM compare</span></div>
-          <div class="qa-flow card-bg-img"><img src="assets/projects/Unknown-9.png" alt="Question answering pipeline visual"></div>
-        </button>
-
         <button class="work-card project-card dark" data-project="rl" onclick="openProject('rl')" data-secret="reward trace: steering is just a policy learning where not to die.">
           <span class="work-tag">RL / Vision</span>
           <h3>DQN Racing Agent</h3>
           <p>Pixels in, steering out — behavior learned through reward instead of instructions.</p>
           <div class="card-spec"><span>DQN</span><span>control</span><span>reward trace</span></div>
           <div class="track-visual card-bg-img"><img src="assets/projects/DQN-Car.png" alt="DQN racing agent"></div>
-        </button>
-
-        <button class="work-card project-card signal" data-project="emotion" onclick="openProject('emotion')" data-secret="archive ghost: this card is a promise to recover the old live loop.">
-          <span class="work-tag">Realtime CV</span>
-          <h3>emotion stream</h3>
-          <p>The lost webcam experiment: face signal, live loop, probably hiding on the MacBook.</p>
-          <div class="card-spec"><span>webcam</span><span>face signal</span><span>archive hunt</span></div>
-          <div class="face-signal card-bg-img"><img src="assets/projects/Unknown-13.png" alt="Realtime emotion recognition visual"></div>
-        </button>
-
-        <button class="work-card project-card purple" data-project="ubique" onclick="openProject('ubique')" data-secret="hardware rule: real sensors punish pretty diagrams instantly.">
-          <span class="work-tag">IoT / Systems</span>
-          <h3>UbiquePulse</h3>
-          <p>Sensors, flows and app pieces — the kind of project that proves code can touch reality.</p>
-          <div class="card-spec"><span>ESP32</span><span>Node-RED</span><span>WebApp</span></div>
-          <div class="iot-map card-bg-img"><img src="assets/projects/IOT.png" alt="UbiquePulse IoT system"></div>
-        </button>
-
-        <button class="work-card project-card bright" data-project="alpaca" onclick="openProject('alpaca')" data-secret="market rule: paper first, ego never.">
-          <span class="work-tag">Markets / Agent</span>
-          <h3>Alpaca Markets</h3>
-          <p>Market automation without cosplay: data, risk, execution, then maybe confidence.</p>
-          <div class="card-spec"><span>broker API</span><span>risk first</span><span>branch soon</span></div>
-          <div class="market-visual card-bg-img"><img src="assets/projects/stocks.png" alt="Alpaca Markets automation visual"></div>
         </button>
 
         <button class="work-card project-card signal" data-project="foundations" onclick="openProject('foundations')" data-secret="tiny-rule engine: small automata, suspiciously big behavior.">
@@ -294,7 +254,7 @@ default: suspicious
       <h2>you found the unnecessary-but-correct layer.</h2>
       <p class="vault-copy">The interface keeps a second map under the surface: tiny rules, proof crumbs, and the extra polish that makes a system feel alive instead of merely assembled.</p>
       <div class="vault-grid" aria-label="hidden system facts">
-        <span><b>07</b><em>artifact nodes</em></span>
+        <span><b>02</b><em>artifact nodes</em></span>
         <span><b>12</b><em>real vertebrae</em></span>
         <span><b>∞</b><em>default suspicion</em></span>
       </div>
@@ -320,6 +280,9 @@ default: suspicious
   <script>
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isMobile = window.matchMedia('(max-width: 760px)').matches;
+    const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    // Touch has no meaningful pointer position; remove desktop cursor layers rather than leaving a dead reticle/orb on-screen.
+    if (isMobile || coarsePointer) document.querySelectorAll('#cursor-orb, #cursor-system').forEach(node => node.remove());
     const fxParam = new URLSearchParams(location.search).get('fx');
     const fullFx = fxParam === 'full';
     const fxOff = fxParam === 'off';
@@ -381,47 +344,6 @@ default: suspicious
     if (ambientFx) mountIntegratedWebGL();
 
     const projects = {
-      gesture: {
-        kicker: 'computer vision / object detection', title: 'gesture vision',
-        simple: 'A camera sees a hand gesture and the model says what it is. Simple idea. Annoying details.',
-        tech: 'YOLO-style object detection on merged gesture datasets. The actual work is not just training: label semantics had to be normalized, examples inspected, and the output made visible.',
-        points: ['7 gesture classes', 'merged Roboflow-style datasets', 'label perspective cleanup', 'fine-tuned detector + visual samples'],
-        github: '',
-        media: '<div class="modal-gallery"><img src="assets/projects/gesture/gesture-vision-card.jpg"><img src="assets/projects/gesture/gesture-1.jpg"><img src="assets/projects/gesture/gesture-2.jpg"></div><code class="media-caption">camera → landmarks → bbox → class</code>'
-      },
-      squad: {
-        kicker: 'nlp / question answering', title: 'SQuAD QA benchmark',
-        simple: 'Give the system a paragraph and a question. It has to answer from the text. No magic, just reading under pressure.',
-        tech: 'A SQuAD-style QA setup around context/question/answer triples: tokenizer artifacts, T5 fine-tuning, and room for comparison against larger reference models like ChatGPT/LLaMA.',
-        points: ['known benchmark task', 'T5 QA fine-tuning', 'answer quality inspection', 'LLM comparison framing'],
-        github: '',
-        media: '<div class="qa-card"><span>context</span><p>... a paragraph with the answer hidden inside ...</p><span>question</span><p>what did the model actually read?</p><span>answer</span><p class="violet">the smallest useful signal.</p></div><img class="doc-thumb" src="assets/projects/nlp/finetuning-large-language-models.pdf.png">'
-      },
-
-      emotion: {
-        kicker: 'realtime computer vision / archive hunt', title: 'emotion stream',
-        simple: 'Webcam in, face signal out. The cool part is not the label — it is that the loop reacts live.',
-        tech: 'Planned cleanup target from the MacBook archive: realtime face/emotion recognition around camera capture, face detection and frame-by-frame inference. Source hunt is pending until MacBook SSH/File Sharing is open over Tailscale.',
-        points: ['realtime webcam loop', 'face/emotion inference target', 'portfolio candidate', 'private source still being recovered'],
-        github: '',
-        media: '<div class="qa-card"><span>frame</span><p>camera → face crop → emotion logits</p><span>loop</span><p>latency matters more than notebook prettiness</p><span>status</span><p class="violet">archive hunt pending</p></div><code class="media-caption">this one gets real once the MacBook opens</code>'
-      },
-      ubique: {
-        kicker: 'iot / embedded / system design', title: 'UbiquePulse',
-        simple: 'A real system, not just a notebook: sensors, hardware, flows and an app trying to talk to each other without becoming soup.',
-        tech: 'Existing archive candidate with ESP32/Raspberry Pi material, Node-RED flows, WebApp pieces, system diagrams and project documentation. Strong visual material for a systems card/detail page.',
-        points: ['hardware + web app', 'Node-RED/system diagrams', 'project documentation', 'good website detail candidate'],
-        github: '',
-        media: '<div class="qa-card"><span>devices</span><p>ESP32 / sensors / RFID-ish hardware layer</p><span>flow</span><p>Node-RED + web surface</p><span>artifact</span><p class="violet">system diagrams available</p></div>'
-      },
-      alpaca: {
-        kicker: 'markets / automation', title: 'Alpaca Markets',
-        simple: 'A trading system project with a colleague. Dangerous if sloppy, interesting if treated like infrastructure.',
-        tech: 'Collaborative repo access exists. Work should start on a new branch and separate research/backtesting, broker API integration, risk controls and execution logic instead of pretending a notebook is a strategy.',
-        points: ['collaborative repo', 'new branch workflow', 'broker API integration', 'risk before hype'],
-        github: '',
-        media: '<div class="qa-card"><span>rule</span><p>no live trading before boring checks pass</p><span>layers</span><p>data → signal → risk → execution</p><span>default</span><p class="violet">paper first, ego later</p></div>'
-      },
       rl: {
         kicker: 'reinforcement learning / control', title: 'DQN racing agent',
         simple: 'The agent sees pixels from a racing game and learns which action is less stupid next.',
@@ -843,7 +765,7 @@ default: suspicious
       window.scryxConsent = stored || 'unset';
     })();
   </script>
-  <script src="assets/premium-interaction.js?v=mobile-background-smooth-1" defer></script>
+  <script src="assets/premium-interaction.js?v=mobile-cursor-off-1" defer></script>
   <script src="assets/navigation.js?v=nav-maths-1"></script>
 </body>
 </html>

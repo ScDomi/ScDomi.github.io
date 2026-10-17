@@ -922,3 +922,12 @@ body.home-scryx .premium-particles{opacity:.88!important}
 }
 @keyframes artifactRailNudge{0%,100%{transform:translateX(0);opacity:.68}50%{transform:translateX(5px);opacity:1}}
 @media(prefers-reduced-motion:reduce){.artifact-rail-meta i{animation:none}}
+
+/* public artifact grid: only projects with a public repo belong here */
+@media(min-width:1121px){.project-grid.artifact-field .project-card{grid-column:span 3!important}}
+
+/* The custom reticle belongs to desktop; never let it ghost onto touch screens. */
+@media(max-width:760px),(pointer:coarse){
+  .cursor-system,.cursor-orb{display:none!important}
+  body.home-scryx,body.home-scryx a,body.home-scryx button{cursor:auto!important}
+}

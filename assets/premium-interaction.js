@@ -7,8 +7,8 @@
   const body = document.body;
   setTimeout(() => document.querySelector('.boot-overlay')?.classList.add('done'), 2200);
 
-  // The reticle is the cursor. Create it on every page, reuse the homepage markup if present.
-  body.classList.add('reticle-cursor');
+  // The reticle is a desktop-only cursor treatment.
+  if (!coarse && !isMobile) body.classList.add('reticle-cursor');
   let sys = document.getElementById('cursor-system');
   if (!sys && !coarse && !isMobile) {
     sys = document.createElement('div');
