@@ -70,9 +70,17 @@
   addEventListener('popstate', () => softNavigate(location.href, false));
 
   async function mountRouteModules(path) {
-    if (path.startsWith('/maths/') && document.getElementById('lorenz-canvas')) {
-      if (window.__mountLorenzAttractor) window.__mountLorenzAttractor();
-      else await import('/assets/lorenz-attractor.js?v=lorenz-real-1');
+    if (!path.startsWith('/maths/')) return;
+    const modules = [
+      { canvas: 'fractal-canvas', mount: '__mountFractalExplorer', src: '/assets/fractal-explorer.js?v=fractal-gpu-1' },
+      { canvas: 'lorenz-canvas', mount: '__mountLorenzAttractor', src: '/assets/lorenz-attractor.js?v=lorenz-real-1' },
+      { canvas: 'pendulum-canvas', mount: '__mountDoublePendulum', src: '/assets/double-pendulum.js?v=chaos-lab-1' },
+      { canvas: 'gradient-canvas', mount: '__mountGradientField', src: '/assets/gradient-field.js?v=maths-gradient-field-1' }
+    ];
+    for (const module of modules) {
+      if (!document.getElementById(module.canvas)) continue;
+      if (window[module.mount]) window[module.mount]();
+      else await import(module.src);
     }
   }
 

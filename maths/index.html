@@ -6,7 +6,7 @@
   <title>Maths / scryx</title>
   <meta name="description" content="Interactive mathematical visualizations on scryx: Mandelbrot and Julia fractals, Lorenz attractor, double pendulum chaos, phase spaces, and real differential equations." />
   <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="stylesheet" href="/assets/style.css?v=consistency-mobile-overflow-cortex-1" />
+  <link rel="stylesheet" href="/assets/style.css?v=maths-gradient-field-1" />
 </head>
 <body class="home-scryx brain-interface active-lite" data-soft-router="true">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
@@ -145,10 +145,43 @@
       </div>
     </section>
 
+    <section class="gradient-lab" aria-labelledby="gradient-title">
+      <div class="section-heading-row quiet-heading">
+        <div>
+          <p class="section-kicker">03 / optimization field</p>
+          <h2 id="gradient-title">Gradient Descent, with consequences.</h2>
+        </div>
+      </div>
+      <div class="gradient-grid">
+        <div class="gradient-stage">
+          <canvas id="gradient-canvas" aria-label="Interactive loss landscape with a real gradient descent trajectory"></canvas>
+          <div class="gradient-readout" id="gradient-readout">mapping loss surface…</div>
+        </div>
+        <aside class="gradient-panel">
+          <div class="equation-card gradient-equation-card">
+            <span>optimization / geometry</span>
+            <code>xₜ₊₁ = xₜ − η∇f(xₜ) + μvₜ</code>
+            <code>η = learning rate · μ = momentum</code>
+            <code>arrow field = −∇f(x, y)</code>
+            <p>A real loss surface, its local gradients, and a point trying to descend without pretending optimization is a straight line. Click the surface to choose a new initial condition.</p>
+          </div>
+          <form id="gradient-controls" class="gradient-controls">
+            <label>landscape <select id="gradient-function"><option value="himmelblau">Himmelblau / multiple basins</option><option value="rosenbrock">Rosenbrock / curved valley</option><option value="doublewell">double well / symmetry break</option></select></label>
+            <label>learning rate <b data-gradient-value="gradient-learning-rate">0.018</b><input id="gradient-learning-rate" type="range" min="0.001" max="0.08" step="0.001" value="0.018"></label>
+            <label>momentum <b data-gradient-value="gradient-momentum">0.72</b><input id="gradient-momentum" type="range" min="0" max="0.96" step="0.01" value="0.72"></label>
+            <label>steps / frame <b data-gradient-value="gradient-steps">2</b><input id="gradient-steps" type="range" min="1" max="12" step="1" value="2"></label>
+            <div class="gradient-actions"><button id="gradient-toggle" type="button">pause descent</button><button id="gradient-random" type="button">new initial state</button><button id="gradient-reset" type="button">reset field</button></div>
+          </form>
+          <p class="gradient-hint">Bright is expensive. Dark basins are low loss. The agent can settle, orbit, overshoot or get stuck depending on geometry and your update rule.</p>
+        </aside>
+      </div>
+    </section>
+
     <section class="maths-gallery" aria-label="Future mathematical visualizations">
       <div class="section-heading-row quiet-heading"><div><p class="section-kicker">next shelves</p><h2>built to expand.</h2></div></div>
       <div class="lab-collection-grid compact-gallery">
-        <article class="lab-entry-card dormant"><span>planned</span><div><h2>Gradient Fields</h2><p>Vector fields, flow lines, optimization paths, and local geometry.</p></div></article>
+        <article class="lab-entry-card dormant"><span>planned</span><div><h2>Fourier Room</h2><p>Signals decomposed into rotating components, then rebuilt in public.</p></div></article>
+        <article class="lab-entry-card dormant"><span>planned</span><div><h2>Reaction–Diffusion</h2><p>Two chemicals, local rules, and patterns that look far too alive.</p></div></article>
       </div>
     </section>
   </main>
@@ -160,6 +193,7 @@
   <script src="/assets/fractal-explorer.js?v=fractal-gpu-1"></script>
   <script type="module" src="/assets/lorenz-attractor.js?v=lorenz-real-1"></script>
   <script src="/assets/double-pendulum.js?v=chaos-lab-1"></script>
-  <script src="/assets/navigation.js?v=nav-maths-1"></script>
+  <script src="/assets/gradient-field.js?v=maths-gradient-field-1"></script>
+  <script src="/assets/navigation.js?v=nav-maths-gradient-1"></script>
 </body>
 </html>
