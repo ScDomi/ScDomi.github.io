@@ -505,6 +505,8 @@ body.reticle-cursor .cursor-system{display:block!important;opacity:1!important;m
 .cursor-meta span:empty{display:none}.cursor-meta b{font-size:.48rem;color:rgba(143,220,255,.66)}
 .cursor-system.is-hover .cursor-ring{width:64px;height:64px;left:-32px;top:-32px;border-color:rgba(255,207,122,.58);box-shadow:0 0 42px rgba(255,207,122,.18),inset 0 0 24px rgba(255,207,122,.1)}
 .cursor-system.is-hover .c-arm{box-shadow:0 0 14px rgba(255,207,122,.7)}.cursor-system.is-down .cursor-reticle{filter:drop-shadow(0 0 22px rgba(255,207,122,.78));transform:translate(var(--mx,50vw),var(--my,50vh)) scale(.88)}
+/* Pressed ring must override the late hover geometry too. Keep its own centre at 0/0. */
+.cursor-system.is-down .cursor-ring,.cursor-system.is-down.is-hover .cursor-ring{width:20px;height:20px;left:-10px;top:-10px;margin:0;border-color:#fff}
 @media(pointer:coarse),(max-width:760px){body.reticle-cursor,body.reticle-cursor *{cursor:auto!important}.cursor-system{display:none!important}}
 
 /* logo/brand lockup: brighter, still minimal */
