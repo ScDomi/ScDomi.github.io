@@ -10,8 +10,16 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      chtml: { scale: 0.96 },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <link rel="stylesheet" href="/assets/style.css?v=consistency-mobile-overflow-cortex-1" />
-  <link rel="stylesheet" href="/assets/ml-visualizer.css?v=dl-residual-highway-2" />
+  <link rel="stylesheet" href="/assets/ml-visualizer.css?v=dl-residual-story-1" />
 </head>
 <body class="home-scryx brain-interface active-lite ml-page dl-page">
   <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
@@ -271,25 +279,50 @@ status: gradients flowing (mostly)</code></pre>
           <p class="section-kicker">chapter 07 / residual highway</p>
           <h2>don’t relearn the whole world. learn the difference.</h2>
         </div>
-        <p class="section-note">A residual block keeps the old signal and only asks a layer to add a correction. The yellow bypass is not decoration: it is an identity path for both information and blame.</p>
+        <p class="section-note">Deep nets did not only fail because they were "too big". At some depth, adding layers made optimisation worse — even when those layers should have been able to do nothing at all.</p>
       </div>
       <div class="chalk-stage residual-stage">
         <aside class="chapter-rail"><b>07</b><span>skip connection</span><i></i></aside>
-        <div class="residual-copy">
-          <strong>why ResNets made very deep nets less fragile</strong>
-          <p>A plain layer must invent the next representation from scratch. A residual layer gets the previous representation for free and learns <code>F(x)</code>: the change worth making. If the block has nothing useful to add, it can become almost identity instead of destroying signal.</p>
+        <div class="residual-story">
+          <article>
+            <span>01 / the awkward observation</span>
+            <strong>more layers, worse training.</strong>
+            <p>Imagine an already-good representation <code>x</code>. A new plain block must learn the full desired mapping <span class="formula">\(H(x)\)</span> from scratch. If the correct move is “change nothing”, it still has to carefully recreate <span class="formula">\(H(x)=x\)</span> through weights and nonlinearities. In a very deep stack, that is a weirdly hard way to do nothing.</p>
+          </article>
+          <article>
+            <span>02 / the reframe</span>
+            <strong>make the old signal the default.</strong>
+            <p>Residual learning rewrites the same target as a correction problem:</p>
+            <div class="display-formula">\[
+              H(x)=x+\mathcal{F}(x;W)
+            \]</div>
+            <p>Now the block receives <span class="formula">\(x\)</span> for free. It only learns <span class="formula">\(\mathcal{F}\)</span>: what needs to change. If nothing needs changing, the useful answer is simply <span class="formula">\(\mathcal{F}(x;W)\approx0\)</span>.</p>
+          </article>
+          <article>
+            <span>03 / why blame can return</span>
+            <strong>there is an express lane backward too.</strong>
+            <p>During backprop, the identity path adds a direct term to the gradient:</p>
+            <div class="display-formula">\[
+              \frac{\partial \mathcal{L}}{\partial x_l}=
+              \frac{\partial \mathcal{L}}{\partial x_{l+1}}
+              \left(I+\frac{\partial \mathcal{F}}{\partial x_l}\right)
+            \]</div>
+            <p>That <span class="formula">\(I\)</span> is the yellow bypass in the figure: no magical immunity, just a path that does not force every previous layer to survive a long product of fragile transformations.</p>
+          </article>
         </div>
         <div class="residual-controls controls" aria-label="residual network controls">
           <label>depth <input id="resDepth" type="range" min="4" max="32" step="1" value="18"><b id="resDepthOut">18</b> blocks</label>
           <label>residual scale α <input id="resScale" type="range" min="5" max="55" step="1" value="24"><b id="resScaleOut">0.24</b></label>
           <button id="resReseed" type="button">new weight seed</button>
         </div>
+        <div class="residual-figure-intro"><b>the toy experiment below</b><span>Same random transforms. Same input. Left must repeatedly replace its state; right carries the state forward and adds a learned correction. Increase depth, then watch which gradient still reaches the first layer.</span></div>
         <canvas id="residualCanvas" width="1440" height="860" aria-label="Interactive comparison of plain deep network signal flow and residual network skip connections"></canvas>
         <div class="residual-metrics" aria-live="polite">
           <div><span>plain gradient reaches input</span><b id="resPlainGrad">—</b></div>
           <div><span>residual gradient reaches input</span><b id="resSkipGrad">—</b></div>
           <p id="resVerdict">calculating signal paths…</p>
         </div>
+        <p class="residual-footnote">This is a deliberately tiny real forward/backward calculation, not a benchmark or a promise that every residual net wins. The point is the parameterisation: the network learns an update to a living signal instead of repeatedly being asked to reconstruct the signal itself.</p>
       </div>
     </section>
 
