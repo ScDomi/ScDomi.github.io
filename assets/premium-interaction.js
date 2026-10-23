@@ -104,6 +104,10 @@
   addEventListener('resize', updateZone, { passive:true });
   updateZone();
 
+  // On touch/mobile, preserve the brain and spine canvases but skip only the
+  // floating premium-light layer (and its desktop-only micro overlays).
+  if (isMobile || coarse || reduce) return;
+
   // Premium particle canvas: layered motes + connective fibers + mouse shockwave.
   const canvas = document.createElement('canvas');
   canvas.className = 'premium-particles';
