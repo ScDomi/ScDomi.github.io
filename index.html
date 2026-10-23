@@ -174,8 +174,8 @@ default: suspicious
       </div>
 
       <div class="artifact-field-shell">
-        <div class="artifact-rail-meta" aria-label="Project gallery contains two projects">
-          <span><b>02</b> projects</span>
+        <div class="artifact-rail-meta" aria-label="Project gallery contains five featured artifacts">
+          <span><b>05</b> artifacts</span>
           <span>swipe to explore <i aria-hidden="true">→</i></span>
         </div>
         <svg class="artifact-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -184,21 +184,45 @@ default: suspicious
           <path d="M28 18 C24 42 40 50 52 56 S70 68 74 88" />
         </svg>
         <div class="work-grid brain-grid project-grid artifact-field">
-        <button class="work-card project-card dark" data-project="rl" onclick="openProject('rl')" data-secret="reward trace: steering is just a policy learning where not to die.">
-          <span class="work-tag">RL / Vision</span>
-          <h3>DQN Racing Agent</h3>
-          <p>Pixels in, steering out — behavior learned through reward instead of instructions.</p>
-          <div class="card-spec"><span>DQN</span><span>control</span><span>reward trace</span></div>
-          <div class="track-visual card-bg-img"><img src="assets/projects/DQN-Car.png" alt="DQN racing agent"></div>
-        </button>
+          <button class="work-card project-card publication" data-project="paper" onclick="openProject('paper')" data-secret="paper trail: a real result survives contact with reviewers, not just a nice notebook.">
+            <span class="work-tag">Research / Publication</span>
+            <h3>LLMs for Math Tutoring</h3>
+            <p>A peer-reviewed study on prompt-moderated LLM support in tertiary mathematics learning.</p>
+            <div class="card-spec"><span>EMNLP 2025</span><span>ACL</span><span>learning</span></div>
+            <div class="paper-visual" aria-hidden="true"><b>FINDINGS</b><i>2025</i><span>prompt / learner / evidence</span></div>
+          </button>
 
-        <button class="work-card project-card signal" data-project="foundations" onclick="openProject('foundations')" data-secret="tiny-rule engine: small automata, suspiciously big behavior.">
-          <span class="work-tag">Foundations</span>
-          <h3>Math & CS Foundations</h3>
-          <p>Small rules making weird worlds — the non-flashy layer that explains the flashy one.</p>
-          <div class="card-spec"><span>logic</span><span>search</span><span>simulations</span></div>
-          <div class="rule-visual card-bg-img"><img src="assets/projects/basics.png" alt="Math and computer science foundations visual"></div>
-        </button>
+          <button class="work-card project-card bright" data-project="emnist" onclick="openProject('emnist')" data-secret="vision trace: the clean model story starts where the digits stop looking clean.">
+            <span class="work-tag">Deep Learning / Vision</span>
+            <h3>EMNIST DL Showcase</h3>
+            <p>Transfer learning and modular CNN experiments on handwritten characters, made inspectable instead of magical.</p>
+            <div class="card-spec"><span>PyTorch</span><span>CNN</span><span>transfer</span></div>
+            <div class="emnist-visual" aria-hidden="true"><span>E</span><span>M</span><span>N</span><span>I</span><span>S</span><span>T</span></div>
+          </button>
+
+          <button class="work-card project-card energy" data-project="renewables" onclick="openProject('renewables')" data-secret="forecast trace: sunlight becomes a curve, then a claim, then a decision.">
+            <span class="work-tag">Data / Forecasting</span>
+            <h3>Renewable Energy Analytics</h3>
+            <p>Germany's electricity mix, renewable growth and solar forecasting — evidence before vibes.</p>
+            <div class="card-spec"><span>time series</span><span>energy</span><span>forecasting</span></div>
+            <div class="energy-visual" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><b></b></div>
+          </button>
+
+          <button class="work-card project-card dark" data-project="rl" onclick="openProject('rl')" data-secret="reward trace: steering is just a policy learning where not to die.">
+            <span class="work-tag">RL / Vision</span>
+            <h3>DQN Racing Agent</h3>
+            <p>Pixels in, steering out — behavior learned through reward instead of instructions.</p>
+            <div class="card-spec"><span>DQN</span><span>control</span><span>reward trace</span></div>
+            <div class="track-visual card-bg-img"><img src="assets/projects/DQN-Car.png" alt="DQN racing agent"></div>
+          </button>
+
+          <button class="work-card project-card signal" data-project="foundations" onclick="openProject('foundations')" data-secret="tiny-rule engine: small automata, suspiciously big behavior.">
+            <span class="work-tag">Foundations</span>
+            <h3>Math & CS Foundations</h3>
+            <p>Small rules making weird worlds — the non-flashy layer that explains the flashy one.</p>
+            <div class="card-spec"><span>logic</span><span>search</span><span>simulations</span></div>
+            <div class="rule-visual card-bg-img"><img src="assets/projects/basics.png" alt="Math and computer science foundations visual"></div>
+          </button>
         </div>
       </div>
     </section>
@@ -344,6 +368,30 @@ default: suspicious
     if (ambientFx) mountIntegratedWebGL();
 
     const projects = {
+      paper: {
+        kicker: 'research publication / Findings of EMNLP 2025', title: 'LLMs for Math Tutoring',
+        simple: 'A peer-reviewed study on prompt-moderated LLM support in tertiary mathematics learning.',
+        tech: 'A controlled learning study about how prompt moderation shapes LLM-based math tutoring. The result is public research, not a portfolio claim that disappears when clicked.',
+        points: ['Findings of EMNLP 2025', 'ACL Anthology publication', 'LLM tutoring', 'learning evaluation'],
+        link: 'https://aclanthology.org/2025.findings-emnlp.605/', linkLabel: 'open ACL Anthology →',
+        media: '<div class="paper-modal"><span>FINDINGS OF EMNLP</span><b>2025</b><p>prompt-moderated LLMs for mathematics learning at tertiary level</p></div><code class="media-caption">public research / DOI-indexed anthology record</code>'
+      },
+      emnist: {
+        kicker: 'deep learning / computer vision', title: 'EMNIST deep learning showcase',
+        simple: 'Transfer learning and modular CNN experiments on the official EMNIST handwritten-character dataset.',
+        tech: 'A PyTorch-based vision project built around reproducible experiments, modular CNN variants and transfer-learning comparisons instead of a one-off accuracy screenshot.',
+        points: ['official EMNIST dataset', 'PyTorch experiments', 'CNN architecture', 'transfer learning'],
+        github: 'https://github.com/ScDomi/emnist-deep-learning-showcase',
+        media: '<div class="emnist-modal">E M N I S T</div><code class="media-caption">handwritten character recognition / experiment trace</code>'
+      },
+      renewables: {
+        kicker: 'data analytics / forecasting', title: 'renewable energy analytics',
+        simple: 'Germany\'s electricity generation, renewable growth and solar forecasting — examined as a data story, not a dashboard decoration.',
+        tech: 'A public analytics case study combining electricity-generation data, renewable trends and solar-forecasting work into a reproducible investigation.',
+        points: ['German energy data', 'time-series analysis', 'solar forecasting', 'reproducible notebook work'],
+        github: 'https://github.com/ScDomi/renewable-energy-analytics',
+        media: '<div class="energy-modal"><i></i><i></i><i></i><i></i><i></i></div><code class="media-caption">energy signal / trends → forecast</code>'
+      },
       rl: {
         kicker: 'reinforcement learning / control', title: 'DQN racing agent',
         simple: 'The agent sees pixels from a racing game and learns which action is less stupid next.',
@@ -364,9 +412,10 @@ default: suspicious
     document.querySelectorAll('.project-card[data-project]').forEach(card => {
       const p = projects[card.dataset.project];
       if (!p) return;
-      card.classList.toggle('has-github', Boolean(p.github));
-      card.classList.toggle('repo-pending', !p.github);
-      card.setAttribute('aria-label', p.github ? `${p.title} — open GitHub` : `${p.title} — repo coming soon`);
+      const target = p.link || p.github;
+      card.classList.toggle('has-github', Boolean(target));
+      card.classList.toggle('repo-pending', !target);
+      card.setAttribute('aria-label', target ? `${p.title} — open public source` : `${p.title} — source coming soon`);
     });
     const dialog = document.getElementById('project-dialog');
     const closeBtn = dialog.querySelector('.dialog-close');
@@ -374,8 +423,9 @@ default: suspicious
       const p = projects[key];
       if (!p) return;
       const mobileTap = window.innerWidth <= 760 || window.matchMedia('(pointer: coarse)').matches;
+      const target = p.link || p.github;
       if (mobileTap) {
-        if (p.github) window.location.href = p.github;
+        if (target) window.location.href = target;
         return;
       }
       document.getElementById('dialog-kicker').textContent = p.kicker;
@@ -384,8 +434,9 @@ default: suspicious
       document.getElementById('dialog-tech').textContent = p.tech;
       document.getElementById('dialog-media').innerHTML = p.media;
       const gh = document.getElementById('dialog-github');
-      gh.href = p.github || '#';
-      gh.style.display = p.github ? 'inline-flex' : 'none';
+      gh.href = target || '#';
+      gh.textContent = p.linkLabel || 'open GitHub repo →';
+      gh.style.display = target ? 'inline-flex' : 'none';
       document.getElementById('dialog-points').innerHTML = p.points.map(x => `<li>${x}</li>`).join('');
       dialog.showModal();
     };
