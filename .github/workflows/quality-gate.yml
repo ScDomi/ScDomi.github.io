@@ -1,0 +1,81 @@
+name: scryx quality gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  syntax-check:
+    name: JS Syntax & Link Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check JavaScript syntax
+        run: |
+          echo "Checking JS syntax for all asset scripts..."
+          failed=0
+          for f in assets/*.js; do
+            node --check "$f" 2>&1 && echo "  ✓ $f" || { echo "  ✗ $f"; failed=1; }
+          done
+          exit $failed
+
+      - name: Check for accidental private endpoints
+        run: |
+          echo "Scanning for private network addresses in served files..."
+          # Fail if any .html or .js file (not git history) contains private addresses
+          if grep -r --include="*.js" --include="*.html" \
+            "tailscale\|\.ts\.net\|tail[0-9]\{6\}" \
+            assets/ index.html dl/ ml/ maths/ about/ projects/ contact.html 2>/dev/null; then
+            echo "FAIL: Private network address found in served files"
+            exit 1
+          fi
+          echo "OK: No private addresses in served files"
+
+      - name: Validate HTML structure (basic)
+        run: |
+          echo "Checking required HTML elements in key routes..."
+          failed=0
+          for f in index.html dl/index.html ml/index.html maths/index.html about/index.html; do
+            if ! grep -q "<!doctype html" "$f" 2>/dev/null; then
+              echo "  ✗ Missing doctype: $f"; failed=1
+            else
+              echo "  ✓ $f"
+            fi
+          done
+          exit $failed
+
+      - name: Check external CDN script integrity
+        run: |
+          echo "Verifying CDN dependencies are pinned to specific versions..."
+          if grep -r "cdn.jsdelivr.net" assets/ index.html dl/ ml/ maths/ | grep -v "@[0-9]"; then
+            echo "WARNING: Unpinned CDN dependency found"
+          else
+            echo "OK: All CDN dependencies are version-pinned"
+          fi
+
+      - name: Check analytics is disabled
+        run: |
+          echo "Verifying analytics.js contains no active (non-comment) tracking calls..."
+          # Strip single-line and block comments, then check for fetch/sendBeacon calls
+          stripped=$(node -e "
+            const fs = require('fs');
+            const src = fs.readFileSync('assets/analytics.js', 'utf8');
+            // Remove block comments
+            const noBlock = src.replace(/\/\*[\s\S]*?\*\//g, '');
+            // Remove line comments
+            const noLine = noBlock.replace(/\/\/.*/g, '');
+            process.stdout.write(noLine);
+          ")
+          if echo "$stripped" | grep -q "fetch(\|sendBeacon("; then
+            echo "FAIL: Active tracking call found in analytics.js executable code"
+            exit 1
+          fi
+          echo "OK: analytics.js is inactive"
