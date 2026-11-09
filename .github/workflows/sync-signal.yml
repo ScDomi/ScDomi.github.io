@@ -1,0 +1,136 @@
+name: sync signal data
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    name: Fetch LeetCode + GitHub → signal.json
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Fetch LeetCode data
+        id: leetcode
+        run: |
+          set -e
+          LC_RESPONSE=$(curl -s --max-time 15 \
+            -X POST https://leetcode.com/graphql \
+            -H "Content-Type: application/json" \
+            -d '{
+              "query": "query getUserProfile($username: String!) { matchedUser(username: $username) { submitStats { acSubmissionNum { difficulty count } } profile { ranking } } }",
+              "variables": { "username": "ScDomi" }
+            }') || true
+
+          if echo "$LC_RESPONSE" | python3 -c "import sys,json; d=json.load(sys.stdin); d['data']['matchedUser']" 2>/dev/null; then
+            echo "lc_ok=true" >> $GITHUB_OUTPUT
+            echo "$LC_RESPONSE" > /tmp/lc_raw.json
+          else
+            echo "lc_ok=false" >> $GITHUB_OUTPUT
+            echo "LeetCode fetch failed or returned unexpected data — keeping last good data"
+          fi
+
+      - name: Fetch GitHub repos
+        id: github_repos
+        run: |
+          set -e
+          GH_RESPONSE=$(curl -s --max-time 15 \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/users/ScDomi/repos?sort=updated&per_page=20") || true
+
+          if echo "$GH_RESPONSE" | python3 -c "import sys,json; l=json.load(sys.stdin); assert isinstance(l, list)" 2>/dev/null; then
+            echo "gh_ok=true" >> $GITHUB_OUTPUT
+            echo "$GH_RESPONSE" > /tmp/gh_repos.json
+          else
+            echo "gh_ok=false" >> $GITHUB_OUTPUT
+            echo "GitHub fetch failed — keeping last good data"
+          fi
+
+      - name: Merge and write signal.json
+        run: |
+          python3 - <<'EOF'
+          import json, os, sys
+          from datetime import datetime, timezone
+
+          OUT = "assets/data/signal.json"
+
+          # Load existing data as fallback
+          with open(OUT) as f:
+              existing = json.load(f)
+
+          synced_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+          result = {**existing, "synced_at": synced_at}
+
+          # --- LeetCode ---
+          lc_ok = os.environ.get("LC_OK", "false") == "true"
+          if lc_ok:
+              try:
+                  with open("/tmp/lc_raw.json") as f:
+                      lc = json.load(f)
+                  stats = lc["data"]["matchedUser"]["submitStats"]["acSubmissionNum"]
+                  counts = {s["difficulty"]: s["count"] for s in stats}
+                  ranking = lc["data"]["matchedUser"]["profile"]["ranking"]
+                  all_solved = counts.get("All", existing["leetcode"]["solved"]["all"])
+                  easy = counts.get("Easy", existing["leetcode"]["solved"]["easy"])
+                  med = counts.get("Medium", existing["leetcode"]["solved"]["medium"])
+                  hard = counts.get("Hard", existing["leetcode"]["solved"]["hard"])
+                  result["leetcode"] = {
+                      **existing["leetcode"],
+                      "solved": {"all": all_solved, "easy": easy, "medium": med, "hard": hard},
+                      "ranking": ranking,
+                  }
+                  print(f"LeetCode updated: {all_solved} solved, rank {ranking}")
+              except Exception as e:
+                  print(f"LeetCode parse error: {e} — keeping existing")
+
+          # --- GitHub ---
+          gh_ok = os.environ.get("GH_OK", "false") == "true"
+          if gh_ok:
+              try:
+                  with open("/tmp/gh_repos.json") as f:
+                      repos_raw = json.load(f)
+                  exclude = {"ScDomi.github.io"}
+                  repos = [
+                      {
+                          "name": r["name"],
+                          "description": (r.get("description") or "")[:120],
+                          "language": r.get("language"),
+                          "url": r["html_url"],
+                          "stars": r.get("stargazers_count", 0),
+                      }
+                      for r in repos_raw if r["name"] not in exclude
+                  ]
+                  result["github"] = {
+                      **existing["github"],
+                      "public_repos": lc["data"]["matchedUser"]["profile"]["ranking"] if False else existing["github"]["public_repos"],
+                      "repos": repos,
+                  }
+                  print(f"GitHub updated: {len(repos)} repos")
+              except Exception as e:
+                  print(f"GitHub parse error: {e} — keeping existing")
+
+          with open(OUT, "w") as f:
+              json.dump(result, f, indent=2)
+          print(f"signal.json written at {synced_at}")
+          EOF
+        env:
+          LC_OK: ${{ steps.leetcode.outputs.lc_ok }}
+          GH_OK: ${{ steps.github_repos.outputs.gh_ok }}
+
+      - name: Commit signal.json if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet assets/data/signal.json || {
+            git add assets/data/signal.json
+            git commit -m "chore: sync signal data $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            git push
+          }

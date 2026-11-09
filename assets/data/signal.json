@@ -1,0 +1,94 @@
+{
+  "synced_at": "2026-11-09T06:00:00Z",
+  "leetcode": {
+    "username": "ScDomi",
+    "profile_url": "https://leetcode.com/ScDomi",
+    "solved": {
+      "all": 645,
+      "easy": 68,
+      "medium": 342,
+      "hard": 235
+    },
+    "submissions": 659,
+    "accept_rate": 97.9,
+    "ranking": 535911,
+    "contest_attended": 0,
+    "languages": [
+      { "name": "Python3", "solved": 645 }
+    ],
+    "tags_advanced": [
+      { "name": "Dynamic Programming", "count": 149 },
+      { "name": "Backtracking", "count": 36 },
+      { "name": "Game Theory", "count": 24 },
+      { "name": "Divide and Conquer", "count": 16 },
+      { "name": "Bitmask", "count": 12 }
+    ],
+    "tags_intermediate": [
+      { "name": "Math", "count": 475 },
+      { "name": "Hash Table", "count": 110 },
+      { "name": "Greedy", "count": 69 },
+      { "name": "Bit Manipulation", "count": 57 },
+      { "name": "Binary Search", "count": 53 }
+    ],
+    "tags_fundamental": [
+      { "name": "Array", "count": 322 },
+      { "name": "String", "count": 127 },
+      { "name": "Sorting", "count": 73 },
+      { "name": "Enumeration", "count": 41 },
+      { "name": "Two Pointers", "count": 39 }
+    ],
+    "calendar_2026": {
+      "active_days": 6,
+      "note": "only current-year calendar available via public API"
+    }
+  },
+  "github": {
+    "username": "ScDomi",
+    "public_repos": 7,
+    "bio": "rules are defaults, not truth",
+    "repos": [
+      {
+        "name": "deep-time",
+        "description": "Procedural deep-time evolution simulator — emergent speciation through geological epochs",
+        "language": "TypeScript",
+        "url": "https://github.com/ScDomi/deep-time",
+        "stars": 0
+      },
+      {
+        "name": "rl-car-racing-dqn",
+        "description": "DQN agent trained on OpenAI Gym CarRacing-v2 — raw pixels to control signals",
+        "language": "Python",
+        "url": "https://github.com/ScDomi/rl-car-racing-dqn",
+        "stars": 0
+      },
+      {
+        "name": "emnist-deep-learning-showcase",
+        "description": "CNN + transfer learning on EMNIST — character recognition from scratch to fine-tuned",
+        "language": "Python",
+        "url": "https://github.com/ScDomi/emnist-deep-learning-showcase",
+        "stars": 0
+      },
+      {
+        "name": "renewable-energy-analytics",
+        "description": "Germany electricity data — renewable share analysis, load forecasting, grid patterns",
+        "language": "Jupyter Notebook",
+        "url": "https://github.com/ScDomi/renewable-energy-analytics",
+        "stars": 0
+      },
+      {
+        "name": "math-cs-foundations",
+        "description": "Multi-language CS portfolio — algorithms, data structures, proofs across Python/Java/C++",
+        "language": "Python",
+        "url": "https://github.com/ScDomi/math-cs-foundations",
+        "stars": 0
+      },
+      {
+        "name": "ScDomi",
+        "description": "Profile README — the public face of the work",
+        "language": null,
+        "url": "https://github.com/ScDomi/ScDomi",
+        "stars": 0
+      }
+    ]
+  }
+}

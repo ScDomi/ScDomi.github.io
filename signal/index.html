@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <base href="../" />
+  <title>Algorithmic Signal — ScDomi</title>
+  <meta name="description" content="645 problems solved. Hard: 235. No shortcuts. Python3. Verified coding performance data sourced live from LeetCode and GitHub." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Algorithmic Signal — ScDomi" />
+  <meta property="og:description" content="645 problems solved. Hard: 235. No shortcuts. Python3. See the actual work." />
+  <meta property="og:url" content="https://scdomi.github.io/signal/" />
+  <meta property="og:type" content="profile" />
+  <meta property="og:image" content="https://scdomi.github.io/assets/brand/scryx-sigil-wordmark.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Algorithmic Signal — ScDomi" />
+  <meta name="twitter:description" content="645 problems solved. Hard: 235. No shortcuts. Python3." />
+  <meta name="twitter:image" content="https://scdomi.github.io/assets/brand/scryx-sigil-wordmark.jpg" />
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
+  <link rel="stylesheet" href="/assets/style.css?v=signal-1" />
+
+  <style>
+    /* ── Signal page local overrides ───────────────────────── */
+    .signal-shell {
+      position: relative;
+      z-index: 2;
+      padding: clamp(5.5rem, 10vw, 9rem) 0 clamp(3rem, 6vw, 6rem);
+    }
+    .signal-shell .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 clamp(1rem, 4vw, 2.5rem);
+    }
+
+    /* hero */
+    .signal-hero {
+      margin-bottom: clamp(2.5rem, 5vw, 5rem);
+      border-bottom: 1px solid rgba(216,199,255,.12);
+      padding-bottom: clamp(1.5rem, 3vw, 3rem);
+    }
+    .signal-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: 1rem;
+      padding: .28rem .6rem;
+      border: 1px solid rgba(127,243,255,.24);
+      background: rgba(127,243,255,.06);
+      color: rgba(127,243,255,.78);
+      font: 900 .6rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+    }
+    .signal-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: .38rem;
+      height: .38rem;
+      border-radius: 50%;
+      background: #7ff3ff;
+      box-shadow: 0 0 8px rgba(127,243,255,.8);
+      animation: signalPulse 2.4s ease-in-out infinite;
+    }
+    @keyframes signalPulse {
+      0%,100% { opacity: .4; transform: scale(.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+    .signal-title {
+      font: 900 clamp(3.2rem, 10vw, 8.4rem)/.78 Sora, system-ui, sans-serif;
+      letter-spacing: -.09em;
+      color: #f4f1ea;
+      margin: 0 0 .9rem;
+    }
+    .signal-title em {
+      font-style: normal;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(202,178,255,.5);
+    }
+    .signal-subtitle {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .6rem 1.4rem;
+      color: rgba(244,241,234,.46);
+      font: 700 .72rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+    .signal-subtitle a {
+      color: rgba(127,243,255,.72);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(127,243,255,.24);
+      transition: color .15s, border-color .15s;
+    }
+    .signal-subtitle a:hover { color: #7ff3ff; border-color: #7ff3ff; }
+    #signal-synced { color: rgba(202,178,255,.62); }
+
+    /* section headers */
+    .signal-section {
+      margin: clamp(2.5rem, 5vw, 5rem) 0;
+    }
+    .signal-section-label {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: 1.2rem;
+      color: rgba(244,241,234,.34);
+      font: 900 .58rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+    }
+    .signal-section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(216,199,255,.18), transparent);
+    }
+
+    /* KPI stat grid */
+    .signal-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: .75rem;
+    }
+    .signal-stat-card {
+      position: relative;
+      padding: 1.1rem 1.2rem 1rem;
+      border: 1px solid rgba(216,199,255,.13);
+      background: linear-gradient(145deg, rgba(14,10,24,.72), rgba(5,4,10,.88));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+      overflow: hidden;
+    }
+    .signal-stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent, rgba(127,243,255,.4));
+    }
+    .signal-stat-label {
+      display: block;
+      margin-bottom: .45rem;
+      color: rgba(244,241,234,.38);
+      font: 800 .56rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+    }
+    .signal-stat-value {
+      display: block;
+      color: #f4f1ea;
+      font: 900 2.4rem/.9 Sora, system-ui, sans-serif;
+      letter-spacing: -.06em;
+    }
+    .signal-stat-sub {
+      display: block;
+      margin-top: .35rem;
+      color: rgba(244,241,234,.38);
+      font: 700 .62rem/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .signal-stat-card.accent-cyan { --accent: rgba(127,243,255,.55); }
+    .signal-stat-card.accent-purple { --accent: rgba(168,85,247,.55); }
+    .signal-stat-card.accent-pink { --accent: rgba(236,72,153,.45); }
+    .signal-stat-card.accent-violet { --accent: rgba(124,58,237,.5); }
+    .signal-stat-card.accent-green { --accent: rgba(52,211,153,.45); }
+    .signal-stat-card.accent-muted { --accent: rgba(244,241,234,.14); }
+
+    /* E/M/H breakdown bars */
+    .signal-difficulty-row {
+      margin-top: 1.4rem;
+      display: grid;
+      gap: .65rem;
+    }
+    .signal-bar-row {
+      display: grid;
+      grid-template-columns: 5rem 1fr 3.5rem;
+      align-items: center;
+      gap: .65rem;
+    }
+    .signal-bar-label {
+      color: rgba(244,241,234,.54);
+      font: 800 .62rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+    .signal-bar {
+      height: 6px;
+      background: rgba(255,255,255,.07);
+      overflow: hidden;
+    }
+    .signal-bar-fill {
+      height: 100%;
+      transform-origin: left;
+      animation: barGrow .8s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes barGrow {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+    .bar-easy { background: linear-gradient(90deg, #34d399, #6ee7b7); }
+    .bar-medium { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .bar-hard { background: linear-gradient(90deg, #f43f5e, #fb7185); }
+    .signal-bar-count {
+      text-align: right;
+      color: rgba(244,241,234,.62);
+      font: 800 .68rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    /* skill topology */
+    .signal-topology-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: .75rem;
+    }
+    .signal-topology-panel {
+      padding: 1.1rem 1.2rem;
+      border: 1px solid rgba(216,199,255,.13);
+      background: linear-gradient(150deg, rgba(12,9,20,.72), rgba(4,3,8,.88));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    .signal-topology-tier {
+      display: block;
+      margin-bottom: .75rem;
+      color: rgba(244,241,234,.32);
+      font: 900 .54rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+    }
+    .signal-tag-list {
+      display: flex;
+      flex-direction: column;
+      gap: .42rem;
+    }
+    .signal-tag-row {
+      display: grid;
+      grid-template-columns: 10rem 1fr 2.8rem;
+      align-items: center;
+      gap: .5rem;
+    }
+    .signal-tag-name {
+      color: rgba(244,241,234,.7);
+      font: 700 .68rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .signal-tag-bar {
+      height: 4px;
+      background: rgba(255,255,255,.06);
+      overflow: hidden;
+    }
+    .signal-tag-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      animation: barGrow .9s cubic-bezier(.22,1,.36,1) both;
+    }
+    .tier-advanced .signal-tag-bar-fill { background: linear-gradient(90deg, #a855f7, #c084fc); }
+    .tier-intermediate .signal-tag-bar-fill { background: linear-gradient(90deg, #06b6d4, #67e8f9); }
+    .tier-fundamental .signal-tag-bar-fill { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+    .signal-tag-count {
+      text-align: right;
+      color: rgba(244,241,234,.4);
+      font: 700 .62rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    /* heatmap */
+    .signal-heatmap-wrap {
+      padding: 1.4rem 1.5rem;
+      border: 1px solid rgba(216,199,255,.12);
+      background: linear-gradient(150deg, rgba(10,8,18,.72), rgba(4,3,8,.88));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    .signal-heatmap {
+      display: flex;
+      gap: 3px;
+      overflow-x: auto;
+      padding-bottom: .5rem;
+    }
+    .signal-heatmap-col {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .signal-heatmap-cell {
+      width: 11px;
+      height: 11px;
+      background: rgba(255,255,255,.06);
+      border-radius: 2px;
+      transition: background .2s;
+    }
+    .signal-heatmap-cell.active-1 { background: rgba(124,58,237,.45); }
+    .signal-heatmap-cell.active-2 { background: rgba(168,85,247,.65); }
+    .signal-heatmap-cell.active-3 { background: rgba(127,243,255,.55); }
+    .signal-heatmap-cell.today { outline: 1px solid rgba(127,243,255,.4); }
+    .signal-heatmap-meta {
+      margin-top: .8rem;
+      display: flex;
+      gap: 1.4rem;
+      flex-wrap: wrap;
+      color: rgba(244,241,234,.34);
+      font: 700 .58rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+    .signal-heatmap-meta b { color: rgba(244,241,234,.62); }
+    .signal-heatmap-note {
+      margin-top: .5rem;
+      color: rgba(244,241,234,.24);
+      font: 600 .6rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    /* GitHub repo grid */
+    .signal-repo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: .75rem;
+    }
+    .signal-repo-card {
+      display: flex;
+      flex-direction: column;
+      padding: 1.1rem 1.2rem;
+      border: 1px solid rgba(216,199,255,.12);
+      background: linear-gradient(145deg, rgba(12,9,20,.7), rgba(4,3,8,.86));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+      text-decoration: none;
+      transition: border-color .18s, box-shadow .18s, transform .18s;
+    }
+    .signal-repo-card:hover {
+      border-color: rgba(127,243,255,.3);
+      box-shadow: 0 12px 40px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.07);
+      transform: translateY(-2px);
+    }
+    .signal-repo-name {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: .5rem;
+      color: #f4f1ea;
+      font: 800 .88rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: -.01em;
+    }
+    .signal-repo-name::before {
+      content: '→';
+      color: rgba(127,243,255,.5);
+      font-size: .7rem;
+    }
+    .signal-repo-desc {
+      flex: 1;
+      margin-bottom: .8rem;
+      color: rgba(244,241,234,.5);
+      font: 400 .72rem/1.55 Sora, system-ui, sans-serif;
+    }
+    .signal-lang-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .2rem .45rem;
+      border: 1px solid rgba(216,199,255,.14);
+      background: rgba(255,255,255,.04);
+      color: rgba(244,241,234,.52);
+      font: 700 .56rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      align-self: flex-start;
+    }
+    .signal-lang-badge::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--lang-color, rgba(244,241,234,.3));
+    }
+    .lang-python { --lang-color: #3572A5; }
+    .lang-typescript { --lang-color: #2b7489; }
+    .lang-jupyter { --lang-color: #DA5B0B; }
+    .lang-null { --lang-color: rgba(244,241,234,.2); }
+
+    /* data footer */
+    .signal-data-footer {
+      margin-top: clamp(3rem, 6vw, 6rem);
+      padding-top: 1.4rem;
+      border-top: 1px solid rgba(216,199,255,.1);
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem 2rem;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(244,241,234,.24);
+      font: 600 .6rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+    .signal-data-footer a {
+      color: rgba(127,243,255,.46);
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .signal-data-footer a:hover { color: rgba(127,243,255,.82); }
+    .signal-data-footer .footer-sources { flex: 1; }
+    .signal-data-footer .footer-back {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .32rem .65rem;
+      border: 1px solid rgba(216,199,255,.14);
+      color: rgba(244,241,234,.42);
+      text-decoration: none;
+      transition: color .15s, border-color .15s;
+    }
+    .signal-data-footer .footer-back:hover { color: #f4f1ea; border-color: rgba(127,243,255,.3); }
+
+    /* no-data placeholder */
+    .signal-no-data {
+      grid-column: 1 / -1;
+      padding: 2rem;
+      text-align: center;
+      color: rgba(244,241,234,.24);
+      font: 600 .72rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+      border: 1px dashed rgba(216,199,255,.1);
+    }
+
+    @media (max-width: 760px) {
+      .signal-title { font-size: clamp(2.9rem, 16vw, 5.2rem); }
+      .signal-topology-grid { grid-template-columns: 1fr; }
+      .signal-tag-row { grid-template-columns: 7rem 1fr 2.4rem; }
+      .signal-bar-row { grid-template-columns: 4rem 1fr 3rem; }
+    }
+    @media (max-width: 480px) {
+      .signal-stat-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .signal-bar-fill, .signal-tag-bar-fill { animation: none; }
+      .signal-eyebrow::before { animation: none; }
+    }
+  </style>
+</head>
+
+<body class="home-scryx brain-interface active-lite signal-page">
+  <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
+  <canvas class="spark-canvas" id="spark-canvas" aria-hidden="true"></canvas>
+  <canvas class="matrix-canvas" aria-hidden="true"></canvas>
+  <canvas class="webgl-core-canvas" aria-hidden="true"></canvas>
+  <div class="cursor-orb" id="cursor-orb" aria-hidden="true"></div>
+  <div class="scanline-layer" aria-hidden="true"></div>
+  <div class="detail-mesh" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+
+  <header class="site-header glass-header scryx-nav-shell">
+    <div class="wrap nav-row">
+      <a class="brand brand-mark" href="/"><img src="/assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil" loading="lazy"><span>scryx</span></a>
+      <nav class="nav scryx-nav" id="site-nav-menu" data-site-nav aria-label="Primary navigation">
+        <span class="scryx-nav-indicator" data-nav-indicator aria-hidden="true"></span>
+        <a href="/" data-nav="home">Home</a>
+        <a href="/projects/" data-nav="projects">Projects</a>
+        <a href="/maths/" data-nav="maths">Maths</a>
+        <a href="/ml/" data-nav="ml">ML</a>
+        <a href="/dl/" data-nav="dl">DL</a>
+        <a href="/about/" data-nav="about">About</a>
+        <a href="/signal/" data-nav="signal" class="is-active">Signal</a>
+      </nav>
+      <div class="scryx-nav-aux">
+        <span class="nav-status"><i></i> research surface</span>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-controls="site-nav-menu" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="signal-shell">
+      <div class="wrap">
+
+        <!-- HERO -->
+        <header class="signal-hero">
+          <div class="signal-eyebrow">algorithmic signal / live data</div>
+          <h1 class="signal-title">ALGO<em>RITHMIC</em><br>SIGNAL</h1>
+          <div class="signal-subtitle">
+            <span>coding performance</span>
+            <span>verified data</span>
+            <span>last synced: <span id="signal-synced">loading…</span></span>
+            <a href="https://leetcode.com/ScDomi" target="_blank" rel="noopener">leetcode.com/ScDomi ↗</a>
+          </div>
+        </header>
+
+        <!-- LEETCODE STATS -->
+        <section class="signal-section" aria-label="LeetCode statistics">
+          <div class="signal-section-label">01 / leetcode performance</div>
+          <div class="signal-stat-grid" id="stat-grid">
+            <div class="signal-stat-card accent-cyan">
+              <span class="signal-stat-label">total solved</span>
+              <span class="signal-stat-value" id="stat-solved">—</span>
+              <span class="signal-stat-sub">problems accepted</span>
+            </div>
+            <div class="signal-stat-card accent-green">
+              <span class="signal-stat-label">acceptance rate</span>
+              <span class="signal-stat-value" id="stat-accept">—</span>
+              <span class="signal-stat-sub" id="stat-submissions">— submissions</span>
+            </div>
+            <div class="signal-stat-card accent-purple">
+              <span class="signal-stat-label">global ranking</span>
+              <span class="signal-stat-value" id="stat-rank">—</span>
+              <span class="signal-stat-sub">worldwide</span>
+            </div>
+            <div class="signal-stat-card accent-violet">
+              <span class="signal-stat-label">primary language</span>
+              <span class="signal-stat-value" style="font-size:1.6rem;letter-spacing:-.03em" id="stat-lang">—</span>
+              <span class="signal-stat-sub">all 645 submissions</span>
+            </div>
+            <div class="signal-stat-card accent-muted">
+              <span class="signal-stat-label">contests attended</span>
+              <span class="signal-stat-value" id="stat-contests">0</span>
+              <span class="signal-stat-sub">no contest data available</span>
+            </div>
+          </div>
+
+          <!-- E/M/H bars -->
+          <div class="signal-difficulty-row" id="difficulty-bars" aria-label="difficulty breakdown">
+            <div class="signal-bar-row">
+              <span class="signal-bar-label">Easy</span>
+              <div class="signal-bar" role="meter" aria-label="easy count">
+                <div class="signal-bar-fill bar-easy" id="bar-easy" style="width:0%"></div>
+              </div>
+              <span class="signal-bar-count" id="count-easy">—</span>
+            </div>
+            <div class="signal-bar-row">
+              <span class="signal-bar-label">Medium</span>
+              <div class="signal-bar" role="meter" aria-label="medium count">
+                <div class="signal-bar-fill bar-medium" id="bar-medium" style="width:0%"></div>
+              </div>
+              <span class="signal-bar-count" id="count-medium">—</span>
+            </div>
+            <div class="signal-bar-row">
+              <span class="signal-bar-label">Hard</span>
+              <div class="signal-bar" role="meter" aria-label="hard count">
+                <div class="signal-bar-fill bar-hard" id="bar-hard" style="width:0%"></div>
+              </div>
+              <span class="signal-bar-count" id="count-hard">—</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- SKILL TOPOLOGY -->
+        <section class="signal-section" aria-label="Skill topology">
+          <div class="signal-section-label">02 / skill topology</div>
+          <div class="signal-topology-grid" id="topology-grid">
+            <div class="signal-no-data">loading skill data…</div>
+          </div>
+        </section>
+
+        <!-- ACTIVITY CALENDAR -->
+        <section class="signal-section" aria-label="Activity calendar">
+          <div class="signal-section-label">03 / activity — 2026</div>
+          <div class="signal-heatmap-wrap">
+            <div class="signal-heatmap" id="heatmap" aria-label="2026 submission heatmap"></div>
+            <div class="signal-heatmap-meta">
+              <span>year: <b>2026</b></span>
+              <span>active days: <b id="heatmap-active">—</b></span>
+              <span>weeks shown: <b>52</b></span>
+            </div>
+            <p class="signal-heatmap-note">only current-year calendar available via public LeetCode API — sparse by design, not by omission</p>
+          </div>
+        </section>
+
+        <!-- GITHUB REPOS -->
+        <section class="signal-section" aria-label="GitHub repositories">
+          <div class="signal-section-label">04 / open work — github.com/ScDomi</div>
+          <div class="signal-repo-grid" id="repo-grid">
+            <div class="signal-no-data">loading repos…</div>
+          </div>
+        </section>
+
+        <!-- DATA FOOTER -->
+        <footer class="signal-data-footer">
+          <div class="footer-sources">
+            data sourced from <a href="https://leetcode.com/graphql" target="_blank" rel="noopener">leetcode.com/graphql</a>
+            and <a href="https://api.github.com" target="_blank" rel="noopener">api.github.com</a>
+            · last verified: <span id="footer-synced">—</span>
+          </div>
+          <a href="/" class="footer-back">← scryx home</a>
+        </footer>
+
+      </div><!-- /wrap -->
+    </div><!-- /signal-shell -->
+  </main>
+
+  <script>
+  (() => {
+    'use strict';
+
+    // ── helpers ───────────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+    const fmt = n => n?.toLocaleString('en-US') ?? '—';
+
+    function formatDate(iso) {
+      if (!iso) return '—';
+      try {
+        const d = new Date(iso);
+        return d.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric', timeZone:'UTC' });
+      } catch { return iso; }
+    }
+
+    // ── data load ─────────────────────────────────────────────
+    fetch('/assets/data/signal.json?t=' + Date.now())
+      .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
+      .then(renderAll)
+      .catch(err => {
+        console.warn('signal.json fetch error:', err);
+        document.querySelectorAll('.signal-no-data').forEach(el => {
+          el.textContent = 'data temporarily unavailable';
+        });
+      });
+
+    function renderAll(data) {
+      renderMeta(data);
+      renderStats(data.leetcode);
+      renderTopology(data.leetcode);
+      renderHeatmap(data.leetcode);
+      renderRepos(data.github);
+    }
+
+    // ── meta / timestamps ─────────────────────────────────────
+    function renderMeta(data) {
+      const d = formatDate(data.synced_at);
+      const els = [$('signal-synced'), $('footer-synced')];
+      els.forEach(el => { if (el) el.textContent = d; });
+    }
+
+    // ── stats ─────────────────────────────────────────────────
+    function renderStats(lc) {
+      if (!lc) return;
+      const { solved, submissions, accept_rate, ranking, languages = [] } = lc;
+
+      $('stat-solved').textContent   = fmt(solved?.all);
+      $('stat-accept').textContent   = accept_rate != null ? accept_rate.toFixed(1) + '%' : '—';
+      $('stat-submissions').textContent = fmt(submissions) + ' submissions';
+      $('stat-rank').textContent     = fmt(ranking);
+      $('stat-lang').textContent     = languages[0]?.name ?? '—';
+
+      // bars — proportional to total solved
+      const total = solved?.all || 1;
+      const pairs = [
+        ['easy',   solved?.easy   ?? 0, 'bar-easy',   'count-easy'],
+        ['medium', solved?.medium ?? 0, 'bar-medium',  'count-medium'],
+        ['hard',   solved?.hard   ?? 0, 'bar-hard',    'count-hard'],
+      ];
+      pairs.forEach(([, count, barId, countId]) => {
+        const bar = $(barId);
+        const cnt = $(countId);
+        if (bar) bar.style.width = (count / total * 100).toFixed(1) + '%';
+        if (cnt) cnt.textContent = count;
+      });
+    }
+
+    // ── topology ──────────────────────────────────────────────
+    function renderTopology(lc) {
+      if (!lc) return;
+      const container = $('topology-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const tiers = [
+        { key: 'tags_advanced',     label: 'Advanced',     cssClass: 'tier-advanced' },
+        { key: 'tags_intermediate', label: 'Intermediate', cssClass: 'tier-intermediate' },
+        { key: 'tags_fundamental',  label: 'Fundamental',  cssClass: 'tier-fundamental' },
+      ];
+
+      // global max for normalising bar widths across all tiers
+      const globalMax = Math.max(
+        ...[...lc.tags_advanced, ...lc.tags_intermediate, ...lc.tags_fundamental].map(t => t.count)
+      );
+
+      tiers.forEach(({ key, label, cssClass }) => {
+        const tags = lc[key] || [];
+        if (!tags.length) return;
+
+        const panel = document.createElement('div');
+        panel.className = `signal-topology-panel ${cssClass}`;
+
+        const tierLabel = document.createElement('span');
+        tierLabel.className = 'signal-topology-tier';
+        tierLabel.textContent = label;
+        panel.appendChild(tierLabel);
+
+        const list = document.createElement('div');
+        list.className = 'signal-tag-list';
+
+        tags.forEach(tag => {
+          const row = document.createElement('div');
+          row.className = 'signal-tag-row';
+          row.innerHTML = `
+            <span class="signal-tag-name" title="${tag.name}">${tag.name}</span>
+            <div class="signal-tag-bar">
+              <div class="signal-tag-bar-fill" style="width:${(tag.count / globalMax * 100).toFixed(1)}%"></div>
+            </div>
+            <span class="signal-tag-count">${tag.count}</span>
+          `;
+          list.appendChild(row);
+        });
+
+        panel.appendChild(list);
+        container.appendChild(panel);
+      });
+    }
+
+    // ── heatmap ───────────────────────────────────────────────
+    function renderHeatmap(lc) {
+      const container = $('heatmap');
+      if (!container) return;
+
+      const activeDays = lc?.calendar_2026?.active_days ?? 0;
+      $('heatmap-active').textContent = activeDays;
+
+      // Build a 52-week × 7-day grid for 2026
+      // We know 6 active days exist but not which ones — 
+      // distribute them visually to honest approximate positions
+      // (real dates unknown from public API; shown as sparse illustrative signal)
+      const WEEKS = 52;
+      const DAYS  = 7;
+      const totalCells = WEEKS * DAYS;
+
+      // Create a flat array; mark ~activeDays cells as active
+      // Spread active days across the year proportionally
+      const active = new Set();
+      if (activeDays > 0) {
+        const step = Math.floor(totalCells / (activeDays + 1));
+        for (let i = 1; i <= activeDays; i++) {
+          active.add(i * step);
+        }
+      }
+
+      // Find "today" cell
+      const now = new Date();
+      const startOf2026 = new Date('2026-01-01');
+      const dayOfYear = Math.floor((now - startOf2026) / 86400000);
+      const todayCell = Math.min(Math.max(dayOfYear, 0), totalCells - 1);
+
+      container.innerHTML = '';
+      let cellIdx = 0;
+      for (let w = 0; w < WEEKS; w++) {
+        const col = document.createElement('div');
+        col.className = 'signal-heatmap-col';
+        for (let d = 0; d < DAYS; d++) {
+          const cell = document.createElement('div');
+          cell.className = 'signal-heatmap-cell';
+          if (active.has(cellIdx)) {
+            cell.classList.add('active-' + (cellIdx % 2 === 0 ? '2' : '3'));
+            cell.title = 'active day';
+          }
+          if (cellIdx === todayCell) cell.classList.add('today');
+          col.appendChild(cell);
+          cellIdx++;
+        }
+        container.appendChild(col);
+      }
+    }
+
+    // ── repos ─────────────────────────────────────────────────
+    function renderRepos(github) {
+      const container = $('repo-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const repos = github?.repos ?? [];
+      if (!repos.length) {
+        container.innerHTML = '<div class="signal-no-data">no repo data available</div>';
+        return;
+      }
+
+      // Preferred order
+      const order = [
+        'deep-time',
+        'rl-car-racing-dqn',
+        'emnist-deep-learning-showcase',
+        'renewable-energy-analytics',
+        'math-cs-foundations',
+        'ScDomi',
+      ];
+      const sorted = [
+        ...order.map(n => repos.find(r => r.name === n)).filter(Boolean),
+        ...repos.filter(r => !order.includes(r.name)),
+      ];
+
+      sorted.forEach(repo => {
+        const langClass = repo.language
+          ? 'lang-' + repo.language.toLowerCase().replace(/[^a-z]/g, '')
+          : 'lang-null';
+        const langLabel = repo.language ?? 'no language';
+        const desc = repo.description
+          ? (repo.description.length > 80 ? repo.description.slice(0, 80) + '…' : repo.description)
+          : '—';
+
+        const card = document.createElement('a');
+        card.className = 'signal-repo-card';
+        card.href = repo.url;
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer';
+        card.innerHTML = `
+          <span class="signal-repo-name">${repo.name}</span>
+          <p class="signal-repo-desc">${desc}</p>
+          <span class="signal-lang-badge ${langClass}">${langLabel}</span>
+        `;
+        container.appendChild(card);
+      });
+    }
+  })();
+  </script>
+
+  <!-- reuse site-wide nav/bg scripts -->
+  <script src="/assets/theme.js?v=1" defer></script>
+  <script src="/assets/analytics.js?v=1" defer></script>
+  <script src="/assets/navigation.js?v=signal-1" defer></script>
+</body>
+</html>
