@@ -951,3 +951,21 @@ body.home-scryx .premium-particles{opacity:.88!important}
 .project-grid .project-card.publication.has-github::after{content:"open ACL Anthology"!important;color:rgba(202,178,255,.82)!important}
 @media(max-width:760px){.project-grid .project-card.publication.has-github::after{content:"tap → ACL Anthology"!important}}
 @media(max-width:680px){.paper-visual,.emnist-visual,.energy-visual{opacity:.62;transform:scale(.88);transform-origin:100% 100%}}
+
+/* ===== presence layer: session pulse + counter + return ghost ===== */
+/* cache marker: presence-layer-1 */
+
+/* footer pulse dot */
+.presence-pulse-wrap{display:inline-flex;align-items:center;gap:.45rem;color:rgba(127,243,255,.46);font:800 .58rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+.presence-pulse{display:inline-block;width:.42rem;height:.42rem;border-radius:50%;background:#7ff3ff;box-shadow:0 0 8px rgba(127,243,255,.7);animation:presenceBreathe 2.8s ease-in-out infinite}
+@keyframes presenceBreathe{0%,100%{opacity:.38;transform:scale(.82);box-shadow:0 0 6px rgba(127,243,255,.4)}50%{opacity:1;transform:scale(1.14);box-shadow:0 0 16px rgba(127,243,255,.85),0 0 32px rgba(185,101,255,.3)}}
+@media(prefers-reduced-motion:reduce){.presence-pulse{animation:none;opacity:.62}}
+
+/* session counter on about page */
+.session-counter{display:inline-flex;align-items:baseline;gap:.6rem;margin:.5rem 0 .3rem;padding:.42rem .72rem;border:1px solid rgba(127,243,255,.18);background:rgba(0,0,0,.24);backdrop-filter:blur(8px);max-width:max-content}
+.session-counter-label{font:900 .58rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.18em;text-transform:uppercase;color:rgba(127,243,255,.55)}
+.session-counter-value{font:900 1.08rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em;color:#7ff3ff;text-shadow:0 0 18px rgba(127,243,255,.55)}
+
+/* return-visit ghost text */
+.still-here-ghost{display:block;font-size:clamp(.82rem,1.4vw,1.1rem);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:800;letter-spacing:.22em;text-transform:lowercase;color:rgba(127,243,255,.0);transition:color .9s ease;margin-top:.6rem;pointer-events:none}
+.still-here-ghost.visible{color:rgba(127,243,255,.54)}
