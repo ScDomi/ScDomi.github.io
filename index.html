@@ -238,18 +238,18 @@ default: suspicious
       <div class="competitive-panel">
         <div class="lc-stats">
           <div class="lc-primary">
-            <span class="lc-count" id="lc-total">645</span>
+            <span class="lc-count" id="lc-total">1964</span>
             <span class="lc-label">problems solved</span>
           </div>
           <div class="lc-difficulty-row">
-            <span class="lc-chip easy"><b id="lc-easy">68</b>&nbsp;Easy</span>
-            <span class="lc-chip medium"><b id="lc-medium">342</b>&nbsp;Medium</span>
-            <span class="lc-chip hard"><b id="lc-hard">235</b>&nbsp;Hard</span>
+            <span class="lc-chip easy"><b id="lc-easy">419</b>&nbsp;Easy</span>
+            <span class="lc-chip medium"><b id="lc-medium">770</b>&nbsp;Medium</span>
+            <span class="lc-chip hard"><b id="lc-hard">775</b>&nbsp;Hard</span>
           </div>
           <div class="lc-bar" aria-hidden="true">
-            <div class="lc-bar-seg easy" style="width:10.5%"></div>
-            <div class="lc-bar-seg medium" style="width:53.1%"></div>
-            <div class="lc-bar-seg hard" style="width:36.4%"></div>
+            <div class="lc-bar-seg easy" style="width:21.3%"></div>
+            <div class="lc-bar-seg medium" style="width:39.2%"></div>
+            <div class="lc-bar-seg hard" style="width:39.5%"></div>
           </div>
           <div class="lc-rank-row">
             <span class="lc-rank-label">global rank</span>
@@ -264,7 +264,7 @@ default: suspicious
 mode:    pressure-first
 signal:  edge-case driven
 tool:    constraint as teacher
-result:  645 proofs of running code
+result:  1964 proofs of running code
 <span class="dim">↳</span> hard problems don't negotiate.</code></pre>
           </div>
         </div>
@@ -868,7 +868,7 @@ result:  645 proofs of running code
       const hardEl = document.getElementById('lc-hard');
       if (!totalEl) return;
       // Live fetch from alfa-leetcode-api; fall back to last-known values
-      const FALLBACK = { total:645, easy:68, medium:342, hard:235 };
+      const FALLBACK = { total:1964, easy:419, medium:770, hard:775 };
       let targets = { ...FALLBACK };
       let animated = false;
       const easeOutQuad = t => t * (2 - t);
@@ -891,7 +891,7 @@ result:  645 proofs of running code
 
       (async () => {
         try {
-          const res = await fetch('https://alfa-leetcode-api.onrender.com/ScDomi', { signal: AbortSignal.timeout(5000) });
+          const res = await fetch('https://leetcode-stats.tashif.codes/ScDomi', { signal: AbortSignal.timeout(5000) });
           if (res.ok) {
             const d = await res.json();
             targets = {
