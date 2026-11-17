@@ -233,41 +233,35 @@ default: suspicious
       <div class="comp-head">
         <p class="section-kicker">competitive programming</p>
         <h2>code that runs under pressure.</h2>
-        <p class="comp-subline">competitive programming — where the edge case is the point.</p>
       </div>
-      <div class="competitive-panel">
-        <div class="lc-stats">
-          <div class="lc-primary">
-            <span class="lc-count" id="lc-total">1964</span>
-            <span class="lc-label">problems solved</span>
+      <div class="lc-compact">
+        <div class="lc-hero-row">
+          <div class="lc-top-badge">
+            <span class="lc-top-pct" id="lc-top-pct">Top 0.5%</span>
+            <span class="lc-top-label">globally ranked · LeetCode</span>
           </div>
-          <div class="lc-difficulty-row">
-            <span class="lc-chip easy"><b id="lc-easy">419</b>&nbsp;Easy</span>
-            <span class="lc-chip medium"><b id="lc-medium">770</b>&nbsp;Medium</span>
-            <span class="lc-chip hard"><b id="lc-hard">775</b>&nbsp;Hard</span>
-          </div>
-          <div class="lc-bar" aria-hidden="true">
-            <div class="lc-bar-seg easy" style="width:21.3%"></div>
-            <div class="lc-bar-seg medium" style="width:39.2%"></div>
-            <div class="lc-bar-seg hard" style="width:39.5%"></div>
-          </div>
-          <div class="lc-rank-row">
-            <span class="lc-rank-label">global rank</span>
-            <span class="lc-rank-value" id="lc-rank">—</span>
-          </div>
-          <a class="lc-profile-link" href="https://leetcode.com/u/ScDomi/" target="_blank" rel="noreferrer">→ open profile</a>
-        </div>
-        <div class="lc-flavor">
-          <div class="terminal-panel lc-terminal">
-            <div class="term-top"><i></i><i></i><i></i><span>~/scryx/competitive</span></div>
-            <pre><code>$ cat competitive.log
-mode:    pressure-first
-signal:  edge-case driven
-tool:    constraint as teacher
-result:  1964 proofs of running code
-<span class="dim">↳</span> hard problems don't negotiate.</code></pre>
+          <div class="lc-stat-pair">
+            <div class="lc-stat-tile">
+              <span class="lc-count" id="lc-total">1964</span>
+              <span class="lc-tile-label">problems solved</span>
+            </div>
+            <div class="lc-stat-tile">
+              <span class="lc-rank-value" id="lc-rank">#3,237</span>
+              <span class="lc-tile-label">global rank</span>
+            </div>
           </div>
         </div>
+        <div class="lc-difficulty-row">
+          <span class="lc-chip easy"><b id="lc-easy">419</b>&nbsp;Easy</span>
+          <span class="lc-chip medium"><b id="lc-medium">770</b>&nbsp;Medium</span>
+          <span class="lc-chip hard"><b id="lc-hard">775</b>&nbsp;Hard</span>
+        </div>
+        <div class="lc-bar" aria-hidden="true">
+          <div class="lc-bar-seg easy" style="width:21.3%"></div>
+          <div class="lc-bar-seg medium" style="width:39.2%"></div>
+          <div class="lc-bar-seg hard" style="width:39.5%"></div>
+        </div>
+        <a class="lc-profile-link" href="https://leetcode.com/u/ScDomi/" target="_blank" rel="noreferrer">→ open profile</a>
       </div>
     </section>
 
@@ -883,11 +877,8 @@ result:  1964 proofs of running code
         if (mBar) mBar.style.width = (t.medium / tot * 100).toFixed(1) + '%';
         if (hBar) hBar.style.width = (t.hard / tot * 100).toFixed(1) + '%';
       }
-      // Update flavor text count
-      function updateFlavorCount(n) {
-        const pre = document.querySelector('#competitive .lc-flavor pre code');
-        if (pre) pre.innerHTML = pre.innerHTML.replace(/\d+ proofs of running code/, n + ' proofs of running code');
-      }
+        // Update flavor text count (removed - no terminal panel)
+      function updateFlavorCount(n) {}
 
       (async () => {
         try {
@@ -902,6 +893,12 @@ result:  1964 proofs of running code
             };
             const rankEl = document.getElementById('lc-rank');
             if (rankEl && d.ranking) rankEl.textContent = '#' + Number(d.ranking).toLocaleString('en');
+            // Compute Top X%
+            const topPctEl = document.getElementById('lc-top-pct');
+            if (topPctEl && d.ranking) {
+              const pct = d.ranking / 700000 * 100;
+              topPctEl.textContent = 'Top ' + (pct < 1 ? pct.toFixed(1) : Math.round(pct)) + '%';
+            }
           }
         } catch (_) { /* network error or timeout — use fallback */ }
         updateBar(targets);
