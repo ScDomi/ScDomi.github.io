@@ -969,3 +969,86 @@ body.home-scryx .premium-particles{opacity:.88!important}
 /* return-visit ghost text */
 .still-here-ghost{display:block;font-size:clamp(.82rem,1.4vw,1.1rem);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:800;letter-spacing:.22em;text-transform:lowercase;color:rgba(127,243,255,.0);transition:color .9s ease;margin-top:.6rem;pointer-events:none}
 .still-here-ghost.visible{color:rgba(127,243,255,.54)}
+
+/* ===== mainpage overhaul: uniform cards, competitive section, micro-interactions ===== */
+/* cache marker: mainpage-overhaul-1 */
+
+/* --- Uniform project cards (Task 3) --- */
+.work-card.project-card{min-height:320px!important;padding:1.2rem!important;padding-bottom:1.5rem!important;display:flex!important;flex-direction:column!important;justify-content:flex-end!important;border-radius:20px!important}
+.work-card.project-card .card-bg-img{position:absolute!important;top:0!important;left:0!important;right:0!important;height:56%!important;overflow:hidden!important;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(to bottom,black 52%,transparent 100%);mask-image:linear-gradient(to bottom,black 52%,transparent 100%)}
+.work-card.project-card .card-bg-img img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
+.work-card.project-card .work-tag,.work-card.project-card h3,.work-card.project-card p,.work-card.project-card .card-spec{position:relative!important;z-index:1!important}
+.work-card.project-card .paper-visual,.work-card.project-card .emnist-visual[aria-hidden],.work-card.project-card .energy-visual{display:none!important}
+
+/* Mobile: single-column stack, no swipe rail (Task 3 + Task 4) */
+@media(max-width:768px){
+  .artifact-field-shell{overflow:hidden!important}
+  .project-grid.artifact-field{display:grid!important;grid-template-columns:1fr!important;overflow:hidden!important;padding-top:1rem!important}
+  .project-grid.artifact-field::after{display:none!important}
+  .artifact-rail-meta span:last-child{display:none}
+  .work-card.project-card{min-height:260px!important;flex-basis:auto!important;width:100%!important}
+}
+
+/* --- Task 5a: project card hover lift (springy ease-out) --- */
+.project-grid .work-card.project-card{transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s ease,border-color .18s ease!important}
+.project-grid .work-card.project-card:hover{transform:translateY(-6px) scale(1.015)!important;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(180,120,255,.18)!important}
+
+/* --- Task 5b: nav link hover underline sweep --- */
+@media(min-width:981px){
+  .scryx-nav a::after{content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:0;height:1px;background:rgba(216,199,255,.52);border-radius:1px;transition:width .18s ease;pointer-events:none}
+  .scryx-nav a:hover::after{width:calc(100% - 1rem)}
+  .scryx-nav a.is-active::after{display:none}
+}
+
+/* --- Task 5d: section entrance fade-up --- */
+.section-hidden{opacity:0;transform:translateY(28px)}
+.section-visible{opacity:1!important;transform:translateY(0)!important;transition:opacity .6s ease,transform .6s ease}
+
+/* --- Task 5e: difficulty chip pulse keyframes --- */
+@keyframes chip-pulse-easy{0%{box-shadow:0 0 0 0 rgba(74,222,128,.45)}50%{box-shadow:0 0 0 7px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+@keyframes chip-pulse-medium{0%{box-shadow:0 0 0 0 rgba(251,191,36,.45)}50%{box-shadow:0 0 0 7px rgba(251,191,36,0)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}
+@keyframes chip-pulse-hard{0%{box-shadow:0 0 0 0 rgba(248,113,113,.45)}50%{box-shadow:0 0 0 7px rgba(248,113,113,0)}100%{box-shadow:0 0 0 0 rgba(248,113,113,0)}}
+.lc-chip.easy.chip-pulsed{animation:chip-pulse-easy .6s ease-out forwards}
+.lc-chip.medium.chip-pulsed{animation:chip-pulse-medium .6s ease-out forwards}
+.lc-chip.hard.chip-pulsed{animation:chip-pulse-hard .6s ease-out forwards}
+
+/* --- Competitive section: LeetCode stats panel (Task 2) --- */
+.competitive-section{padding-top:2.5rem}
+.comp-head{margin-bottom:2rem}
+.comp-head h2{margin-bottom:.4rem}
+.comp-subline{color:#9891a4;margin:0;font-size:.95rem}
+.competitive-panel{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+.lc-stats{border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:1.8rem;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 30px 90px rgba(0,0,0,.3)}
+.lc-primary{margin-bottom:1.5rem}
+.lc-count{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(3.5rem,7vw,6rem);font-weight:800;letter-spacing:-.06em;line-height:.9;color:#f4efff}
+.lc-label{display:block;color:#9891a4;text-transform:uppercase;letter-spacing:.1em;font-size:.68rem;font-weight:900;margin-top:.4rem}
+.lc-difficulty-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
+.lc-chip{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .7rem;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid}
+.lc-chip b{font-weight:900}
+.lc-chip.easy{color:#4ade80;border-color:rgba(74,222,128,.32);background:rgba(74,222,128,.07)}
+.lc-chip.medium{color:#fbbf24;border-color:rgba(251,191,36,.32);background:rgba(251,191,36,.07)}
+.lc-chip.hard{color:#f87171;border-color:rgba(248,113,113,.32);background:rgba(248,113,113,.07)}
+.lc-bar{height:6px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.08);display:flex;margin-bottom:1.2rem}
+.lc-bar-seg.easy{background:#4ade80}
+.lc-bar-seg.medium{background:#fbbf24}
+.lc-bar-seg.hard{background:#f87171}
+.lc-profile-link{display:inline-flex;align-items:center;padding:.5rem .9rem;border:1px solid rgba(255,255,255,.14);border-radius:999px;color:#d9d1e7;text-decoration:none;font-size:.84rem;font-weight:700;background:rgba(255,255,255,.04);transition:border-color .18s ease,background .18s ease}
+.lc-profile-link:visited{color:#d9d1e7}
+.lc-profile-link:hover{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.08)}
+.lc-flavor{align-self:stretch;display:flex;flex-direction:column}
+.lc-terminal{flex:1}
+.lc-terminal pre{min-height:180px}
+@media(max-width:768px){
+  .competitive-panel{grid-template-columns:1fr;gap:1.2rem}
+  .lc-terminal pre{min-height:auto}
+}
+
+/* Reduced-motion safety net */
+@media(prefers-reduced-motion:reduce){
+  .section-hidden{opacity:1!important;transform:none!important}
+  .section-visible{transition:none!important}
+  .lc-chip.chip-pulsed{animation:none!important}
+  .project-grid .work-card.project-card{transition:border-color .18s ease!important}
+  .project-grid .work-card.project-card:hover{transform:none!important}
+  .scryx-nav a::after{transition:none!important}
+}

@@ -24,7 +24,6 @@
   function routeKey(path = location.pathname) {
     path = normalize(path);
     if (path === '/') return 'home';
-    if (path.startsWith('/projects/')) return 'projects';
     if (path.startsWith('/maths/')) return 'maths';
     if (path.startsWith('/ml/')) return 'ml';
     if (path.startsWith('/dl/')) return 'dl';

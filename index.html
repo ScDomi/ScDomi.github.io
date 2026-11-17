@@ -15,7 +15,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/favicon-180.png" />
-  <link rel="stylesheet" href="assets/style.css?v=presence-layer-1" />
+  <link rel="stylesheet" href="assets/style.css?v=mainpage-overhaul-1" />
   <script type="importmap">
     { "imports": {
       "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -53,7 +53,6 @@
       <nav class="nav scryx-nav" id="site-nav-menu" data-site-nav aria-label="Primary navigation">
         <span class="scryx-nav-indicator" data-nav-indicator aria-hidden="true"></span>
         <a href="/" data-nav="home">Home</a>
-        <a href="/projects/" data-nav="projects">Projects</a>
         <a href="/maths/" data-nav="maths">Maths</a>
         <a href="/ml/" data-nav="ml">ML</a>
         <a href="/dl/" data-nav="dl">DL</a>
@@ -226,6 +225,44 @@ default: suspicious
             <div class="card-spec"><span>logic</span><span>search</span><span>simulations</span></div>
             <div class="rule-visual card-bg-img"><img src="assets/projects/basics.png" alt="Math and computer science foundations visual"></div>
           </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="competitive" class="wrap section competitive-section">
+      <div class="comp-head">
+        <p class="section-kicker">competitive programming</p>
+        <h2>code that runs under pressure.</h2>
+        <p class="comp-subline">competitive programming — where the edge case is the point.</p>
+      </div>
+      <div class="competitive-panel">
+        <div class="lc-stats">
+          <div class="lc-primary">
+            <span class="lc-count" id="lc-total">645</span>
+            <span class="lc-label">problems solved</span>
+          </div>
+          <div class="lc-difficulty-row">
+            <span class="lc-chip easy"><b id="lc-easy">68</b>&nbsp;Easy</span>
+            <span class="lc-chip medium"><b id="lc-medium">342</b>&nbsp;Medium</span>
+            <span class="lc-chip hard"><b id="lc-hard">235</b>&nbsp;Hard</span>
+          </div>
+          <div class="lc-bar" aria-hidden="true">
+            <div class="lc-bar-seg easy" style="width:10.5%"></div>
+            <div class="lc-bar-seg medium" style="width:53.1%"></div>
+            <div class="lc-bar-seg hard" style="width:36.4%"></div>
+          </div>
+          <a class="lc-profile-link" href="https://leetcode.com/u/ScDomi/" target="_blank" rel="noreferrer">→ open profile</a>
+        </div>
+        <div class="lc-flavor">
+          <div class="terminal-panel lc-terminal">
+            <div class="term-top"><i></i><i></i><i></i><span>~/scryx/competitive</span></div>
+            <pre><code>$ cat competitive.log
+mode:    pressure-first
+signal:  edge-case driven
+tool:    constraint as teacher
+result:  645 proofs of running code
+<span class="dim">↳</span> hard problems don't negotiate.</code></pre>
+          </div>
         </div>
       </div>
     </section>
@@ -799,6 +836,65 @@ default: suspicious
       });
       console.log('%cscryx hidden layer', 'color:#b98cff;font-weight:900;font-size:16px');
       console.log('try: type "scryx", tap the logo 4x, or hover a project card too long.');
+    })();
+
+    // Section entrance fade-up
+    (function sectionFadeUp(){
+      if (reduceMotion) return;
+      const sections = document.querySelectorAll('.section:not(#interface)');
+      sections.forEach(s => s.classList.add('section-hidden'));
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('section-hidden');
+            entry.target.classList.add('section-visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      sections.forEach(s => obs.observe(s));
+    })();
+
+    // LeetCode counter animation with stagger
+    (function lcCounter(){
+      if (reduceMotion) return;
+      const totalEl = document.getElementById('lc-total');
+      const easyEl = document.getElementById('lc-easy');
+      const medEl = document.getElementById('lc-medium');
+      const hardEl = document.getElementById('lc-hard');
+      if (!totalEl) return;
+      const targets = { total:645, easy:68, medium:342, hard:235 };
+      let animated = false;
+      const easeOutQuad = t => t * (2 - t);
+      function countUp(el, target, delay, duration, onDone){
+        setTimeout(() => {
+          const start = performance.now();
+          function step(now){
+            const p = Math.min((now - start) / duration, 1);
+            el.textContent = Math.round(easeOutQuad(p) * target);
+            if (p < 1) requestAnimationFrame(step);
+            else { el.textContent = target; onDone?.(); }
+          }
+          requestAnimationFrame(step);
+        }, delay);
+      }
+      function pulseChip(sel){
+        const c = document.querySelector(sel);
+        if (c) { c.classList.add('chip-pulsed'); setTimeout(() => c.classList.remove('chip-pulsed'), 700); }
+      }
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !animated) {
+            animated = true; obs.disconnect();
+            countUp(totalEl, targets.total, 0, 1200);
+            countUp(easyEl, targets.easy, 0, 1200, () => pulseChip('.lc-chip.easy'));
+            countUp(medEl, targets.medium, 100, 1200, () => pulseChip('.lc-chip.medium'));
+            countUp(hardEl, targets.hard, 200, 1200, () => pulseChip('.lc-chip.hard'));
+          }
+        });
+      }, { threshold: 0.4 });
+      const section = document.getElementById('competitive');
+      if (section) obs.observe(section);
     })();
 
     // cookie consent: opt-in local memory only, no tracking without a yes
