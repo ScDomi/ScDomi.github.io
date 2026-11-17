@@ -863,9 +863,58 @@ result:  645 proofs of running code
       const medEl = document.getElementById('lc-medium');
       const hardEl = document.getElementById('lc-hard');
       if (!totalEl) return;
-      const targets = { total:645, easy:68, medium:342, hard:235 };
+      // Live fetch from alfa-leetcode-api; fall back to last-known values
+      const FALLBACK = { total:645, easy:68, medium:342, hard:235 };
+      let targets = { ...FALLBACK };
       let animated = false;
       const easeOutQuad = t => t * (2 - t);
+
+      // Update progress bar segments proportionally
+      function updateBar(t) {
+        const tot = t.total || 1;
+        const eBar = document.querySelector('.lc-bar .lc-bar-seg.easy');
+        const mBar = document.querySelector('.lc-bar .lc-bar-seg.medium');
+        const hBar = document.querySelector('.lc-bar .lc-bar-seg.hard');
+        if (eBar) eBar.style.width = (t.easy / tot * 100).toFixed(1) + '%';
+        if (mBar) mBar.style.width = (t.medium / tot * 100).toFixed(1) + '%';
+        if (hBar) hBar.style.width = (t.hard / tot * 100).toFixed(1) + '%';
+      }
+      // Update flavor text count
+      function updateFlavorCount(n) {
+        const pre = document.querySelector('#competitive .lc-flavor pre code');
+        if (pre) pre.innerHTML = pre.innerHTML.replace(/\d+ proofs of running code/, n + ' proofs of running code');
+      }
+
+      (async () => {
+        try {
+          const res = await fetch('https://alfa-leetcode-api.onrender.com/ScDomi/solved', { signal: AbortSignal.timeout(5000) });
+          if (res.ok) {
+            const d = await res.json();
+            targets = {
+              total:  d.solvedProblem  || FALLBACK.total,
+              easy:   d.easySolved     || FALLBACK.easy,
+              medium: d.mediumSolved   || FALLBACK.medium,
+              hard:   d.hardSolved     || FALLBACK.hard,
+            };
+          }
+        } catch (_) { /* network error or timeout — use fallback */ }
+        updateBar(targets);
+        updateFlavorCount(targets.total);
+        // Update chip labels with live numbers
+        const easyEl2  = document.getElementById('lc-easy');
+        const medEl2   = document.getElementById('lc-medium');
+        const hardEl2  = document.getElementById('lc-hard');
+        const totalEl2 = document.getElementById('lc-total');
+        if (!animated) {
+          // Pre-fill so they don't stay at 0 if section already in view before fetch
+          if (reduceMotion) {
+            if (totalEl2) totalEl2.textContent = targets.total;
+            if (easyEl2)  easyEl2.textContent  = targets.easy;
+            if (medEl2)   medEl2.textContent   = targets.medium;
+            if (hardEl2)  hardEl2.textContent  = targets.hard;
+          }
+        }
+      })();
       function countUp(el, target, delay, duration, onDone){
         setTimeout(() => {
           const start = performance.now();
