@@ -1032,6 +1032,9 @@ body.home-scryx .premium-particles{opacity:.88!important}
 .lc-bar-seg.easy{background:#4ade80}
 .lc-bar-seg.medium{background:#fbbf24}
 .lc-bar-seg.hard{background:#f87171}
+.lc-rank-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem .8rem;margin-bottom:1rem;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.04)}
+.lc-rank-label{font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.lc-rank-value{font-size:1rem;font-weight:800;color:#e2d4f0;letter-spacing:-.01em}
 .lc-profile-link{display:inline-flex;align-items:center;padding:.5rem .9rem;border:1px solid rgba(255,255,255,.14);border-radius:999px;color:#d9d1e7;text-decoration:none;font-size:.84rem;font-weight:700;background:rgba(255,255,255,.04);transition:border-color .18s ease,background .18s ease}
 .lc-profile-link:visited{color:#d9d1e7}
 .lc-profile-link:hover{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.08)}

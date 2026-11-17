@@ -251,6 +251,10 @@ default: suspicious
             <div class="lc-bar-seg medium" style="width:53.1%"></div>
             <div class="lc-bar-seg hard" style="width:36.4%"></div>
           </div>
+          <div class="lc-rank-row">
+            <span class="lc-rank-label">global rank</span>
+            <span class="lc-rank-value" id="lc-rank">—</span>
+          </div>
           <a class="lc-profile-link" href="https://leetcode.com/u/ScDomi/" target="_blank" rel="noreferrer">→ open profile</a>
         </div>
         <div class="lc-flavor">
@@ -887,15 +891,17 @@ result:  645 proofs of running code
 
       (async () => {
         try {
-          const res = await fetch('https://alfa-leetcode-api.onrender.com/ScDomi/solved', { signal: AbortSignal.timeout(5000) });
+          const res = await fetch('https://alfa-leetcode-api.onrender.com/ScDomi', { signal: AbortSignal.timeout(5000) });
           if (res.ok) {
             const d = await res.json();
             targets = {
-              total:  d.solvedProblem  || FALLBACK.total,
+              total:  d.totalSolved    || FALLBACK.total,
               easy:   d.easySolved     || FALLBACK.easy,
               medium: d.mediumSolved   || FALLBACK.medium,
               hard:   d.hardSolved     || FALLBACK.hard,
             };
+            const rankEl = document.getElementById('lc-rank');
+            if (rankEl && d.ranking) rankEl.textContent = '#' + Number(d.ranking).toLocaleString('en');
           }
         } catch (_) { /* network error or timeout — use fallback */ }
         updateBar(targets);
