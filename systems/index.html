@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Systems / scryx</title>
+  <meta name="description" content="Interactive experiments in emergence, artificial life, cognition and computational systems by ScDomi.">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="stylesheet" href="/assets/style.css?v=philosophy-remaster-1">
+  <link rel="stylesheet" href="/assets/systems-lab.css?v=systems-lab-1">
+</head>
+<body class="home-scryx brain-interface active-lite systems-page" data-soft-router="true">
+  <div class="systems-noise" aria-hidden="true"></div>
+  <header class="site-header glass-header scryx-nav-shell">
+    <div class="wrap nav-row">
+      <a class="brand brand-mark" href="/"><img src="/assets/brand/scryx-sigil-wordmark.jpg" alt="scryx sigil"><span>scryx</span></a>
+      <nav class="nav scryx-nav" id="site-nav-menu" data-site-nav aria-label="Primary navigation">
+        <span class="scryx-nav-indicator" data-nav-indicator aria-hidden="true"></span>
+        <a href="/" data-nav="home">Home</a>
+        <a href="/systems/" data-nav="systems" aria-current="page">Systems</a>
+        <a href="/maths/" data-nav="maths">Maths</a>
+        <a href="/ml/" data-nav="ml">ML</a>
+        <a href="/dl/" data-nav="dl">DL</a>
+        <a href="/about/" data-nav="about">About</a>
+      </nav>
+      <div class="scryx-nav-aux"><span class="nav-status"><i></i> live experiment</span><button class="nav-toggle" type="button" data-nav-toggle aria-controls="site-nav-menu" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span><span></span></button></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap systems-hero">
+      <div class="systems-copy">
+        <p class="eyebrow">scryx / experimental systems</p>
+        <h1>simple rules.<br><em>unreasonable worlds.</em></h1>
+        <p class="lead">Mathematics, artificial intelligence and creative computation meet where local rules become global behavior.</p>
+        <div class="systems-axis" aria-label="Fields"><span>AI</span><i></i><span>MATHEMATICS</span><i></i><span>COMPLEX SYSTEMS</span><i></i><span>CREATIVE TECHNOLOGY</span></div>
+      </div>
+      <div class="rd-shell">
+        <div class="rd-meta"><span>REACTION–DIFFUSION / GRAY–SCOTT</span><b id="rd-state">RUNNING</b></div>
+        <canvas id="rd-canvas" width="640" height="400" aria-label="Interactive Gray-Scott reaction diffusion simulation"></canvas>
+        <div class="rd-equation" aria-hidden="true">∂u/∂t = Dᵤ∇²u − uv² + f(1−u)</div>
+        <div class="rd-controls">
+          <label>feed <output id="feed-out">0.0367</output><input id="feed" type="range" min="0.010" max="0.080" step="0.0001" value="0.0367"></label>
+          <label>kill <output id="kill-out">0.0649</output><input id="kill" type="range" min="0.040" max="0.075" step="0.0001" value="0.0649"></label>
+          <button id="rd-pause" type="button">pause</button><button id="rd-reset" type="button">reset seed</button>
+        </div>
+        <p class="rd-help">Draw on the field. The image is computed live from two diffusing chemicals — not a video or scripted animation.</p>
+      </div>
+    </section>
+
+    <section class="wrap systems-manifesto">
+      <p class="section-kicker">the intersection</p>
+      <h2>Not separate interests.<br>Different views of the same problem.</h2>
+      <div class="manifesto-grid">
+        <p><b>Mathematics</b> gives the structures.</p><p><b>Computation</b> makes them executable.</p><p><b>Intelligence</b> asks how systems adapt.</p><p><b>Art</b> makes invisible behavior perceptible.</p>
+      </div>
+    </section>
+
+    <section class="wrap concept-section" id="concepts">
+      <div class="concept-head"><p class="section-kicker">flagship inquiries</p><h2>Questions worth building around.</h2><p>Public concepts, intentionally separated from private machinery.</p></div>
+      <div class="concept-grid">
+        <article class="concept-card psyche"><span>01 / COMPUTATIONAL COGNITION</span><h3>PSYCHE</h3><p class="question">What would it take for a computational system to maintain a coherent model of itself?</p><p>A theoretical and experimental inquiry into internal state, memory, agency and self-representation. Functional models are not claims of subjective experience.</p><div><b>cognitive architectures</b><b>adaptation</b><b>self-modeling</b></div></article>
+        <article class="concept-card civilizations"><span>02 / ARTIFICIAL SOCIETIES</span><h3>Artificial Civilizations</h3><p class="question">Can collective structure emerge from simple computational agents?</p><p>Small synthetic populations expose the tension between cooperation, competition, resources and environmental pressure.</p><div><b>multi-agent systems</b><b>game theory</b><b>emergence</b></div></article>
+        <article class="concept-card deep-time"><span>03 / ARTIFICIAL LIFE</span><h3>Deep Time</h3><p class="question">How does a tiny intervention reshape a million years of history?</p><p>A deterministic evolution observatory for population dynamics, environmental selection, mutation and phylogeny.</p><div><b>evolution</b><b>complex systems</b><b>procedural simulation</b></div><a href="https://github.com/ScDomi/deep-time" target="_blank" rel="noreferrer">public repository ↗</a></article>
+        <article class="concept-card consciousness"><span>04 / OPEN QUESTION</span><h3>Consciousness & AI</h3><p class="question">Which computational properties make agency, self-representation or metacognition scientifically discussable?</p><p>An explicitly open theoretical field: distinguish observable function, architectural hypothesis and subjective experience.</p><div><b>metacognition</b><b>embodiment</b><b>philosophy of mind</b></div></article>
+      </div>
+    </section>
+
+    <section class="wrap simulation-section" id="civilizations">
+      <div class="simulation-copy"><p class="section-kicker">public synthetic experiment / 01</p><h2>Artificial Civilizations</h2><p class="question">Can collective structure emerge from simple computational agents?</p><p>Agents search for resources, reproduce, compete and occasionally cooperate. This standalone portfolio simulation is not a representation of private research software.</p><div class="sim-readout"><span>population <b id="civ-pop-out">120</b></span><span>cooperation <b id="civ-coop-out">0.55</b></span><span>pressure <b id="civ-pressure-out">0.35</b></span><span>generation <b id="civ-generation">0</b></span></div></div>
+      <div class="simulation-stage"><canvas id="civ-canvas" width="720" height="480" aria-label="Synthetic multi-agent civilization simulation"></canvas><div class="simulation-controls"><label>population<input id="civ-pop" type="range" min="30" max="240" step="10" value="120"></label><label>cooperation<input id="civ-coop" type="range" min="0" max="1" step="0.05" value="0.55"></label><label>environmental pressure<input id="civ-pressure" type="range" min="0" max="1" step="0.05" value="0.35"></label><button id="civ-reset" type="button">new seeded world</button></div></div>
+    </section>
+
+    <section class="wrap signal-section" id="information">
+      <div class="signal-head"><p class="section-kicker">public synthetic experiment / 02</p><h2>Information has texture.</h2><p>Entropy measures uncertainty. Cryptographic diffusion turns a tiny change in input into a large, unpredictable change in output.</p></div>
+      <div class="signal-grid">
+        <article class="entropy-lab"><span>SHANNON ENTROPY</span><textarea id="entropy-input" rows="5" spellcheck="false">rules are defaults, not truth.</textarea><div class="entropy-meter"><i id="entropy-fill"></i></div><div class="entropy-stats"><b id="entropy-value">0.00</b><span>bits / byte</span><em id="entropy-unique">0 unique symbols</em></div></article>
+        <article class="avalanche-lab"><span>SHA-256 AVALANCHE EFFECT</span><div class="hash-inputs"><input id="hash-a" value="scryx"><input id="hash-b" value="scryy"></div><div class="hash-strips"><canvas id="hash-canvas-a" width="256" height="32" aria-label="SHA-256 bits for first input"></canvas><canvas id="hash-canvas-b" width="256" height="32" aria-label="SHA-256 bits for second input"></canvas></div><p><b id="hash-distance">—</b> of 256 output bits changed.</p></article>
+      </div>
+    </section>
+
+    <section class="wrap graph-section" id="graph">
+      <div class="graph-copy"><p class="section-kicker">concept graph</p><h2>One system.<br>Many projections.</h2><p>Select a concept to expose its public relationships. The graph is navigation, not decoration.</p><div id="graph-detail" class="graph-detail"><span>SELECTED / SYSTEMS</span><strong>Systems connect rules, state, interaction and change.</strong></div></div>
+      <div class="graph-stage"><canvas id="concept-canvas" width="760" height="620" tabindex="0" aria-label="Interactive concept graph connecting mathematics, intelligence, evolution and creative technology"></canvas></div>
+    </section>
+
+    <section class="wrap systems-method">
+      <div><p class="section-kicker">operating doctrine</p><h2>demonstrate intelligence<br>through creation.</h2></div>
+      <ol><li><span>01</span><b>formalize</b><p>Turn curiosity into a system with explicit variables and constraints.</p></li><li><span>02</span><b>simulate</b><p>Let the rules run long enough to contradict intuition.</p></li><li><span>03</span><b>inspect</b><p>Build an interface that exposes behavior instead of decorating it.</p></li><li><span>04</span><b>differentiate</b><p>Separate evidence, interpretation and speculation.</p></li></ol>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-row"><div><strong>scryx</strong><p>rules are defaults, not truth.</p></div><div><a href="https://github.com/ScDomi" target="_blank" rel="noreferrer">GitHub ↗</a><a href="/maths/">Mathematics</a><a href="/about/">About</a></div></div></footer>
+  <button class="systems-command-trigger" id="systems-command-trigger" type="button" aria-haspopup="dialog" aria-controls="systems-command">⌘</button>
+  <dialog class="systems-command" id="systems-command"><form method="dialog"><button class="command-close" aria-label="Close command interface">×</button></form><p>SCRYX COMMAND INDEX</p><label for="systems-command-input">type a command</label><input id="systems-command-input" autocomplete="off" placeholder="help"><pre id="systems-command-output">help · explore · simulate · math · intelligence · consciousness · graph · clear</pre></dialog>
+  <script src="/assets/navigation.js?v=systems-lab-1" defer></script>
+  <script src="/assets/systems-lab.js?v=systems-lab-2" defer></script>
+</body>
+</html>
